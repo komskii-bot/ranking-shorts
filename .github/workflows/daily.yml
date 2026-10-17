@@ -1,0 +1,64 @@
+name: Daily ranking Short
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 10:00 AM Manila time, every day
+  workflow_dispatch: {}   # "Run workflow" button for manual runs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-short
+  cancel-in-progress: false
+
+jobs:
+  make-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+
+      - name: Render today's video
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: python -m pipeline.main
+
+      - name: Keep a copy of the video as a release (backup / preview)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="video-$(date -u +%Y%m%d)-${{ github.run_number }}"
+          TITLE=$(python -c "import json;print(json.load(open('out/post.json'))['title'])")
+          gh release create "$TAG" out/video.mp4 out/post.json --title "$TITLE" --notes "Rendered and uploaded by the daily run"
+
+      - name: Save queue and history
+        run: |
+          git config user.name "ranking-bot"
+          git config user.email "ranking-bot@users.noreply.github.com"
+          git add state/
+          git diff --cached --quiet || git commit -m "Daily run $(date -u +%F)"
+          git push
+
+      - name: Keep only the newest 30 video releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release list --limit 200 --json tagName --jq '.[30:][].tagName' | while read -r t; do
+            gh release delete "$t" --yes --cleanup-tag || true
+          done

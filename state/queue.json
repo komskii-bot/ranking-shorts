@@ -1,0 +1,172 @@
+[
+  {
+    "id": "biggest-ai-data-centers-2026",
+    "title": "The 5 Biggest AI Data Centers on Earth Right Now",
+    "hook": "These five buildings power the AI you use every day, and number one is enormous.",
+    "items": [
+      {"rank": 5, "name": "Meta Prometheus", "stat": "~471 MW", "line": "Meta's Prometheus in Ohio draws an estimated four hundred seventy megawatts to train its AI models.", "search": "data center servers"},
+      {"rank": 4, "name": "DayOne Nusajaya", "stat": "~473 MW", "line": "The only one outside America, DayOne's campus in Johor, Malaysia, runs at about four hundred seventy three megawatts.", "search": "server room lights"},
+      {"rank": 3, "name": "Microsoft Fairwater Atlanta", "stat": "~636 MW", "line": "Microsoft's Fairwater site near Atlanta uses an estimated six hundred thirty six megawatts.", "search": "data center aerial"},
+      {"rank": 2, "name": "Amazon New Carlisle", "stat": "~910 MW", "line": "Amazon's New Carlisle campus in Indiana, built for Anthropic, draws around nine hundred ten megawatts.", "search": "computer chips closeup"},
+      {"rank": 1, "name": "xAI Colossus 2", "stat": "~946 MW", "line": "Elon Musk's xAI built Colossus 2 in Memphis, using nearly a gigawatt, close to a whole power plant's output.", "search": "power plant night"}
+    ],
+    "outro": "Which tech giant do you think takes number one next year?",
+    "description": "The world's largest AI data centers ranked by estimated IT power, based on Epoch AI's data center tracker.",
+    "tags": ["ai", "data center", "artificial intelligence", "tech", "xai", "microsoft", "amazon", "meta", "top 5", "ranking"],
+    "as_of": "October 2026",
+    "sources": ["Epoch AI — Largest AI data centers by power capacity (epoch.ai)"]
+  },
+  {
+    "id": "deadliest-animals-to-humans",
+    "title": "Top 5 Deadliest Animals to Humans",
+    "hook": "These animals kill more people than any others, and number one is tiny.",
+    "items": [
+      {"rank": 5, "name": "Crocodiles", "stat": "~1,000 / year", "line": "Crocodiles are behind roughly a thousand human deaths every year, mostly in Africa and Asia.", "search": "crocodile water"},
+      {"rank": 4, "name": "Assassin Bugs", "stat": "~10,000 / year", "line": "Assassin bugs spread Chagas disease, which kills around ten thousand people a year.", "search": "insect macro"},
+      {"rank": 3, "name": "Dogs", "stat": "~59,000 / year", "line": "Dogs cause almost all of the fifty nine thousand rabies deaths each year.", "search": "stray dog street"},
+      {"rank": 2, "name": "Snakes", "stat": "81,000–138,000", "line": "Snakebites kill between eighty one thousand and one hundred thirty eight thousand people a year, says the World Health Organization.", "search": "snake closeup"},
+      {"rank": 1, "name": "Mosquitoes", "stat": "500,000+ / year", "line": "Mosquitoes spread malaria, which alone kills over half a million people every single year.", "search": "mosquito"}
+    ],
+    "outro": "Which animal scares you the most? Tell me below.",
+    "description": "The animals responsible for the most human deaths each year, based on World Health Organization estimates.",
+    "tags": ["animals", "deadliest animals", "nature", "facts", "mosquito", "top 5", "ranking", "wildlife"],
+    "as_of": "",
+    "sources": ["World Health Organization fact sheets (malaria, snakebite envenoming, rabies, Chagas disease)"]
+  },
+  {
+    "id": "countries-most-ai-usage-2026",
+    "title": "Countries Where the Most People Use AI",
+    "hook": "In one country, seven out of ten adults already use AI. Can you guess which?",
+    "items": [
+      {"rank": 5, "name": "France", "stat": "47.8%", "line": "In France, nearly forty eight percent of working age adults now use AI tools.", "search": "paris street"},
+      {"rank": 4, "name": "Ireland", "stat": "48.4%", "line": "Ireland edges ahead at about forty eight and a half percent, helped by its big tech industry.", "search": "dublin city"},
+      {"rank": 3, "name": "Norway", "stat": "48.6%", "line": "Norway takes third with just under forty nine percent of adults using AI.", "search": "oslo norway"},
+      {"rank": 2, "name": "Singapore", "stat": "63.4%", "line": "Singapore jumps way ahead, with over sixty three percent of adults using AI.", "search": "singapore skyline"},
+      {"rank": 1, "name": "United Arab Emirates", "stat": "70.1%", "line": "The United Arab Emirates leads the world, with seventy percent of working age people using AI.", "search": "dubai skyline"}
+    ],
+    "outro": "Where do you think your country ranks? Comment below.",
+    "description": "Countries ranked by the share of working-age people who use AI tools, from Microsoft's AI Diffusion Report for the first quarter of 2026.",
+    "tags": ["ai", "artificial intelligence", "ai adoption", "countries", "chatgpt", "tech", "top 5", "ranking"],
+    "as_of": "Q1 2026",
+    "sources": ["Microsoft AI Diffusion Report 2026 Q1", "Visual Capitalist — Mapped: AI Adoption by Country in 2026"]
+  },
+  {
+    "id": "tallest-buildings-world",
+    "title": "The 5 Tallest Buildings in the World",
+    "hook": "Number one is so tall you can watch the sunset twice in one day.",
+    "items": [
+      {"rank": 5, "name": "Ping An Finance Center", "stat": "599 m", "line": "Ping An Finance Center in Shenzhen, China, rises five hundred ninety nine meters.", "search": "shenzhen skyline"},
+      {"rank": 4, "name": "Makkah Clock Tower", "stat": "601 m", "line": "The Makkah Royal Clock Tower in Saudi Arabia reaches six hundred one meters and has one of the world's largest clock faces.", "search": "clock tower"},
+      {"rank": 3, "name": "Shanghai Tower", "stat": "632 m", "line": "The twisting Shanghai Tower stands six hundred thirty two meters tall.", "search": "shanghai skyline"},
+      {"rank": 2, "name": "Merdeka 118", "stat": "679 m", "line": "Merdeka one eighteen in Kuala Lumpur, Malaysia, reaches six hundred seventy nine meters.", "search": "kuala lumpur skyline"},
+      {"rank": 1, "name": "Burj Khalifa", "stat": "828 m", "line": "Dubai's Burj Khalifa towers eight hundred twenty eight meters, almost one hundred fifty meters taller than second place.", "search": "burj khalifa"}
+    ],
+    "outro": "Would you dare go to the top of number one?",
+    "description": "The tallest completed buildings in the world, ranked by architectural height (Council on Tall Buildings and Urban Habitat).",
+    "tags": ["tallest buildings", "skyscraper", "burj khalifa", "architecture", "travel", "top 5", "ranking"],
+    "as_of": "2026",
+    "sources": ["Council on Tall Buildings and Urban Habitat (CTBUH) Skyscraper Center"]
+  },
+  {
+    "id": "largest-countries-by-area",
+    "title": "The 5 Largest Countries in the World",
+    "hook": "Number one is bigger than the surface of Pluto.",
+    "items": [
+      {"rank": 5, "name": "Brazil", "stat": "8.5M km²", "line": "Brazil covers about eight and a half million square kilometers, nearly half of South America.", "search": "amazon rainforest aerial"},
+      {"rank": 4, "name": "China", "stat": "9.6M km²", "line": "China spans about nine point six million square kilometers but uses just one time zone.", "search": "china mountains"},
+      {"rank": 3, "name": "United States", "stat": "9.8M km²", "line": "The United States covers about nine point eight million square kilometers, including Alaska.", "search": "grand canyon"},
+      {"rank": 2, "name": "Canada", "stat": "10.0M km²", "line": "Canada has nearly ten million square kilometers and the longest coastline on Earth.", "search": "canada lake forest"},
+      {"rank": 1, "name": "Russia", "stat": "17.1M km²", "line": "Russia is a massive seventeen million square kilometers, stretching across eleven time zones.", "search": "russia snow landscape"}
+    ],
+    "outro": "Which country would you want to explore first?",
+    "description": "The world's biggest countries ranked by total area (land and water).",
+    "tags": ["geography", "countries", "russia", "canada", "maps", "facts", "top 5", "ranking"],
+    "as_of": "",
+    "sources": ["CIA World Factbook — area"]
+  },
+  {
+    "id": "fastest-animals",
+    "title": "The 5 Fastest Animals on the Planet",
+    "hook": "Number one moves faster than a Formula One car.",
+    "items": [
+      {"rank": 5, "name": "Pronghorn", "stat": "~88 km/h", "line": "The pronghorn hits about eighty eight kilometers per hour and can hold its speed for miles.", "search": "antelope running"},
+      {"rank": 4, "name": "Cheetah", "stat": "~110 km/h", "line": "The cheetah is the fastest land animal, sprinting over one hundred kilometers per hour in seconds.", "search": "cheetah running"},
+      {"rank": 3, "name": "Free-Tailed Bat", "stat": "~160 km/h", "line": "The Brazilian free tailed bat was clocked at around one hundred sixty kilometers per hour in level flight.", "search": "bats flying"},
+      {"rank": 2, "name": "Golden Eagle", "stat": "~240 km/h", "line": "A diving golden eagle can reach about two hundred forty kilometers per hour.", "search": "eagle flying"},
+      {"rank": 1, "name": "Peregrine Falcon", "stat": "~390 km/h", "line": "The peregrine falcon dives at over three hundred twenty kilometers per hour, with a record near three hundred ninety.", "search": "falcon"}
+    ],
+    "outro": "Did you expect a bird at number one?",
+    "description": "The fastest animals in the world, ranked by top recorded speed. Speeds are approximate and vary by study.",
+    "tags": ["animals", "fastest animals", "cheetah", "falcon", "nature", "wildlife", "top 5", "ranking"],
+    "as_of": "",
+    "sources": ["National Geographic", "Royal Society Open Science (2016) bat flight study"]
+  },
+  {
+    "id": "deepest-ocean-trenches",
+    "title": "The 5 Deepest Places in the Ocean",
+    "hook": "Number one is deeper than Mount Everest is tall.",
+    "items": [
+      {"rank": 5, "name": "Kuril-Kamchatka Trench", "stat": "~9,600 m", "line": "The Kuril Kamchatka Trench off Russia plunges about nine thousand six hundred meters.", "search": "deep ocean"},
+      {"rank": 4, "name": "Kermadec Trench", "stat": "~10,000 m", "line": "New Zealand's Kermadec Trench reaches about ten thousand meters down.", "search": "underwater dark"},
+      {"rank": 3, "name": "Philippine Trench", "stat": "~10,540 m", "line": "The Philippine Trench sinks about ten thousand five hundred meters, just off Mindanao.", "search": "ocean waves aerial"},
+      {"rank": 2, "name": "Tonga Trench", "stat": "~10,800 m", "line": "The Tonga Trench's Horizon Deep reaches about ten thousand eight hundred meters.", "search": "jellyfish deep sea"},
+      {"rank": 1, "name": "Mariana Trench", "stat": "~10,935 m", "line": "The Mariana Trench's Challenger Deep is about eleven kilometers down, where pressure is a thousand times stronger than at the surface.", "search": "deep sea"}
+    ],
+    "outro": "Would you ever go down there in a submarine?",
+    "description": "The deepest ocean trenches on Earth, ranked by their deepest measured point. Depths are approximate.",
+    "tags": ["ocean", "mariana trench", "deep sea", "philippines", "geography", "facts", "top 5", "ranking"],
+    "as_of": "",
+    "sources": ["NOAA Ocean Exploration", "Five Deeps Expedition"]
+  },
+  {
+    "id": "largest-planets-solar-system",
+    "title": "The 5 Biggest Planets in Our Solar System",
+    "hook": "You could fit more than a thousand Earths inside number one.",
+    "items": [
+      {"rank": 5, "name": "Earth", "stat": "12,742 km", "line": "Earth is about twelve thousand seven hundred kilometers wide, the biggest rocky planet.", "search": "earth from space"},
+      {"rank": 4, "name": "Neptune", "stat": "49,244 km", "line": "Neptune is nearly four times wider than Earth and has the fastest winds in the solar system.", "search": "planet space"},
+      {"rank": 3, "name": "Uranus", "stat": "50,724 km", "line": "Uranus is just a bit wider than Neptune and spins tipped over on its side.", "search": "galaxy stars"},
+      {"rank": 2, "name": "Saturn", "stat": "116,460 km", "line": "Saturn is over nine times wider than Earth and light enough that it would float in water.", "search": "saturn planet"},
+      {"rank": 1, "name": "Jupiter", "stat": "139,820 km", "line": "Jupiter is so huge that more than thirteen hundred Earths could fit inside it.", "search": "jupiter planet"}
+    ],
+    "outro": "Which planet would you visit first?",
+    "description": "The largest planets in our solar system ranked by diameter, using NASA figures.",
+    "tags": ["space", "planets", "jupiter", "saturn", "astronomy", "nasa", "top 5", "ranking"],
+    "as_of": "",
+    "sources": ["NASA Planetary Fact Sheet"]
+  },
+  {
+    "id": "highest-mountains",
+    "title": "The 5 Highest Mountains on Earth",
+    "hook": "All five are in Asia, and number one is still growing.",
+    "items": [
+      {"rank": 5, "name": "Makalu", "stat": "8,485 m", "line": "Makalu, on the Nepal China border, rises eight thousand four hundred eighty five meters.", "search": "himalaya mountains"},
+      {"rank": 4, "name": "Lhotse", "stat": "8,516 m", "line": "Lhotse stands eight thousand five hundred sixteen meters, right next door to Everest.", "search": "snowy mountain peak"},
+      {"rank": 3, "name": "Kangchenjunga", "stat": "8,586 m", "line": "Kangchenjunga reaches eight thousand five hundred eighty six meters and was once thought to be the tallest.", "search": "mountain clouds"},
+      {"rank": 2, "name": "K2", "stat": "8,611 m", "line": "K2 is eight thousand six hundred eleven meters, and far deadlier to climb than Everest.", "search": "mountain climbing snow"},
+      {"rank": 1, "name": "Mount Everest", "stat": "8,849 m", "line": "Mount Everest stands eight thousand eight hundred forty nine meters and still rises a few millimeters every year.", "search": "mount everest"}
+    ],
+    "outro": "Would you ever try to climb number one?",
+    "description": "The highest mountains in the world ranked by elevation above sea level.",
+    "tags": ["mountains", "everest", "k2", "himalayas", "geography", "facts", "top 5", "ranking"],
+    "as_of": "",
+    "sources": ["Nepal and China joint survey (2020) for Everest", "Encyclopaedia Britannica"]
+  },
+  {
+    "id": "largest-deserts",
+    "title": "The 5 Largest Deserts in the World",
+    "hook": "The biggest desert on Earth isn't hot at all.",
+    "items": [
+      {"rank": 5, "name": "Gobi Desert", "stat": "~1.3M km²", "line": "The Gobi in Mongolia and China covers about one point three million square kilometers.", "search": "gobi desert"},
+      {"rank": 4, "name": "Arabian Desert", "stat": "~2.3M km²", "line": "The Arabian Desert spans about two point three million square kilometers.", "search": "sand dunes"},
+      {"rank": 3, "name": "Sahara Desert", "stat": "~9.2M km²", "line": "The Sahara is the biggest hot desert, about the size of the entire United States.", "search": "sahara desert"},
+      {"rank": 2, "name": "Arctic Desert", "stat": "~13.9M km²", "line": "The Arctic counts as a desert because it gets so little rain or snow, covering about fourteen million square kilometers.", "search": "arctic ice"},
+      {"rank": 1, "name": "Antarctic Desert", "stat": "~14.2M km²", "line": "Antarctica is the largest desert on Earth, at about fourteen million square kilometers of ice.", "search": "antarctica"}
+    ],
+    "outro": "Did you know Antarctica was a desert? Comment yes or no.",
+    "description": "The world's largest deserts by area. A desert is defined by low precipitation, not heat.",
+    "tags": ["deserts", "antarctica", "sahara", "geography", "facts", "nature", "top 5", "ranking"],
+    "as_of": "",
+    "sources": ["Encyclopaedia Britannica", "US Geological Survey"]
+  }
+]

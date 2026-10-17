@@ -1,0 +1,23 @@
+# Topic ideas the auto-writer uses first, top to bottom (one per line).
+# Lines starting with # are ignored. Used topics are skipped automatically.
+# When this list runs out, the writer invents its own topics.
+Most used AI chatbots in the world right now
+Biggest AI companies by valuation
+Countries with the most AI data centers
+Most downloaded apps this year
+Biggest chip makers in the world
+Countries with the fastest mobile internet
+Most valuable companies in the world right now
+Countries with the most satellites in orbit
+Best-selling electric car brands this year
+Most spoken languages in the world
+Longest rivers in the world
+Biggest animals alive today
+Most visited cities in the world
+Most populated countries in the world
+Hottest places ever recorded on Earth
+Biggest volcanoes on Earth
+Most expensive things ever built
+Fastest trains in the world
+Biggest stars we know of
+Countries with the most islands
