@@ -1,5 +1,65 @@
 [
   {
+    "id": "biggest-ai-data-centers-2026",
+    "title": "The 5 Biggest AI Data Centers on Earth Right Now",
+    "hook": "These five buildings power the AI you use every day, and number one is enormous.",
+    "items": [
+      {
+        "rank": 5,
+        "name": "Meta Prometheus",
+        "stat": "~471 MW",
+        "line": "Meta's Prometheus in Ohio draws an estimated four hundred seventy megawatts to train its AI models.",
+        "search": "data center servers"
+      },
+      {
+        "rank": 4,
+        "name": "DayOne Nusajaya",
+        "stat": "~473 MW",
+        "line": "The only one outside America, DayOne's campus in Johor, Malaysia, runs at about four hundred seventy three megawatts.",
+        "search": "server room lights"
+      },
+      {
+        "rank": 3,
+        "name": "Microsoft Fairwater Atlanta",
+        "stat": "~636 MW",
+        "line": "Microsoft's Fairwater site near Atlanta uses an estimated six hundred thirty six megawatts.",
+        "search": "data center aerial"
+      },
+      {
+        "rank": 2,
+        "name": "Amazon New Carlisle",
+        "stat": "~910 MW",
+        "line": "Amazon's New Carlisle campus in Indiana, built for Anthropic, draws around nine hundred ten megawatts.",
+        "search": "computer chips closeup"
+      },
+      {
+        "rank": 1,
+        "name": "xAI Colossus 2",
+        "stat": "~946 MW",
+        "line": "Elon Musk's xAI built Colossus 2 in Memphis, using nearly a gigawatt, close to a whole power plant's output.",
+        "search": "power plant night"
+      }
+    ],
+    "outro": "Which tech giant do you think takes number one next year?",
+    "description": "The world's largest AI data centers ranked by estimated IT power, based on Epoch AI's data center tracker.",
+    "tags": [
+      "ai",
+      "data center",
+      "artificial intelligence",
+      "tech",
+      "xai",
+      "microsoft",
+      "amazon",
+      "meta",
+      "top 5",
+      "ranking"
+    ],
+    "as_of": "October 2026",
+    "sources": [
+      "Epoch AI — Largest AI data centers by power capacity (epoch.ai)"
+    ]
+  },
+  {
     "id": "deadliest-animals-to-humans",
     "title": "Top 5 Deadliest Animals to Humans",
     "hook": "These animals kill more people than any others, and number one is tiny.",
