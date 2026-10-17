@@ -7,6 +7,7 @@
   "music_volume": 0.10,
   "made_for_kids": false,
   "upload_mode": "youtube",
+  "youtube_channel": "@bojjiii",
   "youtube_privacy": "public",
   "youtube_category_id": "27",
   "queue_min_size": 5,

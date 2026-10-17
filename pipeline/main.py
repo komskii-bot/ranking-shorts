@@ -143,9 +143,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true", help="test render: no keys, no internet")
     ap.add_argument("--script-id", help="render this queued script instead of the next one")
+    ap.add_argument("--check-channel", action="store_true", help="only verify which channel the login uploads to")
     args = ap.parse_args()
 
     config = load(os.path.join(ROOT, "config.json"), {})
+    if not args.offline and config.get("upload_mode") == "youtube":
+        from . import youtube
+        youtube.check_channel(config)  # stops here, before any work, if it's the wrong channel
+        if args.check_channel:
+            return
     qpath, hpath = os.path.join(STATE, "queue.json"), os.path.join(STATE, "history.json")
     queue, history = load(qpath, []), load(hpath, [])
 

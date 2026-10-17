@@ -3,7 +3,12 @@ name: Daily ranking Short
 on:
   schedule:
     - cron: "0 2 * * *"   # 10:00 AM Manila time, every day
-  workflow_dispatch: {}   # "Run workflow" button for manual runs
+  workflow_dispatch:      # "Run workflow" button for manual runs
+    inputs:
+      check_only:
+        description: "Only check which YouTube channel the login uploads to (no video)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -38,9 +43,16 @@ jobs:
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
-        run: python -m pipeline.main
+        run: |
+          if [ "${{ inputs.check_only }}" = "true" ]; then
+            python -m pipeline.main --check-channel
+            echo "CHECK_ONLY=1" >> "$GITHUB_ENV"
+          else
+            python -m pipeline.main
+          fi
 
       - name: Keep a copy of the video as a release (backup / preview)
+        if: env.CHECK_ONLY != '1'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -49,6 +61,7 @@ jobs:
           gh release create "$TAG" out/video.mp4 out/post.json --title "$TITLE" --notes "Rendered and uploaded by the daily run"
 
       - name: Save queue and history
+        if: env.CHECK_ONLY != '1'
         run: |
           git config user.name "ranking-bot"
           git config user.email "ranking-bot@users.noreply.github.com"

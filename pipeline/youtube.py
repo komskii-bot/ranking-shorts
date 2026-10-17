@@ -1,15 +1,17 @@
-"""Optional direct upload via the YouTube Data API (upload_mode = "youtube").
+"""Direct upload via the YouTube Data API, with a channel safety lock.
 
-Note: YouTube locks API uploads to PRIVATE until your Google Cloud project
-passes YouTube's free API audit. Until then, keep upload_mode = "metricool".
+Before any upload, the signed-in channel is checked against
+config["youtube_channel"] (e.g. "@bojjiii"). On a mismatch nothing is uploaded.
 """
 import os
 
+SCOPES = ["https://www.googleapis.com/auth/youtube.upload",
+          "https://www.googleapis.com/auth/youtube.readonly"]
 
-def upload(video_path, script, config, synthetic):
+
+def _client():
     from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
-    from googleapiclient.http import MediaFileUpload
 
     creds = Credentials(
         None,
@@ -17,9 +19,37 @@ def upload(video_path, script, config, synthetic):
         client_id=os.environ["YT_CLIENT_ID"],
         client_secret=os.environ["YT_CLIENT_SECRET"],
         token_uri="https://oauth2.googleapis.com/token",
-        scopes=["https://www.googleapis.com/auth/youtube.upload"],
+        scopes=SCOPES,
     )
-    yt = build("youtube", "v3", credentials=creds, cache_discovery=False)
+    return build("youtube", "v3", credentials=creds, cache_discovery=False)
+
+
+def check_channel(config):
+    """Return the signed-in channel's handle, or raise if it isn't the expected one."""
+    want = (config.get("youtube_channel") or "").lower().lstrip("@")
+    if not want:
+        raise RuntimeError('Set "youtube_channel" in config.json (e.g. "@bojjiii") before uploading.')
+    try:
+        items = _client().channels().list(part="snippet", mine=True).execute().get("items", [])
+    except Exception as e:
+        raise RuntimeError(
+            "Couldn't read which channel this login belongs to. Redo the sign-in with BOTH scopes "
+            f"(youtube.upload and youtube.readonly) and update YT_REFRESH_TOKEN. Details: {e}")
+    if not items:
+        raise RuntimeError("This login has no YouTube channel.")
+    snip = items[0]["snippet"]
+    got = (snip.get("customUrl") or "").lower().lstrip("@")
+    label = f'{snip.get("title")} (@{got}, id {items[0]["id"]})'
+    if got != want:
+        raise RuntimeError(f"SAFETY LOCK: signed in as {label}, expected @{want}. Nothing was uploaded.")
+    print(f"Channel check OK: {label}")
+    return label
+
+
+def upload(video_path, script, config, synthetic):
+    from googleapiclient.http import MediaFileUpload
+
+    yt = _client()
     body = {
         "snippet": {
             "title": script["yt_title"],
