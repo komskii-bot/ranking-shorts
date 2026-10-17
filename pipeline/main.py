@@ -75,8 +75,9 @@ def build_post(script, config, credits, synthetic):
         lines.append("")
         lines.append("Sources: " + "; ".join(script["sources"][:5]))
     if credits:
-        names = ", ".join(dict.fromkeys(c["by"] for c in credits))
-        lines.append(f"Stock footage from Pexels (pexels.com): {names}")
+        for site in dict.fromkeys(c.get("site", "Pexels") for c in credits):
+            names = ", ".join(dict.fromkeys(c["by"] for c in credits if c.get("site", "Pexels") == site))
+            lines.append(f"Stock footage from {site} ({site.lower()}.com): {names}")
     tags = [t.lstrip("#") for t in script["tags"]]
     lines.append("")
     lines.append(" ".join(config["default_hashtags"]))
