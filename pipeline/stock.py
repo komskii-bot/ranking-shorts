@@ -78,10 +78,41 @@ def _pixabay(query, out_path, min_secs, used_ids):
     return None
 
 
+def _openverse(query, out_path, used_ids):
+    """No key needed. Public-domain / CC0 photos only (free for commercial use)."""
+    for aspect in ("tall", None):
+        params = {"q": query[:200], "license": "cc0,pdm", "page_size": 20, "mature": "false"}
+        if aspect:
+            params["aspect_ratio"] = aspect
+        try:
+            r = requests.get("https://api.openverse.org/v1/images/", params=params, timeout=60,
+                             headers={"User-Agent": "RankingShorts/1.0 (+https://komskii-bot.github.io/ranking-shorts/)"})
+            results = r.json().get("results", []) if r.ok else []
+        except Exception as e:
+            print(f"  Openverse error: {e}")
+            results = []
+        results = [x for x in results if x.get("url") and x["id"] not in used_ids
+                   and (x.get("height") or 0) >= 900]
+        random.shuffle(results)
+        for x in results[:4]:
+            img = out_path.rsplit(".", 1)[0] + ".jpg"
+            try:
+                _download(x["url"], img)
+                from PIL import Image
+                Image.open(img).verify()
+                used_ids.add(x["id"])
+                return {"kind": "photo", "path": img, "by": x.get("creator") or "Openverse",
+                        "url": x.get("foreign_landing_url"), "site": "Openverse"}
+            except Exception as e:
+                print(f"  image skipped: {e}")
+    return None
+
+
 def find_clip(query, out_path, min_secs, used_ids):
     """Download a portrait-friendly clip. Returns credit dict, or None."""
-    got = _pexels(query, out_path, min_secs, used_ids)
-    return got or _pixabay(query, out_path, min_secs, used_ids)
+    return (_pexels(query, out_path, min_secs, used_ids)
+            or _pixabay(query, out_path, min_secs, used_ids)
+            or _openverse(query, out_path, used_ids))
 
 
 def _pexels(query, out_path, min_secs, used_ids):
