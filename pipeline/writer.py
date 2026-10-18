@@ -43,17 +43,46 @@ RULES = """Rules:
 - Keep it neutral: no political, religious or medical-advice topics."""
 
 
+API = "https://generativelanguage.googleapis.com/v1beta"
+_resolved = {}
+
+
+def _pick_model(preferred, api_key):
+    """Use the configured model if it exists, else the newest general Flash model this key can use."""
+    if preferred in _resolved:
+        return _resolved[preferred]
+    r = requests.get(f"{API}/models", headers={"x-goog-api-key": api_key}, params={"pageSize": 200}, timeout=60)
+    r.raise_for_status()
+    names = [m["name"].split("/", 1)[1] for m in r.json().get("models", [])
+             if "generateContent" in m.get("supportedGenerationMethods", [])]
+    if preferred in names:
+        _resolved[preferred] = preferred
+        return preferred
+    bad = ("lite", "image", "tts", "live", "audio", "embedding", "exp", "preview", "thinking", "robotics")
+    flash = [n for n in names if "flash" in n and not any(b in n for b in bad)] or \
+            [n for n in names if "flash" in n and not any(b in n for b in ("image", "tts", "live", "audio"))]
+    if not flash:
+        raise RuntimeError(f"No Flash model available to this key. Models: {', '.join(names)[:600]}")
+    import re
+    ver = lambda n: [float(x) for x in re.findall(r"\d+(?:\.\d+)?", n)[:1]] or [0]
+    best = sorted(flash, key=lambda n: (ver(n), "latest" in n, -len(n)), reverse=True)[0]
+    print(f"::notice::Gemini model '{preferred}' not available — using '{best}'")
+    _resolved[preferred] = best
+    return best
+
+
 def _call_gemini(prompt, model, api_key, use_search=True):
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+    model = _pick_model(model, api_key)
+    url = f"{API}/models/{model}:generateContent"
     body = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {"temperature": 0.9},
     }
     if use_search:
         body["tools"] = [{"google_search": {}}]
-    r = requests.post(url, params={"key": api_key}, json=body, timeout=120)
+    r = requests.post(url, headers={"x-goog-api-key": api_key}, json=body, timeout=180)
     if r.status_code >= 400:
-        raise RuntimeError(f"Gemini error {r.status_code}: {r.text[:500]}")
+        raise RuntimeError(f"Gemini error {r.status_code} ({model}): " + " ".join(r.text.split())[:500])
     data = r.json()
     cand = data["candidates"][0]
     text = "".join(p.get("text", "") for p in cand["content"]["parts"])
@@ -114,7 +143,7 @@ def write_script(config, used_titles, wanted_topic=None):
             text, grounded = _call_gemini(prompt, config["gemini_model"], api_key)
             script = validate(_extract_json(text))
             script["sources"] = list(dict.fromkeys(script["sources"] + grounded))[:10]
-            script["written_by"] = config["gemini_model"]
+            script["written_by"] = _resolved.get(config["gemini_model"], config["gemini_model"])
             script["written_on"] = dt.date.today().isoformat()
             return script
         except Exception as e:  # retry on bad JSON / transient errors
