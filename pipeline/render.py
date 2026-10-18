@@ -167,15 +167,25 @@ def static_layer(script, seg, accent, path):
     elif seg["kind"] == "outro":
         f = font(118)
         parts = [("WHAT'S YOUR", WHITE), ("#1?", hex_rgba(HIGHLIGHT[3]))]
-        y = 330
+        y = 250
         for t, c in parts:
             x = (W - d.textlength(t, font=f)) / 2
             d.text((x, y), t, font=f, fill=c, stroke_width=9, stroke_fill=(0, 0, 0, 255))
             y += 130
-        f2 = font(70)
+        f2 = font(64)
         t = "COMMENT BELOW"
-        d.text(((W - d.textlength(t, font=f2)) / 2, y + 20), t, font=f2, fill=hex_rgba(HIGHLIGHT[1]),
+        d.text(((W - d.textlength(t, font=f2)) / 2, y + 10), t, font=f2, fill=hex_rgba(HIGHLIGHT[1]),
                stroke_width=7, stroke_fill=(0, 0, 0, 255))
+        # subscribe button
+        f3 = font(62)
+        t = "SUBSCRIBE"
+        tw = d.textlength(t, font=f3)
+        bx, by = (W - tw - 150) / 2, y + 110
+        d.rounded_rectangle([bx, by, bx + tw + 150, by + 104], 52, fill=(255, 0, 0, 255),
+                            outline=(255, 255, 255, 255), width=5)
+        cx, cy = bx + 52, by + 52  # bell-ish play icon
+        d.polygon([(cx - 14, cy - 20), (cx - 14, cy + 20), (cx + 20, cy)], fill=WHITE)
+        d.text((bx + 95, by + 12), t, font=f3, fill=WHITE)
     else:
         item = seg["item"]
         rich_title(d, tokens, 150, 50, 34, 2, max_w=960, stroke=5)

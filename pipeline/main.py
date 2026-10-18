@@ -115,6 +115,23 @@ def write_upload_notes(post, script):
         fh.write("\n".join(lines) + "\n")
 
 
+SUBSCRIBE_LINES = [
+    "I'm a brand new creator, so if you liked this, hit subscribe. It honestly helps a ton!",
+    "New channel alert! Subscribe and I'll keep the rankings coming every single day.",
+    "Help a new creator out. Hit subscribe for a fresh top five every day!",
+    "I just started this channel, so every sub means a lot. Tap subscribe and let's grow together!",
+    "Small channel, big rankings. Subscribe so you don't miss tomorrow's!",
+    "If you learned something new, smash that subscribe button. I'm just getting started!",
+    "Still a tiny channel, but not for long, right? Hit subscribe and be here from day one.",
+    "Want a new ranking every day? Subscribe. It really helps a new creator like me!",
+]
+
+
+def subscribe_line(script):
+    """Spoken call to action for the outro: the script's own, or one picked per video."""
+    return script.get("cta") or random.Random(script["id"] + "cta").choice(SUBSCRIBE_LINES)
+
+
 EMOTIONS = ["presenting", "shocked", "thinking", "celebrating", "curious", "excited", "exclaim", "nervous"]
 
 
@@ -162,7 +179,7 @@ def make_video(script, config, offline, workdir):
     plan = [("hook", script["hook"], None, script["items"][-1]["search"])]
     plan += [("item", f"Number {i['rank']}. {i['name']}. {i['line']}", i, i["search"]) for i in script["items"]]
     if not outro:
-        plan.append(("outro", script["outro"], None, script["items"][0]["search"]))
+        plan.append(("outro", f"{script['outro']} {subscribe_line(script)}", None, script["items"][0]["search"]))
 
     for kind, text, item, query in plan:
         audio = os.path.join(workdir, f"v{idx}.mp3")

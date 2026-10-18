@@ -24,6 +24,7 @@ SCHEMA_HINT = """Return ONLY a JSON object, no markdown fences, in exactly this 
     ... ranks 4, 3, 2, 1 in that order ...
   ],
   "outro": "One short spoken line asking viewers what they'd put at #1",
+  "cta": "Optional: one short, warm subscribe ask from a NEW creator with a reason to follow (e.g. a new ranking every day). Vary it; leave out to use the default rotation.",
   "highlight": ["1-2 key phrases copied EXACTLY from the title to colour, e.g. the superlative and the subject: ['Deadliest', 'Animals']"],
   "highlight_colors": ["one hex colour per highlight phrase that FITS THE TOPIC and pops on dark video, from: #FF3B3B red, #1DE9D6 teal, #FF9F1C orange, #FFD23F yellow, #C86BFF purple, #4DA3FF blue, #3DDC84 green (e.g. danger=red, AI/tech=teal, space=purple, desert=orange, ocean=blue)"],
   "description": "2-3 sentence YouTube description stating the data source and date",
