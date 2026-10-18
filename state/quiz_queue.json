@@ -1,5 +1,107 @@
 [
   {
+    "id": "quiz-ai-basics",
+    "title": "Can You Get 5/5 on This AI Quiz?",
+    "highlight": [
+      "5/5",
+      "AI Quiz"
+    ],
+    "highlight_colors": [
+      "#FFD23F",
+      "#1DE9D6"
+    ],
+    "hook": "Five questions about AI. Most people miss number five. Let's see how you do!",
+    "questions": [
+      {
+        "q": "Which company created ChatGPT?",
+        "options": [
+          "Google",
+          "OpenAI",
+          "Meta",
+          "Apple"
+        ],
+        "answer": 1,
+        "explain": "OpenAI launched ChatGPT to the public in 2022.",
+        "note": "Source: OpenAI, launched Nov 30, 2022",
+        "search": "artificial intelligence"
+      },
+      {
+        "q": "Which company makes the Gemini AI models?",
+        "options": [
+          "Google",
+          "Amazon",
+          "Microsoft",
+          "OpenAI"
+        ],
+        "answer": 0,
+        "explain": "Gemini is built by Google DeepMind.",
+        "note": "Source: Google DeepMind",
+        "search": "data center servers"
+      },
+      {
+        "q": "What does GPT stand for?",
+        "options": [
+          "General Purpose Technology",
+          "Generative Pre-trained Transformer",
+          "Global Processing Tool",
+          "Graphic Prediction Tool"
+        ],
+        "answer": 1,
+        "explain": "The transformer is the AI design behind it.",
+        "note": "Source: OpenAI's original GPT paper (2018)",
+        "search": "computer code"
+      },
+      {
+        "q": "Which chess champion lost to IBM's Deep Blue in 1997?",
+        "options": [
+          "Magnus Carlsen",
+          "Garry Kasparov",
+          "Bobby Fischer",
+          "Viswanathan Anand"
+        ],
+        "answer": 1,
+        "explain": "Kasparov lost the six-game rematch in 1997.",
+        "note": "Source: IBM. Kasparov had won their first match in 1996",
+        "search": "chess board",
+        "emotion": "exclaim"
+      },
+      {
+        "q": "What's usually called the first true AI program?",
+        "options": [
+          "ELIZA",
+          "Deep Blue",
+          "Logic Theorist",
+          "Siri"
+        ],
+        "answer": 2,
+        "explain": "Logic Theorist proved math theorems back in 1956.",
+        "note": "Newell, Simon & Shaw. Samuel's checkers program came earlier but is classed differently",
+        "search": "vintage computer",
+        "emotion": "shocked"
+      }
+    ],
+    "outro": "So how many did you get? Five out of five? Drop your score below!",
+    "description": "Five quick questions about artificial intelligence, from ChatGPT to the very first AI program.",
+    "tags": [
+      "ai",
+      "quiz",
+      "trivia",
+      "chatgpt",
+      "artificial intelligence",
+      "tech quiz",
+      "general knowledge",
+      "shorts"
+    ],
+    "sources": [
+      "OpenAI — Introducing ChatGPT (Nov 30, 2022)",
+      "Google DeepMind — Gemini",
+      "Radford et al. 2018, OpenAI (GPT)",
+      "IBM — Deep Blue (1997)",
+      "Wikipedia: Logic Theorist (Newell, Simon & Shaw, 1956)"
+    ],
+    "format": "quiz"
+  },
+  {
     "id": "quiz-smartphones",
     "title": "Smartphone Quiz: Can You Get 5/5?",
     "highlight": [
