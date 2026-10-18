@@ -14,7 +14,7 @@
   "youtube_category_id": "27",
   "queue_min_size": 8,
   "posting_slot": "8:00 AM",
-  "gemini_model": "gemini-2.5-flash",
+  "gemini_model": "gemini-3.8-flash",
   "topic_mix": "Alternate between (a) CURRENT tech/AI/business rankings that need fresh data (AI data centers, AI apps, AI usage by country, chip makers, satellites, EV sales, app downloads) and (b) evergreen science/geography/animal/space rankings.",
   "default_hashtags": ["#shorts", "#ranking", "#top5", "#facts"]
 }
