@@ -78,5 +78,59 @@
     "rendered_on": "2026-10-18",
     "post_on": "2026-10-18",
     "status": "rendered"
+  },
+  {
+    "id": "quiz-smartphones",
+    "title": "Smartphone Quiz: Can You Get 5/5?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-18",
+    "post_on": "2026-10-19",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-internet-history",
+    "title": "Internet History Quiz: 5 Questions",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-18",
+    "post_on": "2026-10-20",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-space",
+    "title": "Space Quiz: Only Space Nerds Get 5/5",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-18",
+    "post_on": "2026-10-21",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-brands",
+    "title": "Brand Quiz: Can You Get All 5?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-18",
+    "post_on": "2026-10-22",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-everyday-science",
+    "title": "Everyday Science Quiz: 5/5 or Not?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-18",
+    "post_on": "2026-10-23",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-gaming",
+    "title": "Gaming Quiz: True Gamers Get 5/5",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-18",
+    "post_on": "2026-10-24",
+    "status": "rendered"
   }
 ]
