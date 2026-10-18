@@ -2,7 +2,7 @@ name: Daily ranking Short
 
 on:
   schedule:
-    - cron: "0 10 * * *"  # 6:00 PM Manila time, every day (ready to schedule for the next morning)
+    - cron: "0 8 * * *"   # 4:00 PM Manila time, every day (Claude sends it to you ~6:20 PM)
   workflow_dispatch: {}   # "Run workflow" button for an extra video
 
 permissions:

@@ -1,6 +1,6 @@
 # Ranking Shorts — automated "Top 5" videos
 
-Every day at **6:00 PM Manila** this makes one finished vertical ranking Short. **You upload it yourself** to Bojji (@bojjiii).
+Every day at **4:00 PM Manila** this makes one finished vertical ranking Short. **You upload it yourself** to Bojji (@bojjiii).
 
 ```
 GitHub Actions (free)
