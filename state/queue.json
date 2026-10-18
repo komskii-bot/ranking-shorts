@@ -1,5 +1,423 @@
 [
   {
+    "id": "deadliest-animals-to-humans",
+    "title": "Top 5 Deadliest Animals to Humans",
+    "hook": "These animals take out more humans than anything else, and number one? It's tiny. Like, really tiny.",
+    "items": [
+      {
+        "rank": 5,
+        "name": "Assassin Bugs",
+        "stat": "10,000+ / year",
+        "line": "Assassin bugs spread Chagas disease, which kills more than ten thousand people every year.",
+        "search": "insect macro",
+        "emotion": "nervous"
+      },
+      {
+        "rank": 4,
+        "name": "Freshwater Snails",
+        "stat": "~14,000 / year",
+        "line": "Yeah, snails. Tiny freshwater snails spread a parasite that kills about fourteen thousand people a year.",
+        "search": "snail closeup",
+        "emotion": "curious"
+      },
+      {
+        "rank": 3,
+        "name": "Dogs",
+        "stat": "~44,000 / year",
+        "line": "Rabies kills about forty four thousand people a year, and dogs cause up to ninety nine percent of those cases.",
+        "search": "stray dog street",
+        "emotion": "thinking"
+      },
+      {
+        "rank": 2,
+        "name": "Snakes",
+        "stat": "81,000–138,000",
+        "line": "Snakebites kill between eighty one thousand and one hundred thirty eight thousand people every single year.",
+        "search": "snake closeup",
+        "emotion": "exclaim"
+      },
+      {
+        "rank": 1,
+        "name": "Mosquitoes",
+        "stat": "~610,000 / year",
+        "line": "Mosquitoes spread malaria, which killed about six hundred ten thousand people in twenty twenty four alone.",
+        "search": "mosquito",
+        "emotion": "shocked"
+      }
+    ],
+    "outro": "Okay be honest, which one scares you the most? Drop it below.",
+    "description": "The animals behind the most human deaths each year (not counting humans), based on World Health Organization estimates.",
+    "tags": [
+      "animals",
+      "deadliest animals",
+      "mosquito",
+      "snakes",
+      "nature",
+      "facts",
+      "top 5",
+      "ranking"
+    ],
+    "as_of": "2026 (WHO fact sheets)",
+    "sources": [
+      "WHO malaria fact sheet (610,000 deaths in 2024)",
+      "WHO snakebite envenoming fact sheet (81,410–137,880 deaths/year)",
+      "WHO rabies fact sheet (44,203 deaths/year, up to 99% dog-transmitted)",
+      "WHO schistosomiasis fact sheet (14,353 deaths/year)",
+      "WHO Chagas disease fact sheet (more than 10,000 deaths/year)"
+    ],
+    "highlight": [
+      "Deadliest",
+      "Animals"
+    ],
+    "highlight_colors": [
+      "#FF3B3B",
+      "#FF9F1C"
+    ]
+  },
+  {
+    "id": "countries-most-ai-usage-2026",
+    "title": "Countries Where the Most People Use AI",
+    "hook": "In one country, seven out of ten adults are already using AI. Bet you can't guess which one.",
+    "items": [
+      {
+        "rank": 5,
+        "name": "France",
+        "stat": "47.8%",
+        "line": "In France, nearly forty eight percent of working age adults now use AI tools.",
+        "search": "paris street"
+      },
+      {
+        "rank": 4,
+        "name": "Ireland",
+        "stat": "48.4%",
+        "line": "Ireland edges ahead at about forty eight and a half percent, helped by its big tech industry.",
+        "search": "dublin city"
+      },
+      {
+        "rank": 3,
+        "name": "Norway",
+        "stat": "48.6%",
+        "line": "Norway takes third with just under forty nine percent of adults using AI.",
+        "search": "oslo norway"
+      },
+      {
+        "rank": 2,
+        "name": "Singapore",
+        "stat": "63.4%",
+        "line": "Singapore jumps way ahead, with over sixty three percent of adults using AI.",
+        "search": "singapore skyline"
+      },
+      {
+        "rank": 1,
+        "name": "United Arab Emirates",
+        "stat": "70.1%",
+        "line": "The United Arab Emirates leads the world, with seventy percent of working age people using AI.",
+        "search": "dubai skyline"
+      }
+    ],
+    "outro": "So where's your country on this list? Tell me in the comments.",
+    "description": "Countries ranked by the share of working-age people who use AI tools, from Microsoft's AI Diffusion Report for the first quarter of 2026.",
+    "tags": [
+      "ai",
+      "artificial intelligence",
+      "ai adoption",
+      "countries",
+      "chatgpt",
+      "tech",
+      "top 5",
+      "ranking"
+    ],
+    "as_of": "Q1 2026",
+    "sources": [
+      "Microsoft AI Diffusion Report 2026 Q1",
+      "Visual Capitalist — Mapped: AI Adoption by Country in 2026"
+    ],
+    "highlight": [
+      "Most People",
+      "Use AI"
+    ],
+    "highlight_colors": [
+      "#FF9F1C",
+      "#1DE9D6"
+    ]
+  },
+  {
+    "id": "tallest-buildings-world",
+    "title": "The 5 Tallest Buildings in the World",
+    "hook": "Number one is so tall you can literally watch the sunset twice in one day. Let's go.",
+    "items": [
+      {
+        "rank": 5,
+        "name": "Ping An Finance Center",
+        "stat": "599 m",
+        "line": "Ping An Finance Center in Shenzhen, China, rises five hundred ninety nine meters.",
+        "search": "shenzhen skyline"
+      },
+      {
+        "rank": 4,
+        "name": "Makkah Clock Tower",
+        "stat": "601 m",
+        "line": "The Makkah Royal Clock Tower in Saudi Arabia reaches six hundred one meters and has one of the world's largest clock faces.",
+        "search": "clock tower"
+      },
+      {
+        "rank": 3,
+        "name": "Shanghai Tower",
+        "stat": "632 m",
+        "line": "The twisting Shanghai Tower stands six hundred thirty two meters tall.",
+        "search": "shanghai skyline"
+      },
+      {
+        "rank": 2,
+        "name": "Merdeka 118",
+        "stat": "679 m",
+        "line": "Merdeka one eighteen in Kuala Lumpur, Malaysia, reaches six hundred seventy nine meters.",
+        "search": "kuala lumpur skyline"
+      },
+      {
+        "rank": 1,
+        "name": "Burj Khalifa",
+        "stat": "828 m",
+        "line": "Dubai's Burj Khalifa towers eight hundred twenty eight meters, almost one hundred fifty meters taller than second place.",
+        "search": "burj khalifa"
+      }
+    ],
+    "outro": "Would you actually go to the top of number one? Be honest.",
+    "description": "The tallest completed buildings in the world, ranked by architectural height (Council on Tall Buildings and Urban Habitat).",
+    "tags": [
+      "tallest buildings",
+      "skyscraper",
+      "burj khalifa",
+      "architecture",
+      "travel",
+      "top 5",
+      "ranking"
+    ],
+    "as_of": "2026",
+    "sources": [
+      "Council on Tall Buildings and Urban Habitat (CTBUH) Skyscraper Center"
+    ],
+    "highlight": [
+      "Tallest",
+      "Buildings"
+    ],
+    "highlight_colors": [
+      "#FFD23F",
+      "#4DA3FF"
+    ]
+  },
+  {
+    "id": "largest-countries-by-area",
+    "title": "The 5 Largest Countries in the World",
+    "hook": "Number one is so huge it's bigger than the whole surface of Pluto. No joke.",
+    "items": [
+      {
+        "rank": 5,
+        "name": "Brazil",
+        "stat": "8.5M km²",
+        "line": "Brazil covers about eight and a half million square kilometers, nearly half of South America.",
+        "search": "amazon rainforest aerial"
+      },
+      {
+        "rank": 4,
+        "name": "China",
+        "stat": "9.6M km²",
+        "line": "China spans about nine point six million square kilometers but uses just one time zone.",
+        "search": "china mountains"
+      },
+      {
+        "rank": 3,
+        "name": "United States",
+        "stat": "9.8M km²",
+        "line": "The United States covers about nine point eight million square kilometers, including Alaska.",
+        "search": "grand canyon"
+      },
+      {
+        "rank": 2,
+        "name": "Canada",
+        "stat": "10.0M km²",
+        "line": "Canada has nearly ten million square kilometers and the longest coastline on Earth.",
+        "search": "canada lake forest"
+      },
+      {
+        "rank": 1,
+        "name": "Russia",
+        "stat": "17.1M km²",
+        "line": "Russia is a massive seventeen million square kilometers, stretching across eleven time zones.",
+        "search": "russia snow landscape"
+      }
+    ],
+    "outro": "Which one are you exploring first? Comment it.",
+    "description": "The world's biggest countries ranked by total area (land and water).",
+    "tags": [
+      "geography",
+      "countries",
+      "russia",
+      "canada",
+      "maps",
+      "facts",
+      "top 5",
+      "ranking"
+    ],
+    "as_of": "",
+    "sources": [
+      "CIA World Factbook — area"
+    ],
+    "highlight": [
+      "Largest",
+      "Countries"
+    ],
+    "highlight_colors": [
+      "#FF9F1C",
+      "#3DDC84"
+    ]
+  },
+  {
+    "id": "fastest-animals",
+    "title": "The 5 Fastest Animals on the Planet",
+    "hook": "Number one moves faster than a Formula One car. And yeah, it's an animal.",
+    "items": [
+      {
+        "rank": 5,
+        "name": "Cheetah",
+        "stat": "~104 km/h",
+        "line": "The cheetah, fastest on land, has been reliably clocked at about one hundred four kilometers per hour.",
+        "search": "cheetah running",
+        "emotion": "excited"
+      },
+      {
+        "rank": 4,
+        "name": "Free-Tailed Bat",
+        "stat": "~160 km/h",
+        "line": "A free tailed bat was tracked at around one hundred sixty kilometers per hour in level flight. A bat!",
+        "search": "bats flying",
+        "emotion": "curious"
+      },
+      {
+        "rank": 3,
+        "name": "Needletail Swift",
+        "stat": "~169 km/h",
+        "line": "The white throated needletail is the fastest bird in flapping flight, at about one hundred sixty nine kilometers per hour.",
+        "search": "swift bird",
+        "emotion": "thinking"
+      },
+      {
+        "rank": 2,
+        "name": "Golden Eagle",
+        "stat": "240+ km/h",
+        "line": "A diving golden eagle can hit two hundred forty kilometers per hour, maybe even more.",
+        "search": "golden eagle",
+        "emotion": "exclaim"
+      },
+      {
+        "rank": 1,
+        "name": "Peregrine Falcon",
+        "stat": "~389 km/h",
+        "line": "The peregrine falcon dives at up to three hundred eighty nine kilometers per hour. Faster than a Formula One car.",
+        "search": "falcon",
+        "emotion": "shocked"
+      }
+    ],
+    "outro": "Did you think a bird would take number one? Be honest.",
+    "description": "The fastest animals on Earth ranked by top recorded speed (dives included). Speeds are approximate and some measurements are debated.",
+    "tags": [
+      "animals",
+      "fastest animals",
+      "peregrine falcon",
+      "cheetah",
+      "birds",
+      "wildlife",
+      "top 5",
+      "ranking"
+    ],
+    "as_of": "",
+    "sources": [
+      "Wikipedia: Fastest animals (compiling published measurements)",
+      "McCracken et al. 2016, Royal Society Open Science (free-tailed bat flight speed)"
+    ],
+    "highlight": [
+      "Fastest",
+      "Animals"
+    ],
+    "highlight_colors": [
+      "#FFD23F",
+      "#FF3B3B"
+    ]
+  },
+  {
+    "id": "deepest-ocean-trenches",
+    "title": "The 5 Deepest Places in the Ocean",
+    "hook": "Number one is deeper than Mount Everest is tall. Let that sink in.",
+    "items": [
+      {
+        "rank": 5,
+        "name": "Izu-Ogasawara Trench",
+        "stat": "~9,800 m",
+        "line": "Off Japan, the Izu Ogasawara Trench drops about nine thousand eight hundred meters.",
+        "search": "deep ocean",
+        "emotion": "curious"
+      },
+      {
+        "rank": 4,
+        "name": "Kermadec Trench",
+        "stat": "~10,047 m",
+        "line": "New Zealand's Kermadec Trench goes past ten thousand meters down.",
+        "search": "underwater dark",
+        "emotion": "thinking"
+      },
+      {
+        "rank": 3,
+        "name": "Philippine Trench",
+        "stat": "~10,540 m",
+        "line": "The Philippine Trench sinks about ten thousand five hundred forty meters, right off Mindanao.",
+        "search": "ocean waves aerial",
+        "emotion": "excited"
+      },
+      {
+        "rank": 2,
+        "name": "Tonga Trench",
+        "stat": "~10,800 m",
+        "line": "The Tonga Trench's Horizon Deep reaches about ten thousand eight hundred meters.",
+        "search": "jellyfish deep sea",
+        "emotion": "nervous"
+      },
+      {
+        "rank": 1,
+        "name": "Mariana Trench",
+        "stat": "~10,935 m",
+        "line": "The Mariana Trench's Challenger Deep is almost eleven kilometers down, with crushing pressure over a thousand times the surface.",
+        "search": "deep sea",
+        "emotion": "shocked"
+      }
+    ],
+    "outro": "Would you go down there in a submarine? Because I'm good.",
+    "description": "The deepest ocean trenches on Earth, ranked by their deepest measured point. Depths are approximate and vary slightly between surveys.",
+    "tags": [
+      "ocean",
+      "mariana trench",
+      "deep sea",
+      "philippines",
+      "geography",
+      "facts",
+      "top 5",
+      "ranking"
+    ],
+    "as_of": "",
+    "sources": [
+      "NOAA Ocean Exploration (Challenger Deep)",
+      "Five Deeps Expedition / Caladan Oceanic 2019–2022 dive measurements",
+      "Linley et al. 2017, Deep Sea Research Part I (Kermadec 10,047 m)"
+    ],
+    "highlight": [
+      "Deepest",
+      "Ocean"
+    ],
+    "highlight_colors": [
+      "#1DE9D6",
+      "#4DA3FF"
+    ]
+  },
+  {
     "id": "largest-planets-solar-system",
     "title": "The 5 Biggest Planets in Our Solar System",
     "hook": "You could fit over a thousand Earths inside number one. Wild, right?",

@@ -289,6 +289,25 @@ def mascot_png(src, kind, workdir):
     return out
 
 
+SFX_DIR = os.path.join(ROOT, "assets", "sfx")
+
+
+def sfx_for(seg):
+    """Sound effects for a segment: (file, start seconds, volume)."""
+    f = lambda name: os.path.join(SFX_DIR, name + ".wav")
+    if not os.path.isdir(SFX_DIR):
+        return []
+    if seg["kind"] == "hook":
+        out = [(f("whoosh"), 0.0, 0.55)]
+    elif seg["kind"] == "outro":
+        out = [(f("pop"), 0.15, 0.6)]
+    elif seg["item"]["rank"] == 1:
+        out = [(f("boom"), 0.0, 0.7), (f("ding"), 0.12, 0.45)]
+    else:
+        out = [(f("whoosh"), 0.0, 0.5)]
+    return [x for x in out if os.path.exists(x[0])]
+
+
 def gradient_bg(path, seed):
     rnd = random.Random(seed)
     top = tuple(rnd.randint(20, 90) for _ in range(3))
@@ -347,7 +366,19 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
         last, n_in = nxt, n_in + 1
     inputs += ["-i", seg["audio"]]
     audio_idx = n_in
-    chain.append(f"[{audio_idx}:a]aresample=44100,aformat=channel_layouts=stereo,apad[a]")
+    fx = sfx_for(seg)
+    if not fx:
+        chain.append(f"[{audio_idx}:a]aresample=44100,aformat=channel_layouts=stereo,apad[a]")
+    else:
+        chain.append(f"[{audio_idx}:a]aresample=44100,aformat=channel_layouts=stereo[vo]")
+        labels = ["[vo]"]
+        for k, (path, at, vol) in enumerate(fx):
+            inputs += ["-i", path]
+            ms = int(at * 1000)
+            chain.append(f"[{audio_idx + 1 + k}:a]aresample=44100,aformat=channel_layouts=stereo,"
+                         f"adelay={ms}|{ms},volume={vol}[fx{k}]")
+            labels.append(f"[fx{k}]")
+        chain.append(f"{''.join(labels)}amix=inputs={len(labels)}:duration=first:normalize=0,apad[a]")
     out = os.path.join(workdir, f"seg{idx:02d}.mp4")
     run(["ffmpeg", "-y", *inputs, "-filter_complex", ";".join(chain), "-map", f"[{last}]", "-map", "[a]",
          "-t", f"{dur:.2f}", "-r", str(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "21",

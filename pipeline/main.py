@@ -159,6 +159,7 @@ def pick_emotions(script, config):
 
 def make_video(script, config, offline, workdir):
     accent = config["accent_color"]
+    random.seed(script["id"])  # same script → same footage picks on a re-render
     used_ids, credits, segments = set(), [], []
     idx = 0
     mascot = os.path.join(ROOT, config.get("mascot", "")) if config.get("mascot") else None
