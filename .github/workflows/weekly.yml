@@ -1,9 +1,9 @@
 name: Weekly ranking Shorts batch
 
 on:
-  schedule:
-    - cron: "0 8 * * 6"   # Saturdays 4:00 PM Manila: 7 videos for Mon–Sun of the coming week
-  workflow_dispatch:      # "Run workflow" button for an extra batch
+  # Started every Saturday by Claude's "Bojji weekly video batch" scheduled task, right after it
+  # writes the week's scripts. You can also start it by hand: Actions → Run workflow.
+  workflow_dispatch:
     inputs:
       count:
         description: "How many videos"

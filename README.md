@@ -1,7 +1,8 @@
 # Ranking Shorts — weekly "Top 5" video batches for Bojji (@bojjiii)
 
-Every **Saturday at 4:00 PM Manila** this makes 7 finished vertical ranking Shorts for Mon–Sun of the coming week.
-Claude then sends you the files plus an upload sheet (title, description, tags, date/time for each).
+Every **Saturday afternoon (Manila)** Claude's scheduled task researches and writes 7 scripts (state/queue.json),
+starts this workflow to render them for Mon–Sun of the coming week, then sends you the files plus an upload sheet
+(title, description, tags, date/time for each). Topic ideas it uses first: topics.txt.
 **You upload and schedule them yourself** in YouTube Studio on the Bojji channel (8:00 AM Manila slots).
 
 ```
