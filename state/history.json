@@ -69,5 +69,14 @@
     "rendered_on": "2026-10-18",
     "post_on": "2026-10-19",
     "status": "rendered"
+  },
+  {
+    "id": "quiz-ai-basics",
+    "title": "Can You Get 5/5 on This AI Quiz?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-18",
+    "post_on": "2026-10-25",
+    "status": "rendered"
   }
 ]
