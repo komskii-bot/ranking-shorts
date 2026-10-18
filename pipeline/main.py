@@ -213,6 +213,7 @@ def main():
     ap.add_argument("--offline", action="store_true", help="test render: no keys, no internet")
     ap.add_argument("--count", type=int, default=1, help="how many videos to make in this run")
     ap.add_argument("--start", help="first posting date YYYY-MM-DD (default: next Monday)")
+    ap.add_argument("--write", type=int, help="only write scripts until the queue has this many, then stop")
     args = ap.parse_args()
 
     config = load(os.path.join(ROOT, "config.json"), {})
@@ -220,6 +221,16 @@ def main():
     qpath, hpath = os.path.join(STATE, "queue.json"), os.path.join(STATE, "history.json")
     queue, history = load(qpath, []), load(hpath, [])
     first = dt.date.fromisoformat(args.start) if args.start else next_monday()
+
+    if args.write:
+        before = len(queue)
+        try:
+            refill(config, queue, history, args.write)
+        except Exception as e:
+            print(f"::error::Script writer failed: {str(e)[:900]}")
+        save(qpath, queue)
+        print(f"::notice::Queue {before} -> {len(queue)} scripts")
+        return
 
     if len(queue) < args.count and not args.offline:
         print(f"Queue has {len(queue)}, need {args.count}: writing scripts…")
@@ -273,7 +284,7 @@ def main():
     try:  # keep enough ready scripts for next week; never fail the run over this
         refill(config, queue, history, config.get("queue_min_size", 8))
     except Exception as e:
-        print(f"  (couldn't top up queue: {e})")
+        print(f"::warning::Couldn't top up the script queue: {str(e)[:900]}")
     save(qpath, queue)
     save(hpath, history)
     if not done:
