@@ -6,16 +6,16 @@ on:
   workflow_dispatch:
     inputs:
       count:
-        description: "How many ranking videos (8:00 AM slot)"
+        description: "How many ranking videos (7:00 PM slot)"
         default: "7"
       start:
-        description: "First ranking date YYYY-MM-DD (blank = next Monday)"
+        description: "First ranking date YYYY-MM-DD (blank = next Sunday)"
         default: ""
       quiz_count:
-        description: "How many quiz videos (9:00 PM slot)"
+        description: "How many quiz videos (11:00 PM slot)"
         default: "7"
       quiz_start:
-        description: "First quiz date YYYY-MM-DD (blank = the Sunday before next Monday)"
+        description: "First quiz date YYYY-MM-DD (blank = next Sunday)"
         default: ""
 
 permissions:
@@ -52,11 +52,8 @@ jobs:
           rm -rf out
           COUNT="${{ inputs.count }}"; START="${{ inputs.start }}"
           QCOUNT="${{ inputs.quiz_count }}"; QSTART="${{ inputs.quiz_start }}"
-          if [ -z "$QSTART" ]; then
-            QSTART=$(python -c "from pipeline.main import next_monday; import datetime as d; print(next_monday() - d.timedelta(days=1))")
-          fi
           python -m pipeline.main --kind ranking --count "${COUNT:-7}" ${START:+--start "$START"}
-          python -m pipeline.main --kind quiz --count "${QCOUNT:-7}" --start "$QSTART"
+          python -m pipeline.main --kind quiz --count "${QCOUNT:-7}" ${QSTART:+--start "$QSTART"}
           python -m pipeline.main --merge
 
       - name: Publish the batch (Releases page)

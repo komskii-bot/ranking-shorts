@@ -137,6 +137,33 @@ def subscribe_line(script):
     return script.get("cta") or random.Random(script["id"] + "cta").choice(CTA_LINES)
 
 
+MID_FOLLOW_LINES = [
+    "Enjoying this? Follow for more!",
+    "If you're enjoying this, hit follow for more!",
+    "Quick favor: follow if you're liking this!",
+    "Liking it so far? Tap follow!",
+    "Having fun? Follow for a new one every day!",
+    "Don't forget to follow for more like this!",
+]
+
+
+def mid_follow(script, choices):
+    """Pick where (and which) mid-video follow ask goes, the same every re-render."""
+    rnd = random.Random(script["id"] + "mid")
+    return rnd.choice(choices), rnd.choice(MID_FOLLOW_LINES)
+
+
+def join_audio(first, second, out, gap=0.15):
+    import subprocess
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", first, "-f", "lavfi", "-t", f"{gap}",
+                    "-i", "anullsrc=r=24000:cl=mono", "-i", second, "-filter_complex",
+                    "[0:a]aresample=44100,aformat=channel_layouts=stereo[a0];"
+                    "[1:a]aresample=44100,aformat=channel_layouts=stereo[a1];"
+                    "[2:a]aresample=44100,aformat=channel_layouts=stereo[a2];"
+                    "[a0][a1][a2]concat=n=3:v=0:a=1[o]", "-map", "[o]", out], check=True)
+    return out
+
+
 EMOTIONS = ["presenting", "shocked", "thinking", "celebrating", "curious", "excited", "exclaim", "nervous"]
 
 
@@ -212,11 +239,18 @@ def make_quiz_video(script, config, offline, workdir):
     a = speak(script["hook"])
     add({"kind": "q_hook", "text": script["hook"], "item": None, "audio": a,
          "bg": footage(qs[0].get("search", "technology"), 6), "mascot": pose(["presenting", "curious"])})
+    follow_q, follow_text = mid_follow(script, [2, 3, 4])
     for n, q in enumerate(qs, 1):
         ask = speak(f"Question {n}. {q['q']}")
         letter = "ABCD"[q["answer"]]
         reveal_text = q.get("say") or f"It's {letter}. {q['options'][q['answer']]}!"
         rev = speak(reveal_text)
+        follow_at = None
+        if n == follow_q:
+            extra = speak(follow_text)
+            follow_at = render.duration(rev) + 0.9
+            rev = join_audio(rev, extra, os.path.join(workdir, f"reveal{n}_all.mp3"), gap=0.8)
+            reveal_text = f"{reveal_text} {follow_text}"
         t_ask, t_rev = render.duration(ask) + 0.3, render.duration(rev) + 1.7
         bg = footage(q.get("search", "abstract background"), t_ask + 3 + t_rev + 1)
         base = {"question": q, "n": n, "total": len(qs), "item": None, "captions": False, "bg": bg}
@@ -226,6 +260,7 @@ def make_quiz_video(script, config, offline, workdir):
         add(dict(base, kind="q_timer", text="", audio=timer, bg_ss=t_ask, no_pop=True,
                  mascot=pose(["nervous", "thinking"])))
         add(dict(base, kind="q_reveal", text=reveal_text, audio=rev, pad=1.7, bg_ss=t_ask + 3, no_pop=True,
+                 follow_at=follow_at,
                  mascot=pose(q.get("emotion", "").split() or ["excited", "celebrating", "shocked"])))
         print(f"  question {n}: {q['q'][:50]}")
     outro = f"{script['outro']} {subscribe_line(script)}"
@@ -265,10 +300,19 @@ def make_video(script, config, offline, workdir):
     if not outro:
         plan.append(("outro", f"{script['outro']} {subscribe_line(script)}", None, script["items"][0]["search"]))
 
+    follow_rank, follow_text = mid_follow(script, [4, 3, 2])
     for kind, text, item, query in plan:
         audio = os.path.join(workdir, f"v{idx}.mp3")
         voice.speak(text, audio, config["voice"], config["voice_rate"], offline=offline,
                     pitch=config.get("voice_pitch", "+0Hz"))
+        follow_at = None
+        if item and item["rank"] == follow_rank:
+            extra = os.path.join(workdir, f"v{idx}_follow.mp3")
+            voice.speak(follow_text, extra, config["voice"], config["voice_rate"], offline=offline,
+                        pitch=config.get("voice_pitch", "+0Hz"))
+            follow_at = render.duration(audio) + 0.1
+            audio = join_audio(audio, extra, os.path.join(workdir, f"v{idx}_all.mp3"))
+            text = f"{text} {follow_text}"
         bg = {"kind": "none"}
         if not offline:
             clip = os.path.join(workdir, f"bg{idx}.mp4")
@@ -277,7 +321,8 @@ def make_video(script, config, offline, workdir):
                 bg = {"kind": got["kind"], "path": got.get("path", clip)}
                 credits.append(got)
         pose = poses.get("hook" if kind == "hook" else "outro" if kind == "outro" else item["rank"])
-        add({"kind": kind, "text": text, "item": item, "audio": audio, "bg": bg, "mascot": pose})
+        add({"kind": kind, "text": text, "item": item, "audio": audio, "bg": bg, "mascot": pose,
+             "follow_at": follow_at})
         print(f"  segment {idx}: {kind} {item['name'] if item else ''}")
 
     if outro:
@@ -294,6 +339,12 @@ def make_video(script, config, offline, workdir):
 def next_monday(today=None):
     today = today or (dt.datetime.utcnow() + dt.timedelta(hours=8)).date()  # Manila date
     return today + dt.timedelta(days=(7 - today.weekday()) % 7 or 7)
+
+
+def next_sunday(today=None):
+    """Weeks run Sunday → Saturday (Emilio's schedule)."""
+    today = today or (dt.datetime.utcnow() + dt.timedelta(hours=8)).date()
+    return today + dt.timedelta(days=(6 - today.weekday()) % 7 or 7)
 
 
 KINDS = {
@@ -356,7 +407,7 @@ def main():
     slot = config.get(kind["slot_key"], kind["slot"])
     qpath, hpath = os.path.join(STATE, kind["queue"]), os.path.join(STATE, "history.json")
     queue, history = load(qpath, []), load(hpath, [])
-    first = dt.date.fromisoformat(args.start) if args.start else next_monday()
+    first = dt.date.fromisoformat(args.start) if args.start else next_sunday()
 
     if args.write:
         before = len(queue)

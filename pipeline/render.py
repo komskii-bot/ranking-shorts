@@ -197,6 +197,26 @@ def quiz_layer(img, d, seg, acc):
                 yb += int(nf.size * 1.2)
 
 
+def follow_badge(workdir, idx, kind):
+    """Small 'FOLLOW FOR MORE' pill shown while the mid-video follow ask is spoken."""
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    f = font(50)
+    t = "FOLLOW FOR MORE"
+    tw = d.textlength(t, font=f)
+    y = 1470 if kind.startswith("q_") else 1262
+    x0 = 50  # left side, clear of the mascot on the right
+    d.rounded_rectangle([x0, y, x0 + tw + 130, y + 86], 43, fill=(255, 255, 255, 255),
+                        outline=(255, 0, 0, 255), width=5)
+    cx, cy = x0 + 45, y + 43  # plus sign
+    d.line([(cx - 14, cy), (cx + 14, cy)], fill=(255, 0, 0, 255), width=8)
+    d.line([(cx, cy - 14), (cx, cy + 14)], fill=(255, 0, 0, 255), width=8)
+    d.text((x0 + 82, y + 12), t, font=f, fill=(230, 0, 0, 255))
+    p = os.path.join(workdir, f"s{idx}_follow.png")
+    img.save(p)
+    return p
+
+
 def countdown_pngs(accent, workdir, idx, secs=3):
     """One PNG per second: big number in a ring, shown left of the mascot."""
     out = []
@@ -380,6 +400,8 @@ def mascot_png(src, kind, workdir):
 
 
 SFX_DIR = os.path.join(ROOT, "assets", "sfx")
+# narrator: cut rumble, even out loud/quiet words, then lift it above the effects
+VOICE_FX = "highpass=f=70,acompressor=threshold=-20dB:ratio=3:attack=5:release=80:makeup=4,volume=1.25"
 
 
 def sfx_for(seg):
@@ -389,7 +411,7 @@ def sfx_for(seg):
         return []
     kind = seg["kind"]
     if kind in ("hook", "q_hook"):
-        out = [(f("whoosh"), 0.0, 0.55)]
+        out = [(f("whoosh"), 0.0, 0.45)]
     elif kind in ("outro", "q_outro"):
         out = [(f("pop"), 0.15, 0.6)]
     elif kind == "q_ask":
@@ -401,7 +423,7 @@ def sfx_for(seg):
     elif seg["item"]["rank"] == 1:
         out = [(f("boom"), 0.0, 0.7), (f("ding"), 0.12, 0.45)]
     else:
-        out = [(f("whoosh"), 0.0, 0.5)]
+        out = [(f("whoosh"), 0.0, 0.4)]
     return [x for x in out if os.path.exists(x[0])]
 
 
@@ -435,6 +457,8 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
         caps.append((p, a, b))
     if seg["kind"] == "q_timer":
         caps += countdown_pngs(accent, workdir, idx)
+    if seg.get("follow_at") is not None:
+        caps.append((follow_badge(workdir, idx, seg["kind"]), seg["follow_at"], dur))
 
     bg = seg.get("bg") or {"kind": "none"}
     inputs, vf = [], ""
@@ -470,9 +494,9 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
     audio_idx = n_in
     fx = sfx_for(seg)
     if not fx:
-        chain.append(f"[{audio_idx}:a]aresample=44100,aformat=channel_layouts=stereo,apad[a]")
+        chain.append(f"[{audio_idx}:a]aresample=44100,aformat=channel_layouts=stereo,{VOICE_FX},apad[a]")
     else:
-        chain.append(f"[{audio_idx}:a]aresample=44100,aformat=channel_layouts=stereo[vo]")
+        chain.append(f"[{audio_idx}:a]aresample=44100,aformat=channel_layouts=stereo,{VOICE_FX}[vo]")
         labels = ["[vo]"]
         for k, (path, at, vol) in enumerate(fx):
             inputs += ["-i", path]
@@ -515,9 +539,9 @@ def finish(segments, workdir, out_path, accent, music=None, music_volume=0.1):
         inputs += ["-stream_loop", "-1", "-i", music]
         fc.append(f"[2:a]volume={music_volume},afade=t=out:st={max(0, total-1.5):.2f}:d=1.5[m]")
         fc.append("[0:a][m]amix=inputs=2:duration=first:normalize=0[mix]")
-        fc.append("[mix]loudnorm=I=-14:TP=-1.5:LRA=11[a]")
+        fc.append("[mix]loudnorm=I=-12:TP=-1.0:LRA=9[a]")
     else:
-        fc.append("[0:a]loudnorm=I=-14:TP=-1.5:LRA=11[a]")
+        fc.append("[0:a]loudnorm=I=-12:TP=-1.0:LRA=9[a]")
     run(["ffmpeg", "-y", *inputs, "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]",
          "-t", f"{total:.2f}", "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
          "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-movflags", "+faststart", out_path])
