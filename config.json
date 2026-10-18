@@ -6,7 +6,7 @@
   "mascot": "assets/mascot.png",
   "music_volume": 0.10,
   "made_for_kids": false,
-  "upload_mode": "youtube",
+  "upload_mode": "manual",
   "youtube_channel": "@bojjiii",
   "youtube_privacy": "public",
   "youtube_category_id": "27",

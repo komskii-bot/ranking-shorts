@@ -92,6 +92,29 @@ def build_post(script, config, credits, synthetic):
     }
 
 
+def write_upload_notes(post, script):
+    """Copy-paste sheet for a manual YouTube Studio upload (used as the release notes)."""
+    lines = [
+        "**Upload to Bojji (@bojjiii)** — check the channel name in the top-right of YouTube Studio first.",
+        "",
+        "### Title",
+        "```", post["title"], "```",
+        "### Description",
+        "```", post["description"], "```",
+        "### Tags",
+        "```", ", ".join(post["tags"]), "```",
+        "### Settings",
+        "- Audience: **No, it's not made for kids**",
+        f"- Altered or synthetic content: **{'Yes' if post['ai_generated'] else 'No'}**",
+        "- Visibility: **Schedule** for your posting slot",
+        f"- Length: {post.get('duration', '?')} s",
+    ]
+    if script.get("sources"):
+        lines += ["", "Sources used for the facts: " + "; ".join(script["sources"][:5])]
+    with open(os.path.join(OUT, "upload_notes.md"), "w") as fh:
+        fh.write("\n".join(lines) + "\n")
+
+
 def make_video(script, config, offline, workdir):
     accent = config["accent_color"]
     used_ids, credits, segments = set(), [], []
@@ -173,6 +196,7 @@ def main():
     post = build_post(script, config, credits, synthetic)
     post["duration"] = round(total, 1)
     save(os.path.join(OUT, "post.json"), post)
+    write_upload_notes(post, script)
     print(f"Done: {video} ({total:.1f}s)")
 
     if args.offline:

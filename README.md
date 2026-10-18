@@ -1,19 +1,23 @@
 # Ranking Shorts — automated "Top 5" videos
 
-Every day this makes and posts one vertical ranking Short, with no input from you.
+Every day at **6:00 PM Manila** this makes one finished vertical ranking Short. **You upload it yourself** to Bojji (@bojjiii).
 
 ```
-GitHub Actions (10:00 AM Manila, free)
+GitHub Actions (free)
   1. Takes the next script from state/queue.json
-     (queue empty? Gemini writes one, searching the web for current data)
-  2. Voiceover        edge-tts (free Microsoft neural voices)
-  3. Footage          Pexels API (free stock video)
-  4. Editing          FFmpeg: rank badges, captions, #1 hidden ladder, progress bar, music
-  5. Uploads it straight to your YouTube channel (YouTube Data API, free)
-     and keeps a backup copy under the repo's Releases
+     (queue low? Gemini writes more, searching the web for current data)
+  2. Voiceover        edge-tts (free neural voice)
+  3. Visuals          Pexels / Pixabay video, or Openverse public-domain images
+  4. Editing          FFmpeg: rank badges, captions, hidden #1 ladder, progress bar, mascot, music
+  5. Posts the MP4 + a copy-paste upload sheet on the repo's Releases page
 ```
 
-Everything here is free. Your only regular job is optional: a monthly batch of host clips in Google Flow.
+## Your daily 2 minutes
+1. Open **github.com/komskii-bot/ranking-shorts/releases** → newest release → download the `.mp4`.
+   (Get an email for each new video: repo page → **Watch → Custom → Releases** → Apply.)
+2. YouTube Studio → check the channel is **Bojji** → Create → Upload videos.
+3. Copy the title, description and tags from the release notes; set "Not made for kids".
+4. Visibility → **Schedule** for your posting slot.
 
 ---
 
