@@ -135,6 +135,86 @@ def rich_title(draw, tokens, y, start, min_size, max_lines, max_w=920, stroke=8)
 
 
 LIST_TOP, ROW_H = 300, 118
+OPT_TOP, OPT_H, OPT_GAP = 640, 118, 22
+LETTERS = "ABCD"
+GREEN = "#3DDC84"
+
+
+def quiz_layer(img, d, seg, acc):
+    """Question n/5, the question, 4 options; on reveal the right one turns green + fact and source note."""
+    q, n, total = seg["question"], seg["n"], seg["total"]
+    shade = Image.new("RGBA", (W, H), (0, 0, 0, 95))
+    img.alpha_composite(shade)
+    pf = font(46)
+    label = f"QUESTION {n}/{total}"
+    tw = d.textlength(label, font=pf)
+    d.rounded_rectangle([(W - tw) / 2 - 30, 140, (W + tw) / 2 + 30, 215], 36, fill=acc)
+    d.text(((W - tw) / 2, 148), label, font=pf, fill=(15, 15, 15, 255))
+    f, lines = fit_text(d, q["q"], 960, 76, 46, 4)
+    y = 250 + (4 - len(lines)) * f.size * 0.28
+    centered(d, lines, f, y, WHITE, stroke=7)
+    reveal = seg["kind"] == "q_reveal"
+    for i, opt in enumerate(q["options"]):
+        y = OPT_TOP + i * (OPT_H + OPT_GAP)
+        right = i == q["answer"]
+        if reveal and right:
+            fill, txt, out = hex_rgba(GREEN), (12, 12, 12, 255), (255, 255, 255, 255)
+        elif reveal:
+            fill, txt, out = (0, 0, 0, 150), (255, 255, 255, 120), (255, 255, 255, 70)
+        else:
+            fill, txt, out = (0, 0, 0, 175), WHITE, (255, 255, 255, 230)
+        d.rounded_rectangle([50, y, W - 50, y + OPT_H], 34, fill=fill, outline=out, width=4)
+        cx, cy = 115, y + OPT_H / 2
+        circ = hex_rgba(HIGHLIGHT[i % len(HIGHLIGHT)]) if not reveal or right else (120, 120, 120, 160)
+        if reveal and right:
+            circ = (255, 255, 255, 255)
+        d.ellipse([cx - 40, cy - 40, cx + 40, cy + 40], fill=circ)
+        lf = font(48)
+        lw = d.textlength(LETTERS[i], font=lf)
+        d.text((cx - lw / 2, cy - 33), LETTERS[i], font=lf, fill=(15, 15, 15, 255))
+        size = 56
+        while size > 34 and d.textlength(opt, font=font(size)) > W - 50 - 185:
+            size -= 2
+        of = font(size)
+        d.text((180, cy - size * 0.62), opt, font=of, fill=txt,
+               stroke_width=0 if (reveal and right) else 4, stroke_fill=(0, 0, 0, 255))
+        if reveal and right:  # check mark
+            x0, y0 = W - 120, cy
+            d.line([(x0, y0), (x0 + 18, y0 + 20), (x0 + 52, y0 - 24)], fill=(12, 12, 12, 255), width=11,
+                   joint="curve")
+    if reveal:
+        yb = OPT_TOP + 4 * (OPT_H + OPT_GAP) + 10
+        ef, el = fit_text(d, q.get("explain", ""), 610, 44, 32, 3)
+        for line in el:
+            d.text((60, yb), line, font=ef, fill=WHITE, stroke_width=5, stroke_fill=(0, 0, 0, 255))
+            yb += int(ef.size * 1.15)
+        if q.get("note"):
+            nf, nl = fit_text(d, q["note"], 610, 30, 24, 3)
+            yb += 8
+            for line in nl:
+                d.text((60, yb), line, font=nf, fill=(225, 225, 225, 255), stroke_width=4,
+                       stroke_fill=(0, 0, 0, 255))
+                yb += int(nf.size * 1.2)
+
+
+def countdown_pngs(accent, workdir, idx, secs=3):
+    """One PNG per second: big number in a ring, shown left of the mascot."""
+    out = []
+    cx, cy, r = 250, OPT_TOP + 4 * (OPT_H + OPT_GAP) + 130, 105
+    for k in range(secs):
+        img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        d = ImageDraw.Draw(img)
+        d.ellipse([cx - r - 10, cy - r - 10, cx + r + 10, cy + r + 10], fill=(0, 0, 0, 170))
+        frac = (secs - k) / secs
+        d.arc([cx - r, cy - r, cx + r, cy + r], -90, -90 + 360 * frac, fill=hex_rgba(accent), width=18)
+        t = str(secs - k)
+        f = font(130)
+        tw = d.textlength(t, font=f)
+        d.text((cx - tw / 2, cy - 92), t, font=f, fill=WHITE, stroke_width=6, stroke_fill=(0, 0, 0, 255))
+        p = os.path.join(workdir, f"s{idx}_cd{k}.png")
+        img.save(p)
+        out.append((p, float(k), float(k + 1)))
+    return out
 
 
 def static_layer(script, seg, accent, path):
@@ -157,23 +237,27 @@ def static_layer(script, seg, accent, path):
     acc = hex_rgba(accent)
     tokens = title_colors(script["title"], script.get("highlight"), script.get("highlight_colors"))
 
-    if seg["kind"] == "hook":
+    if seg["kind"] in ("q_ask", "q_timer", "q_reveal"):
+        quiz_layer(img, d, seg, acc)
+    elif seg["kind"] in ("hook", "q_hook"):
         tag = font(70)
-        label = "TOP 5"
+        label = "QUIZ TIME" if seg["kind"] == "q_hook" else "TOP 5"
         tw = d.textlength(label, font=tag)
         d.rounded_rectangle([(W - tw) / 2 - 34, 250, (W + tw) / 2 + 34, 350], 26, fill=hex_rgba(HIGHLIGHT[0]))
         d.text(((W - tw) / 2, 256), label, font=tag, fill=WHITE)
         rich_title(d, tokens, 395, 110, 64, 4)
-    elif seg["kind"] == "outro":
+    elif seg["kind"] in ("outro", "q_outro"):
         f = font(118)
-        parts = [("WHAT'S YOUR", WHITE), ("#1?", hex_rgba(HIGHLIGHT[3]))]
+        parts = ([("HOW MANY", WHITE), ("DID YOU GET?", hex_rgba(HIGHLIGHT[3]))] if seg["kind"] == "q_outro"
+                 else [("WHAT'S YOUR", WHITE), ("#1?", hex_rgba(HIGHLIGHT[3]))])
+        f = font(118) if seg["kind"] == "outro" else font(104)
         y = 250
         for t, c in parts:
             x = (W - d.textlength(t, font=f)) / 2
             d.text((x, y), t, font=f, fill=c, stroke_width=9, stroke_fill=(0, 0, 0, 255))
             y += 130
         f2 = font(64)
-        t = "COMMENT BELOW"
+        t = "COMMENT YOUR SCORE" if seg["kind"] == "q_outro" else "COMMENT BELOW"
         d.text(((W - d.textlength(t, font=f2)) / 2, y + 10), t, font=f2, fill=hex_rgba(HIGHLIGHT[1]),
                stroke_width=7, stroke_fill=(0, 0, 0, 255))
         # subscribe button
@@ -265,7 +349,13 @@ MASCOT_SPOTS = {
     "item": (360, 1000),
     "hook": (640, 1120),
     "outro": (640, 1120),
+    "q_hook": (640, 1120),
+    "q_outro": (640, 1120),
+    "q_ask": (330, 1225),
+    "q_timer": (330, 1225),
+    "q_reveal": (330, 1225),
 }
+RIGHT_SIDE = ("item", "q_ask", "q_timer", "q_reveal")
 
 
 def mascot_png(src, kind, workdir):
@@ -297,10 +387,17 @@ def sfx_for(seg):
     f = lambda name: os.path.join(SFX_DIR, name + ".wav")
     if not os.path.isdir(SFX_DIR):
         return []
-    if seg["kind"] == "hook":
+    kind = seg["kind"]
+    if kind in ("hook", "q_hook"):
         out = [(f("whoosh"), 0.0, 0.55)]
-    elif seg["kind"] == "outro":
+    elif kind in ("outro", "q_outro"):
         out = [(f("pop"), 0.15, 0.6)]
+    elif kind == "q_ask":
+        out = [(f("whoosh"), 0.0, 0.4)]
+    elif kind == "q_timer":
+        out = [(f("tick"), float(k), 0.8) for k in range(3)]
+    elif kind == "q_reveal":
+        out = [(f("ding"), 0.0, 0.5)]
     elif seg["item"]["rank"] == 1:
         out = [(f("boom"), 0.0, 0.7), (f("ding"), 0.12, 0.45)]
     else:
@@ -324,22 +421,26 @@ def gradient_bg(path, seed):
 def render_segment(seg, script, accent, workdir, idx, mascot=None):
     mascot = seg.get("mascot") or mascot
     """seg: kind, text, audio, bg ({'kind': video|photo|none, 'path'})"""
-    dur = duration(seg["audio"]) + 0.35
+    pad = seg.get("pad", 0.35)
+    dur = duration(seg["audio"]) + pad
     static = os.path.join(workdir, f"s{idx}_static.png")
     static_layer(script, seg, accent, static)
     caps = []
-    for j, (txt, a, b) in enumerate(caption_chunks(seg["text"], dur - 0.35)):
+    for j, (txt, a, b) in enumerate([] if seg.get("captions") is False else caption_chunks(seg["text"], dur - pad)):
         p = os.path.join(workdir, f"s{idx}_cap{j}.png")
-        if mascot and seg["kind"] in ("hook", "outro"):
+        if mascot and seg["kind"] in ("hook", "outro", "q_hook", "q_outro"):
             caption_layer(txt, accent, p, y_one=905, y_two=880)  # sits above the big mascot
         else:
             caption_layer(txt, accent, p, y_one=1400, y_two=1360)
         caps.append((p, a, b))
+    if seg["kind"] == "q_timer":
+        caps += countdown_pngs(accent, workdir, idx)
 
     bg = seg.get("bg") or {"kind": "none"}
     inputs, vf = [], ""
     if bg["kind"] == "video":
-        inputs += ["-stream_loop", "-1", "-i", bg["path"]]
+        ss = ["-ss", f"{seg['bg_ss']:.2f}"] if seg.get("bg_ss") else []
+        inputs += ["-stream_loop", "-1", *ss, "-i", bg["path"]]
         vf = (f"[0:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
               f"fps={FPS},setsar=1,eq=brightness=-0.05:saturation=1.12[b0]")
     else:
@@ -354,9 +455,10 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
         mp = mascot_png(mascot, seg["kind"], workdir)
         _, my = MASCOT_SPOTS[seg["kind"]]
         inputs += ["-loop", "1", "-framerate", str(FPS), "-i", mp]
-        x = f"{W - Image.open(mp).width - 10}" if seg["kind"] == "item" else "(W-w)/2"
+        x = f"{W - Image.open(mp).width - 10}" if seg["kind"] in RIGHT_SIDE else "(W-w)/2"
         # pops up from below at the start, then bobs gently while the narrator talks
-        y = (f"{my}+if(lt(t,0.3),(0.3-t)/0.3*420,0)+9*sin(2*PI*t*1.7)")
+        pop_in = "" if seg.get("no_pop") else "+if(lt(t,0.3),(0.3-t)/0.3*420,0)"
+        y = f"{my}{pop_in}+9*sin(2*PI*t*1.7)"
         chain.append(f"[{last}][{n_in}:v]overlay=x='{x}':y='{y}':eval=frame:shortest=1[vm]")
         last, n_in = "vm", n_in + 1
     for j, (p, a, b) in enumerate(caps):

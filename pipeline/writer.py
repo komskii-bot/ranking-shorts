@@ -103,7 +103,50 @@ def _extract_json(text):
     return json.loads(text[start : end + 1])
 
 
+QUIZ_SCHEMA = """Quiz script (state/quiz_queue.json), one object per Short:
+{
+  "id": "kebab-case-unique-id", "format": "quiz",
+  "title": "e.g. Can You Get 5/5 on This AI Quiz?",
+  "highlight": ["phrases copied exactly from the title"], "highlight_colors": ["#hex per phrase"],
+  "hook": "One spoken line, max 16 words",
+  "questions": [  // exactly 5, easy → hard
+    {"q": "Question, max 14 words, ONE clear-cut answer",
+     "options": ["A", "B", "C", "D"],  // 4 options, each max 32 characters
+     "answer": 1,                        // index 0-3 of the correct option
+     "explain": "One short fact shown on screen at the reveal (max 14 words)",
+     "note": "Source and/or clarification shown small (max 18 words), e.g. 'Source: NASA' or a caveat",
+     "search": "2-4 word stock-footage term",
+     "emotion": "optional reveal pose: excited, celebrating, shocked or exclaim"}
+  ],
+  "outro": "One spoken line asking how many they got",
+  "cta": "optional subscribe/like/share ask",
+  "description": "1-2 sentences", "tags": ["8-12 lowercase tags"], "sources": ["source per answer"]
+}"""
+
+
+def validate_quiz(script):
+    for key in ("id", "title", "hook", "questions", "outro", "description", "tags"):
+        if key not in script:
+            raise ValueError(f"quiz missing '{key}'")
+    qs = script["questions"]
+    if len(qs) != 5:
+        raise ValueError("a quiz needs exactly 5 questions")
+    for i, q in enumerate(qs, 1):
+        if len(q.get("options", [])) != 4 or q.get("answer") not in (0, 1, 2, 3):
+            raise ValueError(f"question {i}: needs 4 options and answer 0-3")
+        if len(set(o.lower() for o in q["options"])) != 4:
+            raise ValueError(f"question {i}: duplicate options")
+        for key in ("q", "explain"):
+            if not str(q.get(key, "")).strip():
+                raise ValueError(f"question {i} missing '{key}'")
+    script["format"] = "quiz"
+    script.setdefault("sources", [])
+    return script
+
+
 def validate(script):
+    if script.get("format") == "quiz":
+        return validate_quiz(script)
     for key in ("id", "title", "hook", "items", "outro", "description", "tags"):
         if key not in script:
             raise ValueError(f"script missing '{key}'")

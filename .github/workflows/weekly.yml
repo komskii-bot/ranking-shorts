@@ -6,10 +6,16 @@ on:
   workflow_dispatch:
     inputs:
       count:
-        description: "How many videos"
+        description: "How many ranking videos (8:00 AM slot)"
         default: "7"
       start:
-        description: "First posting date YYYY-MM-DD (blank = next Monday)"
+        description: "First ranking date YYYY-MM-DD (blank = next Monday)"
+        default: ""
+      quiz_count:
+        description: "How many quiz videos (9:00 PM slot)"
+        default: "7"
+      quiz_start:
+        description: "First quiz date YYYY-MM-DD (blank = the Sunday before next Monday)"
         default: ""
 
 permissions:
@@ -43,14 +49,21 @@ jobs:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: |
+          rm -rf out
           COUNT="${{ inputs.count }}"; START="${{ inputs.start }}"
-          python -m pipeline.main --count "${COUNT:-7}" ${START:+--start "$START"}
+          QCOUNT="${{ inputs.quiz_count }}"; QSTART="${{ inputs.quiz_start }}"
+          if [ -z "$QSTART" ]; then
+            QSTART=$(python -c "from pipeline.main import next_monday; import datetime as d; print(next_monday() - d.timedelta(days=1))")
+          fi
+          python -m pipeline.main --kind ranking --count "${COUNT:-7}" ${START:+--start "$START"}
+          python -m pipeline.main --kind quiz --count "${QCOUNT:-7}" --start "$QSTART"
+          python -m pipeline.main --merge
 
       - name: Publish the batch (Releases page)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          FIRST=$(ls out/batch/*.json | head -1 | xargs python -c "import json,sys;print(json.load(open(sys.argv[1]))['post_on'])")
+          FIRST=$(python -c "import json,glob;print(min(json.load(open(f))['post_on'] for f in glob.glob('out/batch/*.json')))")
           TAG="week-${FIRST}-${{ github.run_number }}"
           gh release create "$TAG" out/batch/*.mp4 --title "Bojji videos from ${FIRST}" --notes-file out/upload_sheet.md
 

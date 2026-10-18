@@ -14,6 +14,10 @@
   "youtube_category_id": "27",
   "queue_min_size": 8,
   "posting_slot": "8:00 AM",
+  "quiz_slot": "9:00 PM",
+  "quiz_accent": "#1DE9D6",
+  "quiz_hashtags": ["#shorts", "#quiz", "#trivia", "#facts"],
+  "auto_write": false,
   "gemini_model": "gemini-3.8-flash",
   "topic_mix": "Alternate between (a) CURRENT tech/AI/business rankings that need fresh data (AI data centers, AI apps, AI usage by country, chip makers, satellites, EV sales, app downloads) and (b) evergreen science/geography/animal/space rankings.",
   "default_hashtags": ["#shorts", "#ranking", "#top5", "#facts"]

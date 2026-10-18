@@ -65,10 +65,18 @@ def pop(dur=0.16):
     return np.stack([x, x], axis=1)
 
 
+def tick(dur=0.07):
+    n = int(SR * dur)
+    t = np.arange(n) / SR
+    x = (np.sin(2 * np.pi * 2200 * t) + 0.6 * np.sin(2 * np.pi * 3300 * t)) * np.exp(-t * 90)
+    return np.stack([x, x], axis=1)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     save("whoosh.wav", whoosh(), -6)
     save("ding.wav", ding(), -5)
     save("boom.wav", boom(), -3)
     save("pop.wav", pop(), -7)
+    save("tick.wav", tick(), -9)
     print("saved to", OUT)

@@ -70,7 +70,9 @@ def build_post(script, config, credits, synthetic):
     if script.get("as_of"):
         lines.append(f"Data as of {script['as_of']}.")
     lines.append("")
-    lines.append("What would you put at #1? Tell us in the comments!")
+    quiz = script.get("format") == "quiz"
+    lines.append("How many did you get right? Comment your score!" if quiz
+                 else "What would you put at #1? Tell us in the comments!")
     if script.get("sources"):
         lines.append("")
         lines.append("Sources: " + "; ".join(script["sources"][:5]))
@@ -81,7 +83,8 @@ def build_post(script, config, credits, synthetic):
             lines.append(f"Images and footage from {site} ({domain}): {names}")
     tags = [t.lstrip("#") for t in script["tags"]]
     lines.append("")
-    lines.append(" ".join(config["default_hashtags"]))
+    lines.append(" ".join(config.get("quiz_hashtags", ["#shorts", "#quiz", "#trivia", "#facts"]) if quiz
+                          else config["default_hashtags"]))
     return {
         "title": title[:100],
         "description": "\n".join(lines)[:4900],
@@ -115,30 +118,36 @@ def write_upload_notes(post, script):
         fh.write("\n".join(lines) + "\n")
 
 
-SUBSCRIBE_LINES = [
+CTA_LINES = [
     "I'm a brand new creator, so if you liked this, hit subscribe. It honestly helps a ton!",
-    "New channel alert! Subscribe and I'll keep the rankings coming every single day.",
-    "Help a new creator out. Hit subscribe for a fresh top five every day!",
+    "New channel alert! Subscribe and I'll keep these coming every single day.",
+    "Help a small creator out. Like, share and subscribe. It's free and it makes my day!",
     "I just started this channel, so every sub means a lot. Tap subscribe and let's grow together!",
-    "Small channel, big rankings. Subscribe so you don't miss tomorrow's!",
-    "If you learned something new, smash that subscribe button. I'm just getting started!",
+    "Small channel, big facts. Follow so you don't miss tomorrow's!",
+    "If you learned something new, smash like and share it with a friend. I'm just getting started!",
     "Still a tiny channel, but not for long, right? Hit subscribe and be here from day one.",
-    "Want a new ranking every day? Subscribe. It really helps a new creator like me!",
+    "A like and a follow would honestly make me so happy. Thanks for supporting a small creator!",
+    "Send this to a friend and see if they can beat you. And hey, subscribe, it's free!",
+    "Supporting a small creator costs nothing. Like, follow, and I'll see you tomorrow!",
 ]
 
 
 def subscribe_line(script):
     """Spoken call to action for the outro: the script's own, or one picked per video."""
-    return script.get("cta") or random.Random(script["id"] + "cta").choice(SUBSCRIBE_LINES)
+    return script.get("cta") or random.Random(script["id"] + "cta").choice(CTA_LINES)
 
 
 EMOTIONS = ["presenting", "shocked", "thinking", "celebrating", "curious", "excited", "exclaim", "nervous"]
 
 
+def emotion_files(config):
+    folder = os.path.join(ROOT, config.get("mascot_dir", "assets/emotions"))
+    return {e: os.path.join(folder, e + ".png") for e in EMOTIONS if os.path.exists(os.path.join(folder, e + ".png"))}
+
+
 def pick_emotions(script, config):
     """Mascot pose per segment: hook / countdown / #1 reveal / outro. Scripts may set item["emotion"]."""
-    folder = os.path.join(ROOT, config.get("mascot_dir", "assets/emotions"))
-    have = {e: os.path.join(folder, e + ".png") for e in EMOTIONS if os.path.exists(os.path.join(folder, e + ".png"))}
+    have = emotion_files(config)
     if not have:
         return {}
     rnd = random.Random(script["id"])
@@ -157,7 +166,78 @@ def pick_emotions(script, config):
     return poses
 
 
+def silence(path, secs):
+    import subprocess
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
+                    "-t", f"{secs:.2f}", path], check=True)
+    return path
+
+
+def make_quiz_video(script, config, offline, workdir):
+    """Quiz Short: hook → for each question (ask, 3 s countdown, reveal) → score outro."""
+    accent = config.get("quiz_accent", "#1DE9D6")
+    random.seed(script["id"])
+    rnd = random.Random(script["id"] + "pose")
+    have = emotion_files(config)
+    pose = lambda opts: have.get(rnd.choice([o for o in opts if o in have] or list(have))) if have else None
+    used_ids, credits, segments = set(), [], []
+    qs = script["questions"]
+    idx = 0
+
+    def speak(text):
+        nonlocal idx
+        audio = os.path.join(workdir, f"v{idx}.mp3")
+        voice.speak(text, audio, config["voice"], config["voice_rate"], offline=offline,
+                    pitch=config.get("voice_pitch", "+0Hz"))
+        return audio
+
+    def footage(query, need):
+        if offline:
+            return {"kind": "none"}
+        clip = os.path.join(workdir, f"bg{idx}.mp4")
+        got = stock.find_clip(query, clip, need, used_ids)
+        if not got:
+            return {"kind": "none"}
+        credits.append(got)
+        return {"kind": got["kind"], "path": got.get("path", clip)}
+
+    def add(seg):
+        nonlocal idx
+        segments.append(render.render_segment(seg, script, accent, workdir, idx))
+        idx += 1
+
+    a = speak(script["hook"])
+    add({"kind": "q_hook", "text": script["hook"], "item": None, "audio": a,
+         "bg": footage(qs[0].get("search", "technology"), 6), "mascot": pose(["presenting", "curious"])})
+    for n, q in enumerate(qs, 1):
+        ask = speak(f"Question {n}. {q['q']}")
+        letter = "ABCD"[q["answer"]]
+        reveal_text = q.get("say") or f"It's {letter}. {q['options'][q['answer']]}!"
+        rev = speak(reveal_text)
+        t_ask, t_rev = render.duration(ask) + 0.3, render.duration(rev) + 1.7
+        bg = footage(q.get("search", "abstract background"), t_ask + 3 + t_rev + 1)
+        base = {"question": q, "n": n, "total": len(qs), "item": None, "captions": False, "bg": bg}
+        add(dict(base, kind="q_ask", text=q["q"], audio=ask, pad=0.3,
+                 mascot=pose(["thinking", "curious"])))
+        timer = silence(os.path.join(workdir, f"t{idx}.mp3"), 2.65)
+        add(dict(base, kind="q_timer", text="", audio=timer, bg_ss=t_ask, no_pop=True,
+                 mascot=pose(["nervous", "thinking"])))
+        add(dict(base, kind="q_reveal", text=reveal_text, audio=rev, pad=1.7, bg_ss=t_ask + 3, no_pop=True,
+                 mascot=pose(q.get("emotion", "").split() or ["excited", "celebrating", "shocked"])))
+        print(f"  question {n}: {q['q'][:50]}")
+    outro = f"{script['outro']} {subscribe_line(script)}"
+    a = speak(outro)
+    add({"kind": "q_outro", "text": outro, "item": None, "audio": a,
+         "bg": footage(qs[-1].get("search", "technology"), 10), "mascot": pose(["celebrating", "presenting"])})
+    os.makedirs(OUT, exist_ok=True)
+    out_path = os.path.join(OUT, "video.mp4")
+    total = render.finish(segments, workdir, out_path, accent, None, config["music_volume"])
+    return out_path, total, credits, False
+
+
 def make_video(script, config, offline, workdir):
+    if script.get("format") == "quiz":
+        return make_quiz_video(script, config, offline, workdir)
     accent = config["accent_color"]
     random.seed(script["id"])  # same script → same footage picks on a re-render
     used_ids, credits, segments = set(), [], []
@@ -213,9 +293,19 @@ def next_monday(today=None):
     return today + dt.timedelta(days=(7 - today.weekday()) % 7 or 7)
 
 
-def sheet_block(n, day, slot, post, file_name):
+KINDS = {
+    "ranking": {"queue": "queue.json", "slot_key": "posting_slot", "slot": "8:00 AM", "label": "Ranking"},
+    "quiz": {"queue": "quiz_queue.json", "slot_key": "quiz_slot", "slot": "9:00 PM", "label": "Quiz"},
+}
+
+
+def slot24(slot):
+    return dt.datetime.strptime(slot, "%I:%M %p").strftime("%H%M")
+
+
+def sheet_block(day, slot, label, post, file_name):
     return "\n".join([
-        f"## {n}. {day:%a %b %d} · {slot} — {post['title']}",
+        f"## {day:%a %b %d} · {slot} · {label} — {post['title']}",
         f"File: `{file_name}` · {post.get('duration', '?')} s",
         "", "**Title**", "```", post["title"], "```",
         "**Description**", "```", post["description"], "```",
@@ -226,17 +316,42 @@ def sheet_block(n, day, slot, post, file_name):
     ])
 
 
+def merge_sheet():
+    """Combine every rendered video's block into one upload sheet, in posting order."""
+    batch_dir = os.path.join(OUT, "batch")
+    posts = [load(p, {}) for p in glob.glob(os.path.join(batch_dir, "*.json"))]
+    posts.sort(key=lambda p: (p["post_on"], slot24(p["slot"])))
+    if not posts:
+        sys.exit("no videos were made")
+    first, last = posts[0]["post_on"], posts[-1]["post_on"]
+    fmt = lambda d: dt.date.fromisoformat(d).strftime("%a %b %d")
+    lines = [f"# Bojji (@bojjiii) — {fmt(first)} to {fmt(last)}", "",
+             "Upload each file in YouTube Studio **on the Bojji channel** and set Visibility → Schedule "
+             "for its date and time (Manila).", ""]
+    for f in sorted(glob.glob(os.path.join(OUT, "failed_*.txt"))):
+        lines.append("⚠️ " + open(f).read().strip() + "\n")
+    lines += [p["sheet_block"] for p in posts]
+    with open(os.path.join(OUT, "upload_sheet.md"), "w") as fh:
+        fh.write("\n".join(lines))
+    print(f"Upload sheet: {len(posts)} videos")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true", help="test render: no keys, no internet")
+    ap.add_argument("--kind", choices=list(KINDS), default="ranking")
     ap.add_argument("--count", type=int, default=1, help="how many videos to make in this run")
     ap.add_argument("--start", help="first posting date YYYY-MM-DD (default: next Monday)")
-    ap.add_argument("--write", type=int, help="only write scripts until the queue has this many, then stop")
+    ap.add_argument("--merge", action="store_true", help="only build out/upload_sheet.md from rendered videos")
+    ap.add_argument("--write", type=int, help="only write ranking scripts until the queue has this many (Gemini)")
     args = ap.parse_args()
+    if args.merge:
+        return merge_sheet()
 
     config = load(os.path.join(ROOT, "config.json"), {})
-    slot = config.get("posting_slot", "8:00 AM")
-    qpath, hpath = os.path.join(STATE, "queue.json"), os.path.join(STATE, "history.json")
+    kind = KINDS[args.kind]
+    slot = config.get(kind["slot_key"], kind["slot"])
+    qpath, hpath = os.path.join(STATE, kind["queue"]), os.path.join(STATE, "history.json")
     queue, history = load(qpath, []), load(hpath, [])
     first = dt.date.fromisoformat(args.start) if args.start else next_monday()
 
@@ -250,63 +365,56 @@ def main():
         print(f"::notice::Queue {before} -> {len(queue)} scripts")
         return
 
-    if len(queue) < args.count and not args.offline:
-        print(f"Queue has {len(queue)}, need {args.count}: writing scripts…")
-        try:
-            refill(config, queue, history, args.count)
-        except Exception as e:
-            print(f"  (couldn't write enough scripts: {e})")
+    if args.count < 1:
+        return
     if not queue:
-        sys.exit("queue is empty")
+        print(f"::warning::{kind['label']} queue is empty — nothing to make")
+        return
 
     batch_dir = os.path.join(OUT, "batch")
-    shutil.rmtree(OUT, ignore_errors=True)
-    os.makedirs(batch_dir)
-    sheet = [f"# Bojji (@bojjiii) — {first:%b %d} to {first + dt.timedelta(days=args.count - 1):%b %d}",
-             "", "Upload each file in YouTube Studio **on the Bojji channel** and set Visibility → Schedule "
-             f"for its date at {slot} (Manila).", ""]
+    os.makedirs(batch_dir, exist_ok=True)
     done, failed = [], []
     for n in range(args.count):
         if not queue:
             break
         script = queue[0]
         day = first + dt.timedelta(days=n)
-        print(f"[{n + 1}/{args.count}] {day} — {script['title']}")
+        print(f"[{kind['label']} {n + 1}/{args.count}] {day} — {script['title']}")
         workdir = os.path.join(ROOT, "work")
         shutil.rmtree(workdir, ignore_errors=True)
         os.makedirs(workdir)
         try:
             video, total, credits, synthetic = make_video(script, config, args.offline, workdir)
         except Exception as e:
-            print(f"  FAILED: {e}")
+            print(f"::warning::Couldn't make '{script['title']}': {str(e)[:500]}")
             failed.append(script["title"])
             queue.append(queue.pop(0))  # try it again next batch
             continue
         post = build_post(script, config, credits, synthetic)
         post["duration"] = round(total, 1)
-        name = f"{n + 1}_{day:%a-%b%d}_{script['id']}.mp4"
+        name = f"{day:%m%d}_{day:%a}_{slot24(slot)}_{args.kind}_{script['id']}.mp4"
         shutil.move(video, os.path.join(batch_dir, name))
-        save(os.path.join(batch_dir, name.replace(".mp4", ".json")), dict(post, post_on=str(day), slot=slot))
-        sheet.append(sheet_block(n + 1, day, slot, post, name))
+        save(os.path.join(batch_dir, name.replace(".mp4", ".json")),
+             dict(post, post_on=str(day), slot=slot, kind=args.kind,
+                  sheet_block=sheet_block(day, slot, kind["label"], post, name)))
         done.append(name)
         queue.pop(0)
         history.append({"id": script["id"], "title": script["title"], "topic": script.get("topic", ""),
-                        "rendered_on": dt.date.today().isoformat(), "post_on": str(day), "status": "rendered"})
+                        "kind": args.kind, "rendered_on": dt.date.today().isoformat(), "post_on": str(day),
+                        "status": "rendered"})
     if failed:
-        sheet.insert(4, f"⚠️ Couldn't make: {', '.join(failed)} (kept for next week).\n")
-    with open(os.path.join(OUT, "upload_sheet.md"), "w") as fh:
-        fh.write("\n".join(sheet))
-    print(f"Done: {len(done)} videos, {len(failed)} failed")
+        with open(os.path.join(OUT, f"failed_{args.kind}.txt"), "w") as fh:
+            fh.write(f"Couldn't make {kind['label'].lower()}: {', '.join(failed)} (kept for next week).")
+    print(f"Done: {len(done)} {args.kind} videos, {len(failed)} failed")
     if args.offline:
         return
-    try:  # keep enough ready scripts for next week; never fail the run over this
-        refill(config, queue, history, config.get("queue_min_size", 8))
-    except Exception as e:
-        print(f"::warning::Couldn't top up the script queue: {str(e)[:900]}")
+    if config.get("auto_write") and args.kind == "ranking":
+        try:
+            refill(config, queue, history, config.get("queue_min_size", 8))
+        except Exception as e:
+            print(f"::warning::Couldn't top up the script queue: {str(e)[:900]}")
     save(qpath, queue)
     save(hpath, history)
-    if not done:
-        sys.exit("no videos were made")
 
 
 if __name__ == "__main__":
