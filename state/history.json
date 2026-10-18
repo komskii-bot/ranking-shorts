@@ -15,14 +15,6 @@
     "status": "rendered"
   },
   {
-    "id": "deadliest-animals-to-humans",
-    "title": "Top 5 Deadliest Animals to Humans",
-    "topic": "",
-    "rendered_on": "2026-10-18",
-    "post_on": "2026-10-20",
-    "status": "rendered"
-  },
-  {
     "id": "countries-most-ai-usage-2026",
     "title": "Countries Where the Most People Use AI",
     "topic": "",
@@ -44,22 +36,6 @@
     "topic": "",
     "rendered_on": "2026-10-18",
     "post_on": "2026-10-23",
-    "status": "rendered"
-  },
-  {
-    "id": "fastest-animals",
-    "title": "The 5 Fastest Animals on the Planet",
-    "topic": "",
-    "rendered_on": "2026-10-18",
-    "post_on": "2026-10-24",
-    "status": "rendered"
-  },
-  {
-    "id": "deepest-ocean-trenches",
-    "title": "The 5 Deepest Places in the Ocean",
-    "topic": "",
-    "rendered_on": "2026-10-18",
-    "post_on": "2026-10-25",
     "status": "rendered"
   }
 ]
