@@ -82,69 +82,140 @@ def shadowed(layer, blur=14):
     return out
 
 
+HIGHLIGHT = ["#FF3B3B", "#1DE9D6", "#FF9F1C", "#FFD23F", "#C86BFF"]
+RANK_COLORS = {1: "#FFD23F", 2: "#E8EDF2", 3: "#FF9F1C", 4: "#1DE9D6", 5: "#FF5C8A"}
+STOP = {"ON", "IN", "OF", "THE", "TO", "FOR", "AT", "BY", "WITH", "THAT", "WHERE", "WHO",
+        "RIGHT", "NOW", "EVER", "AND", "A", "AN", "IS", "ARE", "#SHORTS"}
+
+
+def title_colors(title, highlights=None, palette=None):
+    """Return [(word, color_or_None)] — key phrases get flashy colours, numbers yellow."""
+    words = title.upper().replace("#SHORTS", "").split()
+    colors = [None] * len(words)
+    phrases = [h.upper().split() for h in (highlights or []) if h.strip()]
+    if not phrases:  # heuristic: the superlative + the subject that follows it
+        for i, w in enumerate(words):
+            if (w.endswith("EST") and len(w) > 4) or w in ("MOST", "BEST", "WORST", "LEAST"):
+                j = i + 1
+                while j < len(words) and words[j] not in STOP and not words[j].isdigit():
+                    j += 1
+                phrases = [[w]] + ([words[i + 1:j]] if j > i + 1 else [])
+                break
+        if not phrases and len(words) > 2:
+            phrases = [words[-2:]]
+    pal = [c for c in (palette or []) if c] or HIGHLIGHT
+    for k, ph in enumerate(phrases):
+        n = len(ph)
+        for i in range(len(words) - n + 1):
+            if [x.strip(",.!?:") for x in words[i:i + n]] == [x.strip(",.!?:") for x in ph]:
+                for j in range(i, i + n):
+                    colors[j] = pal[k % len(pal)]
+                break
+    for i, w in enumerate(words):
+        if colors[i] is None and any(ch.isdigit() for ch in w):
+            colors[i] = HIGHLIGHT[3]
+    return list(zip(words, colors))
+
+
+def rich_title(draw, tokens, y, start, min_size, max_lines, max_w=920, stroke=8):
+    """Centered, word-wrapped title where each word can have its own colour."""
+    text = " ".join(w for w, _ in tokens)
+    f, lines = fit_text(draw, text, max_w, start, min_size, max_lines)
+    k = 0
+    for line in lines:
+        n = len(line.split())
+        x = (W - draw.textlength(line, font=f)) / 2
+        for w, c in tokens[k:k + n]:
+            draw.text((x, y), w, font=f, fill=hex_rgba(c) if c else WHITE,
+                      stroke_width=stroke, stroke_fill=(0, 0, 0, 255))
+            x += draw.textlength(w + " ", font=f)
+        k += n
+        y += int(f.size * 1.08)
+    return y
+
+
+LIST_TOP, ROW_H = 300, 118
+
+
 def static_layer(script, seg, accent, path):
     img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    # darken top and caption zones so text always reads
     grad = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     gd = ImageDraw.Draw(grad)
     for y in range(H):
-        if y < 1200:
-            a = int(165 * (1 - y / 1200) ** 1.2)
-        elif 1150 < y < 1450:
-            a = int(110 * (1 - abs(y - 1300) / 150))
+        if y < 1150:
+            a = int(150 * (1 - y / 1150) ** 1.1) + 25
+        elif 1300 <= y < 1600:
+            a = int(110 * (1 - abs(y - 1450) / 150))
         else:
             a = 0
-        if a:
+        if a > 0:
             gd.line([(0, y), (W, y)], fill=(0, 0, 0, a))
     img.alpha_composite(grad)
 
     txt = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(txt)
     acc = hex_rgba(accent)
+    tokens = title_colors(script["title"], script.get("highlight"), script.get("highlight_colors"))
 
     if seg["kind"] == "hook":
         tag = font(70)
         label = "TOP 5"
         tw = d.textlength(label, font=tag)
-        d.rounded_rectangle([(W - tw) / 2 - 34, 330, (W + tw) / 2 + 34, 430], 26, fill=acc)
-        d.text(((W - tw) / 2, 336), label, font=tag, fill=(15, 15, 15, 255))
-        f, lines = fit_text(d, script["title"].upper(), 900, 104, 60, 3)
-        centered(d, lines, f, 480, WHITE, stroke=7)
+        d.rounded_rectangle([(W - tw) / 2 - 34, 250, (W + tw) / 2 + 34, 350], 26, fill=hex_rgba(HIGHLIGHT[0]))
+        d.text(((W - tw) / 2, 256), label, font=tag, fill=WHITE)
+        rich_title(d, tokens, 395, 110, 64, 4)
     elif seg["kind"] == "outro":
-        f, lines = fit_text(d, "WHAT'S YOUR #1?", 900, 120, 70, 2)
-        centered(d, lines, f, 430, acc, stroke=8)
-        f2, l2 = fit_text(d, "COMMENT BELOW", 900, 72, 50, 1)
-        centered(d, l2, f2, 710, WHITE, stroke=6)
+        f = font(118)
+        parts = [("WHAT'S YOUR", WHITE), ("#1?", hex_rgba(HIGHLIGHT[3]))]
+        y = 330
+        for t, c in parts:
+            x = (W - d.textlength(t, font=f)) / 2
+            d.text((x, y), t, font=f, fill=c, stroke_width=9, stroke_fill=(0, 0, 0, 255))
+            y += 130
+        f2 = font(70)
+        t = "COMMENT BELOW"
+        d.text(((W - d.textlength(t, font=f2)) / 2, y + 20), t, font=f2, fill=hex_rgba(HIGHLIGHT[1]),
+               stroke_width=7, stroke_fill=(0, 0, 0, 255))
     else:
         item = seg["item"]
-        # small title strip
-        f, lines = fit_text(d, script["title"].upper(), 860, 44, 30, 2)
-        centered(d, lines, f, 175, (255, 255, 255, 230), stroke=4)
-        # rank badge
-        badge = font(250)
-        label = f"#{item['rank']}"
-        bw = d.textlength(label, font=badge)
-        d.text(((W - bw) / 2, 235), label, font=badge, fill=acc, stroke_width=10, stroke_fill=(0, 0, 0, 255))
-        fn, nl = fit_text(d, item["name"].upper(), 940, 90, 56, 2)
-        y = centered(d, nl, fn, 545, WHITE, stroke=7)
-        if item.get("stat"):
-            fs, sl = fit_text(d, item["stat"], 900, 62, 40, 1)
-            sw = d.textlength(sl[0], font=fs)
-            d.rounded_rectangle([(W - sw) / 2 - 26, y + 10, (W + sw) / 2 + 26, y + 18 + fs.size * 1.25], 20,
-                                fill=(0, 0, 0, 170))
-            d.text(((W - sw) / 2, y + 14), sl[0], font=fs, fill=acc)
-        # ranking ladder: revealed items, #1 stays hidden until its turn
-        lf = font(38)
-        ly = 900
+        rich_title(d, tokens, 150, 50, 34, 2, max_w=960, stroke=5)
+        # big ranking list: #1 at the top, names revealed as the countdown reaches them
+        panel = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        ImageDraw.Draw(panel).rounded_rectangle([30, LIST_TOP - 16, W - 30, LIST_TOP + 5 * ROW_H + 4], 36,
+                                                fill=(0, 0, 0, 120))
+        img.alpha_composite(panel)
         for it in sorted(script["items"], key=lambda i: i["rank"]):
-            shown = it["rank"] >= item["rank"]
-            name = it["name"] if shown else "???"
-            col = acc if it["rank"] == item["rank"] else (255, 255, 255, 235 if shown else 150)
-            row = f"{it['rank']}.  {name}"
-            while d.textlength(row, font=lf) > 620 and len(row) > 8:
-                row = row[:-2].rstrip() + "…"
-            d.text((90, ly), row, font=lf, fill=col, stroke_width=4, stroke_fill=(0, 0, 0, 255))
-            ly += 52
+            r = it["rank"]
+            y = LIST_TOP + (r - 1) * ROW_H
+            current = r == item["rank"]
+            shown = r >= item["rank"]
+            if current:
+                d.rounded_rectangle([44, y + 4, W - 44, y + ROW_H - 8], 28, fill=acc)
+            col = hex_rgba(RANK_COLORS.get(r, "#FFFFFF"))
+            nf = font(76)
+            num = f"{r}."
+            d.text((70, y + 8), num, font=nf, fill=(20, 20, 20, 255) if current else col,
+                   stroke_width=0 if current else 6, stroke_fill=(0, 0, 0, 255))
+            name = it["name"].upper() if shown else "?????"
+            size = 72
+            while size > 44 and d.textlength(name, font=font(size)) > W - 230:
+                size -= 4
+            f = font(size)
+            while d.textlength(name, font=f) > W - 230 and len(name) > 4:
+                name = name[:-2].rstrip() + "…"
+            ny = y + 8 + (76 - size) * 0.6
+            if current:
+                d.text((175, ny), name, font=f, fill=(15, 15, 15, 255))
+            else:
+                d.text((175, ny), name, font=f, fill=WHITE if shown else (255, 255, 255, 140),
+                       stroke_width=6, stroke_fill=(0, 0, 0, 255))
+        if item.get("stat"):
+            fs, sl = fit_text(d, item["stat"], 600, 66, 40, 1)
+            sw = d.textlength(sl[0], font=fs)
+            sy = LIST_TOP + 5 * ROW_H + 40
+            d.rounded_rectangle([50, sy, 50 + sw + 56, sy + fs.size * 1.45], 24, fill=(0, 0, 0, 200),
+                                outline=acc, width=5)
+            d.text((78, sy + fs.size * 0.18), sl[0], font=fs, fill=acc)
     img.alpha_composite(shadowed(txt))
     img.save(path)
 
@@ -180,17 +251,17 @@ def caption_layer(text, accent, path, y_one=1235, y_two=1190):
 
 
 MASCOT_SPOTS = {
-    # kind: (height px, x position or None for centred, top y)
-    "item": (340, None, 815),
-    "hook": (580, None, 1080),
-    "outro": (580, None, 1080),
+    # kind: (height px, top y)
+    "item": (360, 1000),
+    "hook": (640, 1120),
+    "outro": (640, 1120),
 }
 
 
 def mascot_png(src, kind, workdir):
-    """Sized 'sticker' version of the mascot: white outline + soft shadow."""
-    h, _, _ = MASCOT_SPOTS[kind]
-    out = os.path.join(workdir, f"mascot_{kind}.png")
+    """Sized 'sticker' version of a mascot pose: white outline + soft shadow."""
+    h, _ = MASCOT_SPOTS[kind]
+    out = os.path.join(workdir, f"mascot_{kind}_{os.path.splitext(os.path.basename(src))[0]}.png")
     if os.path.exists(out):
         return out
     m = Image.open(src).convert("RGBA")
@@ -204,7 +275,6 @@ def mascot_png(src, kind, workdir):
     canvas.paste((0, 0, 0, 255), (0, 6), shadow)
     canvas.paste((255, 255, 255, 255), (0, 0), ring)
     canvas.alpha_composite(m, (pad, pad))
-    # the mascot is cut off at the shirt, so let the bottom edge run off cleanly
     canvas.save(out)
     return out
 
@@ -223,6 +293,7 @@ def gradient_bg(path, seed):
 
 
 def render_segment(seg, script, accent, workdir, idx, mascot=None):
+    mascot = seg.get("mascot") or mascot
     """seg: kind, text, audio, bg ({'kind': video|photo|none, 'path'})"""
     dur = duration(seg["audio"]) + 0.35
     static = os.path.join(workdir, f"s{idx}_static.png")
@@ -231,9 +302,9 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
     for j, (txt, a, b) in enumerate(caption_chunks(seg["text"], dur - 0.35)):
         p = os.path.join(workdir, f"s{idx}_cap{j}.png")
         if mascot and seg["kind"] in ("hook", "outro"):
-            caption_layer(txt, accent, p, y_one=880, y_two=850)  # sits above the big mascot
+            caption_layer(txt, accent, p, y_one=905, y_two=880)  # sits above the big mascot
         else:
-            caption_layer(txt, accent, p)
+            caption_layer(txt, accent, p, y_one=1400, y_two=1360)
         caps.append((p, a, b))
 
     bg = seg.get("bg") or {"kind": "none"}
@@ -252,9 +323,9 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
     last, n_in = "v1", 2
     if mascot:
         mp = mascot_png(mascot, seg["kind"], workdir)
-        _, mx, my = MASCOT_SPOTS[seg["kind"]]
+        _, my = MASCOT_SPOTS[seg["kind"]]
         inputs += ["-loop", "1", "-framerate", str(FPS), "-i", mp]
-        x = f"{W - Image.open(mp).width + 10}" if seg["kind"] == "item" else "(W-w)/2"
+        x = f"{W - Image.open(mp).width - 10}" if seg["kind"] == "item" else "(W-w)/2"
         # pops up from below at the start, then bobs gently while the narrator talks
         y = (f"{my}+if(lt(t,0.3),(0.3-t)/0.3*420,0)+9*sin(2*PI*t*1.7)")
         chain.append(f"[{last}][{n_in}:v]overlay=x='{x}':y='{y}':eval=frame:shortest=1[vm]")

@@ -115,6 +115,31 @@ def write_upload_notes(post, script):
         fh.write("\n".join(lines) + "\n")
 
 
+EMOTIONS = ["presenting", "shocked", "thinking", "celebrating", "curious", "excited", "exclaim", "nervous"]
+
+
+def pick_emotions(script, config):
+    """Mascot pose per segment: hook / countdown / #1 reveal / outro. Scripts may set item["emotion"]."""
+    folder = os.path.join(ROOT, config.get("mascot_dir", "assets/emotions"))
+    have = {e: os.path.join(folder, e + ".png") for e in EMOTIONS if os.path.exists(os.path.join(folder, e + ".png"))}
+    if not have:
+        return {}
+    rnd = random.Random(script["id"])
+    pick = lambda opts: have.get(rnd.choice([o for o in opts if o in have] or list(have)))
+    poses = {"hook": pick(["presenting", "curious"]), "outro": pick(["celebrating", "presenting"])}
+    middle = [e for e in ["thinking", "curious", "excited", "nervous"] if e in have]
+    rnd.shuffle(middle)
+    for k, it in enumerate(sorted(script["items"], key=lambda i: -i["rank"])):
+        want = it.get("emotion")
+        if want in have:
+            poses[it["rank"]] = have[want]
+        elif it["rank"] == 1:
+            poses[1] = pick(["shocked", "exclaim"])
+        else:
+            poses[it["rank"]] = have[middle[k % len(middle)]] if middle else pick(EMOTIONS)
+    return poses
+
+
 def make_video(script, config, offline, workdir):
     accent = config["accent_color"]
     used_ids, credits, segments = set(), [], []
@@ -122,6 +147,7 @@ def make_video(script, config, offline, workdir):
     mascot = os.path.join(ROOT, config.get("mascot", "")) if config.get("mascot") else None
     if mascot and not os.path.exists(mascot):
         mascot = None
+    poses = pick_emotions(script, config)
 
     def add(seg):
         nonlocal idx
@@ -140,7 +166,8 @@ def make_video(script, config, offline, workdir):
 
     for kind, text, item, query in plan:
         audio = os.path.join(workdir, f"v{idx}.mp3")
-        voice.speak(text, audio, config["voice"], config["voice_rate"], offline=offline)
+        voice.speak(text, audio, config["voice"], config["voice_rate"], offline=offline,
+                    pitch=config.get("voice_pitch", "+0Hz"))
         bg = {"kind": "none"}
         if not offline:
             clip = os.path.join(workdir, f"bg{idx}.mp4")
@@ -148,7 +175,8 @@ def make_video(script, config, offline, workdir):
             if got:
                 bg = {"kind": got["kind"], "path": got.get("path", clip)}
                 credits.append(got)
-        add({"kind": kind, "text": text, "item": item, "audio": audio, "bg": bg})
+        pose = poses.get("hook" if kind == "hook" else "outro" if kind == "outro" else item["rank"])
+        add({"kind": kind, "text": text, "item": item, "audio": audio, "bg": bg, "mascot": pose})
         print(f"  segment {idx}: {kind} {item['name'] if item else ''}")
 
     if outro:
@@ -162,63 +190,94 @@ def make_video(script, config, offline, workdir):
     return out_path, total, credits, bool(intro or outro)
 
 
+def next_monday(today=None):
+    today = today or (dt.datetime.utcnow() + dt.timedelta(hours=8)).date()  # Manila date
+    return today + dt.timedelta(days=(7 - today.weekday()) % 7 or 7)
+
+
+def sheet_block(n, day, slot, post, file_name):
+    return "\n".join([
+        f"## {n}. {day:%a %b %d} · {slot} — {post['title']}",
+        f"File: `{file_name}` · {post.get('duration', '?')} s",
+        "", "**Title**", "```", post["title"], "```",
+        "**Description**", "```", post["description"], "```",
+        "**Tags**", "```", ", ".join(post["tags"]), "```",
+        f"Not made for kids · Altered/synthetic content: **{'Yes' if post['ai_generated'] else 'No'}** · "
+        f"Schedule: **{day:%a %b %d}, {slot}** (Manila)",
+        "",
+    ])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true", help="test render: no keys, no internet")
-    ap.add_argument("--script-id", help="render this queued script instead of the next one")
-    ap.add_argument("--check-channel", action="store_true", help="only verify which channel the login uploads to")
+    ap.add_argument("--count", type=int, default=1, help="how many videos to make in this run")
+    ap.add_argument("--start", help="first posting date YYYY-MM-DD (default: next Monday)")
     args = ap.parse_args()
 
     config = load(os.path.join(ROOT, "config.json"), {})
-    if not args.offline and config.get("upload_mode") == "youtube":
-        from . import youtube
-        youtube.check_channel(config)  # stops here, before any work, if it's the wrong channel
-        if args.check_channel:
-            return
+    slot = config.get("posting_slot", "8:00 AM")
     qpath, hpath = os.path.join(STATE, "queue.json"), os.path.join(STATE, "history.json")
     queue, history = load(qpath, []), load(hpath, [])
+    first = dt.date.fromisoformat(args.start) if args.start else next_monday()
 
+    if len(queue) < args.count and not args.offline:
+        print(f"Queue has {len(queue)}, need {args.count}: writing scripts…")
+        try:
+            refill(config, queue, history, args.count)
+        except Exception as e:
+            print(f"  (couldn't write enough scripts: {e})")
     if not queue:
-        if args.offline:
-            sys.exit("queue is empty")
-        print("Queue empty, writing a script…")
-        refill(config, queue, history, 1)
+        sys.exit("queue is empty")
 
-    script = next((q for q in queue if q["id"] == args.script_id), None) if args.script_id else queue[0]
-    if not script:
-        sys.exit(f"no queued script with id {args.script_id}")
-    print(f"Rendering: {script['title']}")
-
-    workdir = os.path.join(ROOT, "work")
-    shutil.rmtree(workdir, ignore_errors=True)
-    os.makedirs(workdir)
-    video, total, credits, synthetic = make_video(script, config, args.offline, workdir)
-    post = build_post(script, config, credits, synthetic)
-    post["duration"] = round(total, 1)
-    save(os.path.join(OUT, "post.json"), post)
-    write_upload_notes(post, script)
-    print(f"Done: {video} ({total:.1f}s)")
-
+    batch_dir = os.path.join(OUT, "batch")
+    shutil.rmtree(OUT, ignore_errors=True)
+    os.makedirs(batch_dir)
+    sheet = [f"# Bojji (@bojjiii) — {first:%b %d} to {first + dt.timedelta(days=args.count - 1):%b %d}",
+             "", "Upload each file in YouTube Studio **on the Bojji channel** and set Visibility → Schedule "
+             f"for its date at {slot} (Manila).", ""]
+    done, failed = [], []
+    for n in range(args.count):
+        if not queue:
+            break
+        script = queue[0]
+        day = first + dt.timedelta(days=n)
+        print(f"[{n + 1}/{args.count}] {day} — {script['title']}")
+        workdir = os.path.join(ROOT, "work")
+        shutil.rmtree(workdir, ignore_errors=True)
+        os.makedirs(workdir)
+        try:
+            video, total, credits, synthetic = make_video(script, config, args.offline, workdir)
+        except Exception as e:
+            print(f"  FAILED: {e}")
+            failed.append(script["title"])
+            queue.append(queue.pop(0))  # try it again next batch
+            continue
+        post = build_post(script, config, credits, synthetic)
+        post["duration"] = round(total, 1)
+        name = f"{n + 1}_{day:%a-%b%d}_{script['id']}.mp4"
+        shutil.move(video, os.path.join(batch_dir, name))
+        save(os.path.join(batch_dir, name.replace(".mp4", ".json")), dict(post, post_on=str(day), slot=slot))
+        sheet.append(sheet_block(n + 1, day, slot, post, name))
+        done.append(name)
+        queue.pop(0)
+        history.append({"id": script["id"], "title": script["title"], "topic": script.get("topic", ""),
+                        "rendered_on": dt.date.today().isoformat(), "post_on": str(day), "status": "rendered"})
+    if failed:
+        sheet.insert(4, f"⚠️ Couldn't make: {', '.join(failed)} (kept for next week).\n")
+    with open(os.path.join(OUT, "upload_sheet.md"), "w") as fh:
+        fh.write("\n".join(sheet))
+    print(f"Done: {len(done)} videos, {len(failed)} failed")
     if args.offline:
         return
-
-    entry = {"id": script["id"], "title": script["title"], "topic": script.get("topic", ""),
-             "rendered_on": dt.date.today().isoformat(), "status": "rendered"}
-    if config.get("upload_mode") == "youtube":
-        from . import youtube
-        script["yt_title"], script["yt_description"] = post["title"], post["description"]
-        entry["youtube_id"] = youtube.upload(video, script, config, synthetic)
-        entry["status"] = "uploaded"
-        print(f"Uploaded: https://youtube.com/shorts/{entry['youtube_id']}")
-
-    queue = [q for q in queue if q["id"] != script["id"]]
-    history.append(entry)
-    try:  # keep a buffer of ready scripts; never fail the run over this
-        refill(config, queue, history, config.get("queue_min_size", 5))
+    try:  # keep enough ready scripts for next week; never fail the run over this
+        refill(config, queue, history, config.get("queue_min_size", 8))
     except Exception as e:
         print(f"  (couldn't top up queue: {e})")
     save(qpath, queue)
     save(hpath, history)
+    if not done:
+        sys.exit("no videos were made")
 
 
 if __name__ == "__main__":

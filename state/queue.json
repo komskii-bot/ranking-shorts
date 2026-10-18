@@ -2,7 +2,7 @@
   {
     "id": "deadliest-animals-to-humans",
     "title": "Top 5 Deadliest Animals to Humans",
-    "hook": "These animals kill more people than any others, and number one is tiny.",
+    "hook": "These animals take out more humans than anything else, and number one? It's tiny. Like, really tiny.",
     "items": [
       {
         "rank": 5,
@@ -40,7 +40,7 @@
         "search": "mosquito"
       }
     ],
-    "outro": "Which animal scares you the most? Tell me below.",
+    "outro": "Okay be honest, which one scares you the most? Drop it below.",
     "description": "The animals responsible for the most human deaths each year, based on World Health Organization estimates.",
     "tags": [
       "animals",
@@ -55,12 +55,20 @@
     "as_of": "",
     "sources": [
       "World Health Organization fact sheets (malaria, snakebite envenoming, rabies, Chagas disease)"
+    ],
+    "highlight": [
+      "Deadliest",
+      "Animals"
+    ],
+    "highlight_colors": [
+      "#FF3B3B",
+      "#FF9F1C"
     ]
   },
   {
     "id": "countries-most-ai-usage-2026",
     "title": "Countries Where the Most People Use AI",
-    "hook": "In one country, seven out of ten adults already use AI. Can you guess which?",
+    "hook": "In one country, seven out of ten adults are already using AI. Bet you can't guess which one.",
     "items": [
       {
         "rank": 5,
@@ -98,7 +106,7 @@
         "search": "dubai skyline"
       }
     ],
-    "outro": "Where do you think your country ranks? Comment below.",
+    "outro": "So where's your country on this list? Tell me in the comments.",
     "description": "Countries ranked by the share of working-age people who use AI tools, from Microsoft's AI Diffusion Report for the first quarter of 2026.",
     "tags": [
       "ai",
@@ -114,12 +122,20 @@
     "sources": [
       "Microsoft AI Diffusion Report 2026 Q1",
       "Visual Capitalist — Mapped: AI Adoption by Country in 2026"
+    ],
+    "highlight": [
+      "Most People",
+      "Use AI"
+    ],
+    "highlight_colors": [
+      "#FF9F1C",
+      "#1DE9D6"
     ]
   },
   {
     "id": "tallest-buildings-world",
     "title": "The 5 Tallest Buildings in the World",
-    "hook": "Number one is so tall you can watch the sunset twice in one day.",
+    "hook": "Number one is so tall you can literally watch the sunset twice in one day. Let's go.",
     "items": [
       {
         "rank": 5,
@@ -157,7 +173,7 @@
         "search": "burj khalifa"
       }
     ],
-    "outro": "Would you dare go to the top of number one?",
+    "outro": "Would you actually go to the top of number one? Be honest.",
     "description": "The tallest completed buildings in the world, ranked by architectural height (Council on Tall Buildings and Urban Habitat).",
     "tags": [
       "tallest buildings",
@@ -171,12 +187,20 @@
     "as_of": "2026",
     "sources": [
       "Council on Tall Buildings and Urban Habitat (CTBUH) Skyscraper Center"
+    ],
+    "highlight": [
+      "Tallest",
+      "Buildings"
+    ],
+    "highlight_colors": [
+      "#FFD23F",
+      "#4DA3FF"
     ]
   },
   {
     "id": "largest-countries-by-area",
     "title": "The 5 Largest Countries in the World",
-    "hook": "Number one is bigger than the surface of Pluto.",
+    "hook": "Number one is so huge it's bigger than the whole surface of Pluto. No joke.",
     "items": [
       {
         "rank": 5,
@@ -214,7 +238,7 @@
         "search": "russia snow landscape"
       }
     ],
-    "outro": "Which country would you want to explore first?",
+    "outro": "Which one are you exploring first? Comment it.",
     "description": "The world's biggest countries ranked by total area (land and water).",
     "tags": [
       "geography",
@@ -229,12 +253,20 @@
     "as_of": "",
     "sources": [
       "CIA World Factbook — area"
+    ],
+    "highlight": [
+      "Largest",
+      "Countries"
+    ],
+    "highlight_colors": [
+      "#FF9F1C",
+      "#3DDC84"
     ]
   },
   {
     "id": "fastest-animals",
     "title": "The 5 Fastest Animals on the Planet",
-    "hook": "Number one moves faster than a Formula One car.",
+    "hook": "Number one moves faster than a Formula One car. Yeah, an animal.",
     "items": [
       {
         "rank": 5,
@@ -272,7 +304,7 @@
         "search": "falcon"
       }
     ],
-    "outro": "Did you expect a bird at number one?",
+    "outro": "Did you see a bird taking number one? Didn't think so.",
     "description": "The fastest animals in the world, ranked by top recorded speed. Speeds are approximate and vary by study.",
     "tags": [
       "animals",
@@ -288,12 +320,20 @@
     "sources": [
       "National Geographic",
       "Royal Society Open Science (2016) bat flight study"
+    ],
+    "highlight": [
+      "Fastest",
+      "Animals"
+    ],
+    "highlight_colors": [
+      "#FFD23F",
+      "#FF3B3B"
     ]
   },
   {
     "id": "deepest-ocean-trenches",
     "title": "The 5 Deepest Places in the Ocean",
-    "hook": "Number one is deeper than Mount Everest is tall.",
+    "hook": "Number one is deeper than Mount Everest is tall. Let that sink in.",
     "items": [
       {
         "rank": 5,
@@ -331,7 +371,7 @@
         "search": "deep sea"
       }
     ],
-    "outro": "Would you ever go down there in a submarine?",
+    "outro": "Would you go down there in a submarine? Because I'm good.",
     "description": "The deepest ocean trenches on Earth, ranked by their deepest measured point. Depths are approximate.",
     "tags": [
       "ocean",
@@ -347,12 +387,20 @@
     "sources": [
       "NOAA Ocean Exploration",
       "Five Deeps Expedition"
+    ],
+    "highlight": [
+      "Deepest",
+      "Ocean"
+    ],
+    "highlight_colors": [
+      "#1DE9D6",
+      "#4DA3FF"
     ]
   },
   {
     "id": "largest-planets-solar-system",
     "title": "The 5 Biggest Planets in Our Solar System",
-    "hook": "You could fit more than a thousand Earths inside number one.",
+    "hook": "You could fit over a thousand Earths inside number one. Wild, right?",
     "items": [
       {
         "rank": 5,
@@ -390,7 +438,7 @@
         "search": "jupiter planet"
       }
     ],
-    "outro": "Which planet would you visit first?",
+    "outro": "Which planet are you visiting first? Tell me below.",
     "description": "The largest planets in our solar system ranked by diameter, using NASA figures.",
     "tags": [
       "space",
@@ -405,12 +453,20 @@
     "as_of": "",
     "sources": [
       "NASA Planetary Fact Sheet"
+    ],
+    "highlight": [
+      "Biggest",
+      "Planets"
+    ],
+    "highlight_colors": [
+      "#C86BFF",
+      "#FF9F1C"
     ]
   },
   {
     "id": "highest-mountains",
     "title": "The 5 Highest Mountains on Earth",
-    "hook": "All five are in Asia, and number one is still growing.",
+    "hook": "All five are in Asia, and number one is still growing. Every single year.",
     "items": [
       {
         "rank": 5,
@@ -448,7 +504,7 @@
         "search": "mount everest"
       }
     ],
-    "outro": "Would you ever try to climb number one?",
+    "outro": "Would you ever try climbing number one? Comment yes or no.",
     "description": "The highest mountains in the world ranked by elevation above sea level.",
     "tags": [
       "mountains",
@@ -464,12 +520,20 @@
     "sources": [
       "Nepal and China joint survey (2020) for Everest",
       "Encyclopaedia Britannica"
+    ],
+    "highlight": [
+      "Highest",
+      "Mountains"
+    ],
+    "highlight_colors": [
+      "#1DE9D6",
+      "#FFD23F"
     ]
   },
   {
     "id": "largest-deserts",
     "title": "The 5 Largest Deserts in the World",
-    "hook": "The biggest desert on Earth isn't hot at all.",
+    "hook": "The biggest desert on Earth? It's not even hot. Watch this.",
     "items": [
       {
         "rank": 5,
@@ -507,7 +571,7 @@
         "search": "antarctica"
       }
     ],
-    "outro": "Did you know Antarctica was a desert? Comment yes or no.",
+    "outro": "Did you know Antarctica counts as a desert? Yes or no, be honest.",
     "description": "The world's largest deserts by area. A desert is defined by low precipitation, not heat.",
     "tags": [
       "deserts",
@@ -523,6 +587,14 @@
     "sources": [
       "Encyclopaedia Britannica",
       "US Geological Survey"
+    ],
+    "highlight": [
+      "Largest",
+      "Deserts"
+    ],
+    "highlight_colors": [
+      "#FF9F1C",
+      "#FFD23F"
     ]
   }
 ]

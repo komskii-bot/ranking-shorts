@@ -19,10 +19,13 @@ SCHEMA_HINT = """Return ONLY a JSON object, no markdown fences, in exactly this 
   "items": [
     {"rank": 5, "name": "Short name (max 4 words)", "stat": "Key number, max 4 words, e.g. 946 MW",
      "line": "One spoken sentence, 12-20 words, with the key number and one surprising detail",
+     "emotion": "optional mascot reaction for this item: thinking, curious, excited, nervous, shocked or exclaim",
      "search": "2-4 word stock-footage search term that would show this item"},
     ... ranks 4, 3, 2, 1 in that order ...
   ],
   "outro": "One short spoken line asking viewers what they'd put at #1",
+  "highlight": ["1-2 key phrases copied EXACTLY from the title to colour, e.g. the superlative and the subject: ['Deadliest', 'Animals']"],
+  "highlight_colors": ["one hex colour per highlight phrase that FITS THE TOPIC and pops on dark video, from: #FF3B3B red, #1DE9D6 teal, #FF9F1C orange, #FFD23F yellow, #C86BFF purple, #4DA3FF blue, #3DDC84 green (e.g. danger=red, AI/tech=teal, space=purple, desert=orange, ocean=blue)"],
   "description": "2-3 sentence YouTube description stating the data source and date",
   "tags": ["8-12 lowercase tags"],
   "as_of": "Month YYYY the data refers to, or empty string for evergreen facts",
@@ -33,6 +36,7 @@ RULES = """Rules:
 - Exactly 5 items, ordered rank 5 down to rank 1.
 - Every number must come from a reputable source (official stats, research groups, major publications). If sources disagree, say "about" or "estimated".
 - For anything that changes over time, use the newest data you can find and set "as_of".
+- Voice: a young, hype, charismatic narrator talking to a Gen Z audience. Punchy, playful, a bit cheeky ("no joke", "wild, right?", "let that sink in"), at most one slang touch per line, never cringe overload, never mean. Hooks should create curiosity in the first 2 seconds.
 - Spoken lines must sound natural read aloud: no symbols, no parentheses, spell out units ("megawatts", "kilometers").
 - Do NOT pick topics that require movie, TV, music or sports footage.
 - Do NOT rank real private individuals; companies, products, countries and nature are fine.

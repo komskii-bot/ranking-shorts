@@ -1,23 +1,19 @@
-# Ranking Shorts — automated "Top 5" videos
+# Ranking Shorts — weekly "Top 5" video batches for Bojji (@bojjiii)
 
-Every day at **4:00 PM Manila** this makes one finished vertical ranking Short. **You upload it yourself** to Bojji (@bojjiii).
+Every **Saturday at 4:00 PM Manila** this makes 7 finished vertical ranking Shorts for Mon–Sun of the coming week.
+Claude then sends you the files plus an upload sheet (title, description, tags, date/time for each).
+**You upload and schedule them yourself** in YouTube Studio on the Bojji channel (8:00 AM Manila slots).
 
 ```
 GitHub Actions (free)
-  1. Takes the next script from state/queue.json
-     (queue low? Gemini writes more, searching the web for current data)
-  2. Voiceover        edge-tts (free neural voice)
+  1. Takes the next 7 scripts from state/queue.json (Gemini writes more when it runs low)
+  2. Voiceover        edge-tts, young lively voice (config.json: voice / voice_rate / voice_pitch)
   3. Visuals          Pexels / Pixabay video, or Openverse public-domain images
-  4. Editing          FFmpeg: rank badges, captions, hidden #1 ladder, progress bar, mascot, music
-  5. Posts the MP4 + a copy-paste upload sheet on the repo's Releases page
+  4. Editing          FFmpeg: big ranking list, topic-coloured title keywords, captions,
+                      mascot reactions (assets/emotions/*.png), progress bar, music
+  5. One release per week with all 7 MP4s + the upload sheet
 ```
-
-## Your daily 2 minutes
-1. Open **github.com/komskii-bot/ranking-shorts/releases** → newest release → download the `.mp4`.
-   (Get an email for each new video: repo page → **Watch → Custom → Releases** → Apply.)
-2. YouTube Studio → check the channel is **Bojji** → Create → Upload videos.
-3. Copy the title, description and tags from the release notes; set "Not made for kids".
-4. Visibility → **Schedule** for your posting slot.
+To make an extra batch: Actions → Weekly ranking Shorts batch → Run workflow (choose count and first date).
 
 ---
 

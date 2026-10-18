@@ -7,13 +7,13 @@ import subprocess
 FALLBACK_VOICE = "en-US-GuyNeural"
 
 
-async def _edge(text, out_path, voice, rate):
+async def _edge(text, out_path, voice, rate, pitch="+0Hz"):
     import edge_tts
 
-    await edge_tts.Communicate(text, voice, rate=rate).save(out_path)
+    await edge_tts.Communicate(text, voice, rate=rate, pitch=pitch).save(out_path)
 
 
-def speak(text, out_path, voice, rate="+0%", offline=False):
+def speak(text, out_path, voice, rate="+0%", offline=False, pitch="+0Hz"):
     if offline:
         if not shutil.which("espeak-ng"):  # silent placeholder sized like speech
             secs = max(1.5, len(text.split()) / 2.7)
@@ -28,7 +28,7 @@ def speak(text, out_path, voice, rate="+0%", offline=False):
     for v in (voice, FALLBACK_VOICE):
         for _ in range(3):
             try:
-                asyncio.run(_edge(text, out_path, v, rate))
+                asyncio.run(_edge(text, out_path, v, rate, pitch))
                 return out_path
             except Exception as e:  # network hiccup or unknown voice
                 last = e
