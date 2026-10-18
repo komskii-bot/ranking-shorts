@@ -184,9 +184,12 @@ def make_quiz_video(script, config, offline, workdir):
     qs = script["questions"]
     idx = 0
 
+    clips = 0
+
     def speak(text):
-        nonlocal idx
-        audio = os.path.join(workdir, f"v{idx}.mp3")
+        nonlocal clips
+        clips += 1  # every line gets its own file (question and answer used to collide)
+        audio = os.path.join(workdir, f"voice{clips:02d}.mp3")
         voice.speak(text, audio, config["voice"], config["voice_rate"], offline=offline,
                     pitch=config.get("voice_pitch", "+0Hz"))
         return audio
@@ -219,7 +222,7 @@ def make_quiz_video(script, config, offline, workdir):
         base = {"question": q, "n": n, "total": len(qs), "item": None, "captions": False, "bg": bg}
         add(dict(base, kind="q_ask", text=q["q"], audio=ask, pad=0.3,
                  mascot=pose(["thinking", "curious"])))
-        timer = silence(os.path.join(workdir, f"t{idx}.mp3"), 2.65)
+        timer = silence(os.path.join(workdir, f"timer{n}.mp3"), 2.65)
         add(dict(base, kind="q_timer", text="", audio=timer, bg_ss=t_ask, no_pop=True,
                  mascot=pose(["nervous", "thinking"])))
         add(dict(base, kind="q_reveal", text=reveal_text, audio=rev, pad=1.7, bg_ss=t_ask + 3, no_pop=True,
