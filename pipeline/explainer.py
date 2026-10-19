@@ -913,6 +913,7 @@ def main():
     ap.add_argument("--offline", action="store_true")
     ap.add_argument("--preview", type=float, default=None, help="only render the first N seconds")
     ap.add_argument("--frames", action="store_true", help="save a still from every segment")
+    ap.add_argument("--timing-only", action="store_true", help="only time the voice and save timing.json")
     a = ap.parse_args()
     folder = os.path.abspath(a.folder)
     script = json.load(open(os.path.join(folder, "script.json")))
@@ -923,7 +924,11 @@ def main():
     if frames:
         shutil.rmtree(frames, ignore_errors=True); os.makedirs(frames)
     print("1/4 cleaning and timing the voice")
-    for p in script["parts"]:
+    saved_path = os.path.join(folder, "timing.json")
+    saved = json.load(open(saved_path)) if os.path.exists(saved_path) and not a.timing_only else None
+    if saved and not saved.get("method", "").startswith("whisper"):
+        saved = None
+    for pi, p in enumerate(script["parts"]):
         wav = os.path.join(work, p["audio"] + ".wav")
         src = os.path.join(folder, "audio", p["audio"] + ".m4a")
         if not os.path.exists(src):
@@ -931,8 +936,20 @@ def main():
                        if f.startswith(p["audio"]))
         samples = A.clean(src, wav)
         p["wav"], p["dur"] = wav, len(samples) / A.SR
-        A.align(wav, samples, p["beats"])
+        if saved:
+            for b, sb in zip(p["beats"], saved["parts"][pi]["beats"]):
+                b["t0"], b["t1"], b["words"] = sb["t0"], sb["t1"], [tuple(w) for w in sb["words"]]
+        else:
+            A.align(wav, samples, p["beats"])
         print(f"  {p['audio']}: {p['dur']:.1f}s, beats at {[round(b['t0'], 1) for b in p['beats']]}")
+    if a.timing_only:
+        method = "whisper" if A.LOG and all(l.startswith("whisper") for l in A.LOG) else "pauses"
+        json.dump({"method": method, "log": A.LOG,
+                   "parts": [{"audio": p["audio"], "beats": [{"t0": b["t0"], "t1": b["t1"], "words": b["words"]}
+                                                             for b in p["beats"]]} for p in script["parts"]]},
+                  open(saved_path, "w"), indent=0, default=float)
+        print("timing saved:", method, A.LOG)
+        return
     print("2/4 footage")
     credits = fetch_backgrounds(script, work, a.offline)
     print("3/4 rendering")

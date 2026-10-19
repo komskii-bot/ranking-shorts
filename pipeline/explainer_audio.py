@@ -13,6 +13,7 @@ import wave
 import numpy as np
 
 SR = 48000
+LOG = []  # how each part was timed (written to timing.json)
 CLEAN = ("silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.15,"
          "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.25,areverse,"
          "highpass=f=80,afftdn=nf=-28:tn=1,"
@@ -147,8 +148,10 @@ def align(wav_path, samples, beats):
                 t[i] = (s, s + (n - p) / (hi - lo))
         timed = [(words[i], t[i][0], t[i][1]) for i in range(len(words))]
         print(f"    matched {len(known)}/{len(words)} words")
+        LOG.append(f"whisper: matched {len(known)}/{len(words)}")
     except Exception as e:
         print(f"    word timing from pauses ({e.__class__.__name__}: {e})")
+        LOG.append(f"pauses: {e.__class__.__name__}: {str(e)[:300]}")
         timed = _fallback_times(samples, words)
     total = len(samples) / SR
     for bi, b in enumerate(beats):

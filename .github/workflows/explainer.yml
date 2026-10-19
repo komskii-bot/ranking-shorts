@@ -7,6 +7,9 @@ on:
       episode:
         description: "Folder under explainers/ (e.g. desert-data-centers)"
         required: true
+      mode:
+        description: "render, or timing (only time the voice and commit timing.json)"
+        default: "render"
 
 permissions:
   contents: write
@@ -33,7 +36,17 @@ jobs:
       - name: Install Python packages
         run: pip install -r requirements.txt numpy faster-whisper
 
+      - name: Time the voice only
+        if: inputs.mode == 'timing'
+        run: |
+          python -m pipeline.explainer "explainers/${{ inputs.episode }}" --timing-only
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "explainers/${{ inputs.episode }}/timing.json"
+          git commit -m "Voice timing for ${{ inputs.episode }}" && git push
+
       - name: Render the episode
+        if: inputs.mode != 'timing'
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
@@ -43,6 +56,7 @@ jobs:
           ls -la out/explainer
 
       - name: Publish (Releases page)
+        if: inputs.mode != 'timing'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
