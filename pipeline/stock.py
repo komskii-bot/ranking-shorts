@@ -40,6 +40,18 @@ def _download(url, out_path):
                 fh.write(chunk)
 
 
+def _relevant(hits, query):
+    """Keep hits whose tags contain every search word (or all but one for 3+ words)."""
+    words = [w for w in query.lower().split() if len(w) > 2]
+    need = len(words) if len(words) <= 2 else len(words) - 1
+    def score(h):
+        tags = h.get("tags", "").lower()
+        return sum(1 for w in words if w in tags or w.rstrip("s") in tags)
+    good = [h for h in hits if score(h) >= need]
+    good.sort(key=score, reverse=True)
+    return good
+
+
 def _pixabay(query, out_path, min_secs, used_ids, landscape=False):
     key = os.environ.get("PIXABAY_API_KEY")
     if not key:
@@ -51,6 +63,8 @@ def _pixabay(query, out_path, min_secs, used_ids, landscape=False):
     except Exception as e:
         print(f"  Pixabay error: {e}")
         hits = []
+    if landscape:  # explainers: only clips whose tags actually mention the search words
+        hits = _relevant(hits, query)
     long_enough = [h for h in hits if h.get("duration", 0) >= min_secs] or hits
     # prefer tall clips, then random for variety
     random.shuffle(long_enough)
@@ -73,6 +87,8 @@ def _pixabay(query, out_path, min_secs, used_ids, landscape=False):
                          params={"key": key, "q": query[:100], "image_type": "photo",
                                  "orientation": "horizontal" if landscape else "vertical", "per_page": 10, "safesearch": "true"})
         hits = r.json().get("hits", []) if r.ok else []
+        if landscape:
+            hits = _relevant(hits, query)
         if hits:
             h = random.choice(hits[:5])
             img = out_path.rsplit(".", 1)[0] + ".jpg"

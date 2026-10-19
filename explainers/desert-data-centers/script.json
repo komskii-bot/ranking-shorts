@@ -4,17 +4,17 @@
   "title": "Why Are the Biggest AI Data Centers Built in the Desert?",
   "title_lines": ["WHY ARE DATA CENTERS", "BUILT IN THE DESERT?"],
   "accent": "#FF9F1C",
-  "thumbnail": {"text": ["IN THE", "DESERT?!"], "colors": ["#FFFFFF", "#FF9F1C"], "search": "desert sand dunes", "pose": "shocked"},
+  "thumbnail": {"text": ["IN THE", "DESERT?!"], "colors": ["#FFFFFF", "#FF9F1C"], "search": "sand dunes", "pose": "shocked"},
   "parts": [
     {
       "audio": "cold_open", "chapter": null,
       "beats": [
         {"say": "Servers hate heat. Like, really hate it.",
          "visual": {"type": "headline", "lines": ["SERVERS", "HATE HEAT"], "hl": ["HEAT"], "color": "#FF3B3B"},
-         "search": "server room", "bojji": "react:shocked", "sfx": "whoosh"},
+         "search": "server racks", "bojji": "react:shocked", "sfx": "whoosh"},
         {"say": "So why are companies building some of the biggest ones in the hottest, driest places on Earth?",
          "visual": {"type": "headline", "lines": ["SO WHY", "THE DESERT?!"], "hl": ["DESERT?!"], "color": "#FF9F1C"},
-         "search": "sand dunes aerial", "sfx": "whoosh"},
+         "search": "sand dunes", "sfx": "whoosh"},
         {"say": "Arizona. Nevada. Abu Dhabi.",
          "visual": {"type": "tags", "items": ["ARIZONA", "NEVADA", "ABU DHABI"]},
          "search": "desert road", "sfx": "pop"},
@@ -28,7 +28,7 @@
       "audio": "part1", "chapter": "PART 1: WHAT IS A DATA CENTER?",
       "beats": [
         {"say": "First, what even is a data center? It's a giant building packed with computers called servers, stacked in rows and running twenty-four seven.",
-         "visual": {"type": "footage", "label": "DATA CENTER = A BUILDING FULL OF SERVERS"}, "search": "server room", "bojji": "walk"},
+         "visual": {"type": "footage", "label": "DATA CENTER = A BUILDING FULL OF SERVERS"}, "search": "server racks", "bojji": "walk"},
         {"say": "Every video you stream, every photo you back up, every question you ask an AI, it gets handled in a place like this.",
          "visual": {"type": "tags", "items": ["VIDEOS", "PHOTOS", "AI CHATS"]}, "search": "data center servers", "bojji": "point"},
         {"say": "And here's the thing. All those computers turn electricity into heat. A lot of heat.",
@@ -41,7 +41,7 @@
          "visual": {"type": "counter", "value": 945, "suffix": " TWh", "top": "DATA CENTER ELECTRICITY BY 2030", "bottom": "≈ MORE THAN ALL OF JAPAN USES TODAY"},
          "source": "IEA, April 2025", "search": "power lines", "bojji": "react:shocked", "sfx": "ding"},
         {"say": "So companies need more data centers, fast. And they need a lot of room to put them.",
-         "visual": {"type": "footage"}, "search": "construction site aerial", "bojji": "stand"}
+         "visual": {"type": "footage"}, "search": "construction site", "bojji": "stand"}
       ]
     },
     {
@@ -53,7 +53,7 @@
         {"say": "Ever felt cold getting out of a pool, even on a warm day? That's evaporation. When water evaporates, it carries heat away with it.",
          "visual": {"type": "footage", "label": "EVAPORATION = HEAT LEAVING WITH THE WATER"}, "search": "swimming pool", "bojji": "stand"},
         {"say": "Lots of data centers use that same trick. Fans pull hot air through wet pads, the water evaporates, and the air comes out cooler.",
-         "visual": {"type": "evap"}, "search": "industrial fan", "bojji": "point"},
+         "visual": {"type": "evap"}, "search": "fan spinning", "bojji": "point"},
         {"say": "And here's the key. It works best when the air is dry. In humid places, the air is already full of moisture, so water evaporates more slowly and the trick works way worse.",
          "visual": {"type": "versus", "left": ["DRY AIR", "STRONG COOLING"], "right": ["HUMID AIR", "WEAK COOLING"], "lcolor": "#3DDC84", "rcolor": "#FF3B3B"},
          "search": "desert landscape", "bojji": "react:exclaim"},
@@ -74,19 +74,19 @@
       "beats": [
         {"say": "Reason two: space. Deserts have huge stretches of flat, empty land, and it's usually cheap. Data centers are enormous, so that matters.",
          "visual": {"type": "headline", "lines": ["REASON #2", "SPACE"], "hl": ["SPACE"], "color": "#FFD23F"},
-         "search": "empty desert", "bojji": "stand"},
+         "search": "desert landscape", "bojji": "stand"},
         {"say": "Take the Switch Citadel campus near Reno, Nevada. It sits on about two thousand acres, right next to Tesla's Gigafactory. It's designed for up to seven point two million square feet of data center space and up to six hundred fifty megawatts of power. When it opened in 2017, Switch called it the largest data center campus in the world.",
          "visual": {"type": "cards", "place": "RENO, NEVADA", "items": ["~2,000 ACRES", "UP TO 7.2M SQ FT", "UP TO 650 MW"]},
          "source": "Switch, 2017", "search": "nevada desert", "bojji": "point", "sfx": "pop"},
         {"say": "Reason three: power and sunshine. Data centers need huge amounts of reliable electricity, and deserts get tons of sun for solar. Switch says its campus runs on one hundred percent renewable energy.",
          "visual": {"type": "headline", "lines": ["REASON #3", "POWER + SUN"], "hl": ["SUN"], "color": "#FFD23F"},
-         "search": "solar farm", "bojji": "react:excited"},
+         "search": "solar panels", "bojji": "react:excited"},
         {"say": "Reason four: money and location. In 2021, Arizona extended tax breaks on data center equipment all the way to 2033. And the Southwest is home to nearly a fifth of all Americans, so data doesn't have to travel far to reach them.",
          "visual": {"type": "cards", "place": "PHOENIX, ARIZONA", "items": ["TAX BREAKS TO 2033", "~1 IN 5 AMERICANS NEARBY"]},
-         "source": "The Register", "search": "phoenix arizona", "bojji": "point", "sfx": "pop"},
+         "source": "The Register", "search": "arizona city", "bojji": "point", "sfx": "pop"},
         {"say": "And it's not just the US. In Abu Dhabi, a group including OpenAI, Oracle and Nvidia is building Stargate UAE, a one-gigawatt AI cluster inside a five-gigawatt AI campus. The first two hundred megawatts are planned for 2026.",
          "visual": {"type": "nested", "place": "ABU DHABI, UAE", "items": [["5 GW", "AI CAMPUS"], ["1 GW", "STARGATE UAE"], ["200 MW", "FIRST PHASE, 2026"]]},
-         "source": "Gulf News", "search": "abu dhabi", "bojji": "react:shocked"},
+         "source": "Gulf News", "search": "uae desert", "bojji": "react:shocked"},
         {"say": "Real question for you. Would you want a giant data center in your neighborhood? Yes or no, tell me in the comments.",
          "visual": {"type": "cta", "kind": "comment"}, "search": "city night", "bojji": "react:curious", "sfx": "pop"}
       ]
@@ -96,22 +96,22 @@
       "beats": [
         {"say": "But here's the catch. Remember that evaporation trick? It uses water. And deserts don't exactly have a lot of that.",
          "visual": {"type": "headline", "lines": ["THE CATCH:", "WATER"], "hl": ["WATER"], "color": "#4DA3FF"},
-         "search": "dry cracked earth", "bojji": "react:nervous"},
+         "search": "drought", "bojji": "react:nervous"},
         {"say": "Arizona has more than a hundred and fifty data centers. Independent estimates say a single data center can use anywhere from fifty thousand to five million gallons of water a day, depending on how it's cooled.",
          "visual": {"type": "counter", "value": 150, "suffix": "+", "top": "DATA CENTERS IN ARIZONA", "bottom": "EACH: ~50,000 TO 5,000,000 GALLONS OF WATER A DAY"},
          "source": "Grist, March 2026", "search": "water drop", "bojji": "point"},
         {"say": "The sustainability group Ceres estimates data centers in the Phoenix area used about three hundred eighty-five million gallons a year. In a worst case, that could grow about ten times. And the power plants feeding them could use even more water.",
          "visual": {"type": "bars", "title": "PHOENIX-AREA DATA CENTERS, WATER PER YEAR", "items": [["RECENT", 385, "~385M GAL"], ["WORST CASE", 3850, "~3.8B GAL"]]},
-         "source": "Ceres via Grist", "search": "water reservoir", "bojji": "react:shocked", "sfx": "ding"},
+         "source": "Ceres via Grist", "search": "reservoir", "bojji": "react:shocked", "sfx": "ding"},
         {"say": "Now, plot twist. Farming uses more than seventy percent of Arizona's water. Even that worst case for data centers is about one percent of the Phoenix area's home water use. So data centers aren't the biggest water user. They're just one of the fastest growing.",
          "visual": {"type": "share", "pct": 70, "big": "70%+", "label": "OF ARIZONA'S WATER GOES TO FARMING", "note": "DATA CENTERS, WORST CASE ≈ 1% OF PHOENIX HOME USE"},
-         "source": "Grist, March 2026", "search": "farm irrigation", "bojji": "react:exclaim"},
+         "source": "Grist, March 2026", "search": "irrigation", "bojji": "react:exclaim"},
         {"say": "And companies are reacting. Microsoft says its water-cooled Arizona data centers only use up water when it's hotter than about eighty-five degrees Fahrenheit, and it'll build only zero-water data centers in Arizona from now on. Google said its Mesa site won't use evaporative coolers at all.",
          "visual": {"type": "cards", "place": "HOW COMPANIES ARE REACTING", "items": ["MICROSOFT: WATER ONLY ABOVE ~85°F", "MICROSOFT: ZERO-WATER BUILDS IN ARIZONA", "GOOGLE MESA: NO EVAPORATIVE COOLERS"]},
          "source": "Grist; The Register", "search": "data center", "bojji": "point"},
         {"say": "Some cities are pushing back too. In August 2025, Tucson's city council voted unanimously against bringing a giant data center project called Project Blue into the city, after weeks of residents worrying about water, electricity bills and secrecy.",
          "visual": {"type": "headline", "lines": ["TUCSON:", "UNANIMOUS NO"], "hl": ["NO"], "color": "#FF3B3B", "sub": "PROJECT BLUE · AUGUST 6, 2025"},
-         "source": "Arizona Luminaria", "search": "tucson arizona", "bojji": "react:shocked", "sfx": "boom"},
+         "source": "Arizona Luminaria", "search": "arizona desert", "bojji": "react:shocked", "sfx": "boom"},
         {"say": "If that vote surprised you, hit like. It helps more people find these videos.",
          "visual": {"type": "cta", "kind": "like"}, "search": "desert sunset", "bojji": "jump", "sfx": "pop"}
       ]
@@ -121,12 +121,12 @@
       "beats": [
         {"say": "So, genius or problem? Honestly, both.",
          "visual": {"type": "headline", "lines": ["GENIUS", "OR PROBLEM?"], "hl": ["GENIUS"], "color": "#3DDC84"},
-         "search": "data center aerial", "bojji": "react:thinking"},
+         "search": "data center", "bojji": "react:thinking"},
         {"say": "The desert gives data centers dry air for cheap cooling, tons of space, sunshine and tax breaks. But it also puts thirsty, power-hungry machines in places where water is precious.",
          "visual": {"type": "versus", "left": ["GENIUS", "DRY AIR · SPACE · SUN · TAX BREAKS"], "right": ["PROBLEM", "WATER · POWER"], "lcolor": "#3DDC84", "rcolor": "#FF3B3B"},
          "search": "desert landscape", "bojji": "stand"},
         {"say": "And with AI pushing data center electricity use to more than double by 2030, these fights are only getting bigger. The next wave is moving to closed-loop cooling that reuses the same water, or no water at all.",
-         "visual": {"type": "footage", "label": "NEXT: CLOSED-LOOP & ZERO-WATER COOLING"}, "search": "server room", "bojji": "point"},
+         "visual": {"type": "footage", "label": "NEXT: CLOSED-LOOP & ZERO-WATER COOLING"}, "search": "server racks", "bojji": "point"},
         {"say": "So here's my question. If you were in charge, where would you build the next giant AI data center? The desert, somewhere freezing cold, or space? Drop it in the comments.",
          "visual": {"type": "tags", "items": ["DESERT?", "FREEZING COLD?", "SPACE?"]}, "search": "earth from space", "bojji": "react:curious", "sfx": "pop"},
         {"say": "If you enjoyed this, follow for a new Bojji Explains every week. See you in the next one!",

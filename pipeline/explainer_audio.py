@@ -56,7 +56,12 @@ def _whisper_words(wav_path):
     from faster_whisper import WhisperModel  # noqa: only on GitHub
     model = _whisper_words.model = getattr(_whisper_words, "model", None) or \
         WhisperModel("small.en", device="cpu", compute_type="int8")
-    segs, _ = model.transcribe(wav_path, word_timestamps=True, vad_filter=False, beam_size=5)
+    # decode ourselves (16 kHz mono float) so faster-whisper never touches PyAV
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", wav_path, "-ac", "1", "-ar", "16000",
+                          "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    audio = np.frombuffer(raw, np.float32)
+    segs, _ = model.transcribe(audio, word_timestamps=True, vad_filter=False, beam_size=5,
+                               initial_prompt="Bojji Explains: data centers, Arizona, Nevada, Abu Dhabi, Stargate UAE, Ceres, Tucson, Project Blue.")
     out = []
     for s in segs:
         for w in s.words or []:
