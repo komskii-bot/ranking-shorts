@@ -935,18 +935,28 @@ def main():
             src = next(os.path.join(folder, "audio", f) for f in os.listdir(os.path.join(folder, "audio"))
                        if f.startswith(p["audio"]))
         samples = A.clean(src, wav)
-        p["wav"], p["dur"] = wav, len(samples) / A.SR
         if saved:
+            cuts = saved["parts"][pi].get("cuts", [])
+            if cuts:
+                samples = A.apply_cuts(samples, cuts)
+                A.write_wav(wav, samples)
+                print(f"  {p['audio']}: removed {len(cuts)} retake(s), {sum(c['end'] - c['start'] for c in cuts):.1f}s")
+            sh = lambda t: A.shift_time(t, cuts)
             for b, sb in zip(p["beats"], saved["parts"][pi]["beats"]):
-                b["t0"], b["t1"], b["words"] = sb["t0"], sb["t1"], [tuple(w) for w in sb["words"]]
+                b["t0"], b["t1"] = sh(sb["t0"]), sh(sb["t1"])
+                b["words"] = [(w, sh(s0), sh(s1)) for w, s0, s1 in sb["words"]]
+            p["beats"][-1]["t1"] = len(samples) / A.SR
         else:
             A.align(wav, samples, p["beats"])
+        p["wav"], p["dur"] = wav, len(samples) / A.SR
         print(f"  {p['audio']}: {p['dur']:.1f}s, beats at {[round(b['t0'], 1) for b in p['beats']]}")
     if a.timing_only:
-        method = "whisper" if A.LOG and all(l.startswith("whisper") for l in A.LOG) else "pauses"
+        method = "whisper" if A.LOG and not any(l.startswith("pauses") for l in A.LOG) else "pauses"
         json.dump({"method": method, "log": A.LOG,
-                   "parts": [{"audio": p["audio"], "beats": [{"t0": b["t0"], "t1": b["t1"], "words": b["words"]}
-                                                             for b in p["beats"]]} for p in script["parts"]]},
+                   "parts": [{"audio": p["audio"], "cuts": A.CUTS.get(p["wav"], []),
+                              "heard": A.HEARD.get(p["wav"], []),
+                              "beats": [{"t0": b["t0"], "t1": b["t1"], "words": b["words"]}
+                                        for b in p["beats"]]} for p in script["parts"]]},
                   open(saved_path, "w"), indent=0, default=float)
         print("timing saved:", method, A.LOG)
         return

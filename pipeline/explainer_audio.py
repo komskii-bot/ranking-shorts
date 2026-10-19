@@ -14,6 +14,8 @@ import numpy as np
 
 SR = 48000
 LOG = []  # how each part was timed (written to timing.json)
+HEARD = {}  # wav path -> [(word, start, end)] as transcribed
+CUTS = {}   # wav path -> [{"start", "end", "text"}] retakes / false starts to remove
 CLEAN = ("silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.15,"
          "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.25,areverse,"
          "highpass=f=80,afftdn=nf=-28:tn=1,"
@@ -61,6 +63,7 @@ def _whisper_words(wav_path):
                           "-f", "f32le", "-"], capture_output=True, check=True).stdout
     audio = np.frombuffer(raw, np.float32)
     segs, _ = model.transcribe(audio, word_timestamps=True, vad_filter=False, beam_size=5,
+                               condition_on_previous_text=False,
                                initial_prompt="Bojji Explains: data centers, Arizona, Nevada, Abu Dhabi, Stargate UAE, Ceres, Tucson, Project Blue.")
     out = []
     for s in segs:
@@ -118,6 +121,75 @@ def _fallback_times(samples, words):
     return out
 
 
+def find_retakes(script_norm, heard, total):
+    """Heard words that aren't part of the kept take but repeat nearby script words
+    (false starts, restarted sentences, stutters) -> time ranges to cut.
+    The longest-match alignment naturally keeps the complete (usually last) take."""
+    h = [_norm(w) for w, _, _ in heard]
+    sm = difflib.SequenceMatcher(None, script_norm, h, autojunk=False)
+    matched = {}
+    for blk in sm.get_matching_blocks():
+        for k in range(blk.size):
+            matched[blk.b + k] = blk.a + k
+    cuts, i = [], 0
+    while i < len(h):
+        if i in matched:
+            i += 1; continue
+        j = i
+        while j + 1 < len(h) and (j + 1) not in matched:
+            j += 1
+        run = [w for w in h[i:j + 1] if w]
+        nxt = j + 1 if j + 1 < len(h) else None
+        sn = matched[nxt] if nxt is not None else len(script_norm)
+        window = set(script_norm[max(0, sn - 10): sn + 30])
+        overlap = sum(1 for w in run if w in window) / max(1, len(run))
+        start = (heard[i - 1][2] + 0.06) if i > 0 else max(0.0, heard[i][1] - 0.15)
+        end = (heard[nxt][1] - 0.12) if nxt is not None else total
+        text = " ".join(w for w, _, _ in heard[i:j + 1])
+        if run and overlap >= 0.5 and end - start > 0.15:
+            if end - start <= 25:
+                cuts.append({"start": round(start, 3), "end": round(end, 3), "text": text})
+            else:
+                LOG.append(f"NOT cut (too long, {end - start:.1f}s): {text[:120]}")
+        elif run:
+            LOG.append(f"kept extra words: {text[:120]}")
+        i = j + 1
+    return cuts
+
+
+def apply_cuts(samples, cuts, fade=0.03):
+    """Remove cut ranges with short fades so the joins don't click."""
+    if not cuts:
+        return samples
+    keep, last = [], 0
+    nf = int(fade * SR)
+    ramp = np.linspace(0, 1, nf, dtype=np.float32)
+    for c in sorted(cuts, key=lambda c: c["start"]):
+        a, b = int(c["start"] * SR), int(c["end"] * SR)
+        seg = samples[last:a].copy()
+        if len(seg) > nf:
+            seg[-nf:] *= ramp[::-1]
+        keep.append(seg)
+        last = b
+    tail = samples[last:].copy()
+    if len(tail) > nf:
+        tail[:nf] *= ramp
+    keep.append(tail)
+    for k in range(1, len(keep)):
+        if len(keep[k]) > nf:
+            keep[k][:nf] *= ramp
+    return np.concatenate(keep)
+
+
+def shift_time(t, cuts):
+    """Time in the uncut recording -> time after cuts are removed."""
+    out = t
+    for c in cuts:
+        if t > c["start"]:
+            out -= min(t, c["end"]) - c["start"]
+    return out
+
+
 def align(wav_path, samples, beats):
     """Attach t0/t1 (seconds in this part) and per-word timings to each beat."""
     words, owner = [], []
@@ -129,6 +201,10 @@ def align(wav_path, samples, beats):
         heard = _whisper_words(wav_path)
         print(f"    whisper heard {len(heard)} words for {len(words)} script words")
         a = [_norm(w) for w in words]
+        HEARD[wav_path] = heard
+        CUTS[wav_path] = find_retakes(a, heard, len(samples) / SR)
+        for c in CUTS[wav_path]:
+            print(f"    cut {c['start']:.2f}-{c['end']:.2f}: {c['text']}")
         h = [_norm(w) for w, _, _ in heard]
         sm = difflib.SequenceMatcher(None, a, h, autojunk=False)
         t = [None] * len(words)
