@@ -1,0 +1,53 @@
+name: Bojji Explains (long video)
+
+on:
+  # Started by Claude after the voice-over for an episode is added under explainers/<id>/.
+  workflow_dispatch:
+    inputs:
+      episode:
+        description: "Folder under explainers/ (e.g. desert-data-centers)"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: explainer
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt numpy faster-whisper
+
+      - name: Render the episode
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: |
+          rm -rf out
+          python -m pipeline.explainer "explainers/${{ inputs.episode }}" --frames
+          ls -la out/explainer
+
+      - name: Publish (Releases page)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd out/explainer
+          (cd frames && zip -q ../preview_frames.zip *.jpg)
+          TAG="explainer-${{ inputs.episode }}-${{ github.run_number }}"
+          gh release create "$TAG" "${{ inputs.episode }}.mp4" thumbnail.jpg preview_frames.zip timing.json \
+            --title "Bojji Explains: ${{ inputs.episode }}" --notes-file upload_sheet.md
