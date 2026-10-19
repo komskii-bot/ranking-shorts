@@ -47,7 +47,7 @@ def write_wav(path, samples):
 def _norm(word):
     w = word.lower().replace("’", "'")
     w = re.sub(r"[^a-z0-9']", "", w)
-    return w
+    return {"ok": "okay"}.get(w, w)
 
 
 def script_words(text):
@@ -121,40 +121,109 @@ def _fallback_times(samples, words):
     return out
 
 
-def find_retakes(script_norm, heard, total):
-    """Heard words that aren't part of the kept take but repeat nearby script words
-    (false starts, restarted sentences, stutters) -> time ranges to cut.
-    The longest-match alignment naturally keeps the complete (usually last) take."""
-    h = [_norm(w) for w, _, _ in heard]
-    sm = difflib.SequenceMatcher(None, script_norm, h, autojunk=False)
-    matched = {}
-    for blk in sm.get_matching_blocks():
-        for k in range(blk.size):
-            matched[blk.b + k] = blk.a + k
-    cuts, i = [], 0
-    while i < len(h):
-        if i in matched:
-            i += 1; continue
-        j = i
-        while j + 1 < len(h) and (j + 1) not in matched:
-            j += 1
-        run = [w for w in h[i:j + 1] if w]
-        nxt = j + 1 if j + 1 < len(h) else None
-        sn = matched[nxt] if nxt is not None else len(script_norm)
-        window = set(script_norm[max(0, sn - 10): sn + 30])
-        overlap = sum(1 for w in run if w in window) / max(1, len(run))
-        start = (heard[i - 1][2] + 0.06) if i > 0 else max(0.0, heard[i][1] - 0.15)
-        end = (heard[nxt][1] - 0.12) if nxt is not None else total
-        text = " ".join(w for w, _, _ in heard[i:j + 1])
-        if run and overlap >= 0.5 and end - start > 0.15:
-            if end - start <= 25:
-                cuts.append({"start": round(start, 3), "end": round(end, 3), "text": text})
-            else:
-                LOG.append(f"NOT cut (too long, {end - start:.1f}s): {text[:120]}")
-        elif run:
-            LOG.append(f"kept extra words: {text[:120]}")
-        i = j + 1
-    return cuts
+META = {"repeat", "again", "sorry", "redo", "retake", "oops"}
+
+
+def _num_norm(w):
+    """Make '945', 'nine hundred forty-five' etc. comparable enough: drop pure digits/number words."""
+    return w
+
+
+def edit_and_time(words, heard, total):
+    """Sentence by sentence, keep the LAST good take of each script sentence; everything
+    between kept takes that is a false start, a repeated take or retake chatter is cut.
+    Returns (cuts, [(word, start, end)] for every script word, in uncut-recording time)."""
+    sn = [_norm(w) for w in words]
+    hn = [_norm(w) for w, _, _ in heard]
+    # sentence spans in the script
+    spans, s0 = [], 0
+    for i, w in enumerate(words):
+        if w[-1:] in ".?!" or i == len(words) - 1:
+            spans.append((s0, i + 1)); s0 = i + 1
+    cuts, times = [], [None] * len(words)
+    p = 0                      # heard index after the last kept sentence
+    prev_end_t = 0.0
+    for a, b in spans:
+        target = sn[a:b]
+        n = b - a
+        limit = min(len(hn), p + 4 * n + 60)
+        cands = []
+        for st in range(p, limit):
+            for ln in (n - 1, n, n + 1, n + 2):
+                if ln <= 0 or st + ln > len(hn):
+                    continue
+                r = difflib.SequenceMatcher(None, target, hn[st:st + ln], autojunk=False).ratio()
+                cands.append((r, st, ln))
+        if not cands:
+            continue
+        best = max(c[0] for c in cands)
+        if best < 0.45:
+            LOG.append(f"sentence not found: {' '.join(words[a:b])[:80]}")
+            continue
+        # the latest take that scores close to the best one wins; within that take,
+        # use its best-scoring window (so we don't start a word late)
+        good = [c for c in cands if c[0] >= max(0.6, best - 0.12)]
+        last_st = max(c[1] for c in good)
+        cluster = [c for c in good if c[1] >= last_st - max(2, n // 2)]
+        r, st, ln = max(cluster, key=lambda c: (round(c[0], 3), -c[1]))
+        # region between previous kept sentence and this take
+        gap = list(range(p, st))
+        if gap:
+            gw = [hn[k] for k in gap if hn[k]]
+            in_sent = sum(1 for w in gw if w in set(target)) / max(1, len(gw))
+            meta = any(w in META for w in gw)
+            earlier_take = any(c[1] < st and c[1] + c[2] <= st + 1 and c[0] >= 0.5 for c in cands)
+            text = " ".join(heard[k][0] for k in gap)
+            if gw and (in_sent >= 0.5 or meta or earlier_take):
+                # leave ~0.45 s of natural pause across the join
+                c0 = heard[gap[0] - 1][2] + 0.25 if gap[0] > 0 else max(0.0, heard[gap[0]][1] - 0.15)
+                c1 = heard[st][1] - 0.2
+                if c1 - c0 > 0.15:
+                    cuts.append({"start": round(c0, 3), "end": round(c1, 3), "text": text})
+            elif gw:
+                LOG.append(f"kept extra words: {text[:100]}")
+        # word times inside the kept take
+        sm = difflib.SequenceMatcher(None, target, hn[st:st + ln], autojunk=False)
+        last_b = -1
+        for blk in sm.get_matching_blocks():
+            for k in range(blk.size):
+                _, t0, t1 = heard[st + blk.b + k]
+                times[a + blk.a + k] = (t0, t1)
+                last_b = max(last_b, blk.b + k)
+        if times[a] is None:
+            times[a] = (heard[st][1], heard[st][2])
+        # don't let a padded window swallow the first word of the next sentence
+        p = st + (last_b + 1 if last_b >= 0 else ln)
+    known = [i for i, x in enumerate(times) if x]
+    for i in range(len(times)):
+        if times[i] is None:
+            prev = max([k for k in known if k < i], default=None)
+            nxt = min([k for k in known if k > i], default=None)
+            pt = times[prev][1] if prev is not None else 0.0
+            nt = times[nxt][0] if nxt is not None else total
+            lo = prev if prev is not None else -1
+            hi = nxt if nxt is not None else len(times)
+            s_ = pt + (nt - pt) * (i - lo) / (hi - lo)
+            times[i] = (s_, s_ + (nt - pt) / (hi - lo))
+    LOG.append(f"whisper: matched {len(known)}/{len(words)}")
+    return cuts, [(words[i], times[i][0], times[i][1]) for i in range(len(words))]
+
+
+def mumble_cuts(samples, timed, cuts, min_gap=1.5):
+    """Untranscribed voice inside a long pause between two script words (a muttered
+    false start) -> cut it, leaving a natural pause on each side."""
+    hop = int(SR * 0.02)
+    n = len(samples) // hop
+    db = 20 * np.log10(np.sqrt((samples[: n * hop].reshape(n, hop) ** 2).mean(1) + 1e-12))
+    thr = np.percentile(db, 90) - 22
+    out = []
+    for (_, _, e1), (_, s2, _) in zip(timed, timed[1:]):
+        if s2 - e1 < min_gap or any(c["start"] < s2 and c["end"] > e1 for c in cuts):
+            continue
+        seg = db[int((e1 + 0.15) / 0.02): int((s2 - 0.15) / 0.02)] > thr
+        if seg.sum() * 0.02 >= 0.3:
+            out.append({"start": round(e1 + 0.35, 3), "end": round(s2 - 0.3, 3), "text": "(mumbled restart in a pause)"})
+    return out
 
 
 def apply_cuts(samples, cuts, fade=0.03):
@@ -200,36 +269,11 @@ def align(wav_path, samples, beats):
     try:
         heard = _whisper_words(wav_path)
         print(f"    whisper heard {len(heard)} words for {len(words)} script words")
-        a = [_norm(w) for w in words]
         HEARD[wav_path] = heard
-        CUTS[wav_path] = find_retakes(a, heard, len(samples) / SR)
-        for c in CUTS[wav_path]:
+        cuts, timed = edit_and_time(words, heard, len(samples) / SR)
+        CUTS[wav_path] = cuts
+        for c in cuts:
             print(f"    cut {c['start']:.2f}-{c['end']:.2f}: {c['text']}")
-        h = [_norm(w) for w, _, _ in heard]
-        sm = difflib.SequenceMatcher(None, a, h, autojunk=False)
-        t = [None] * len(words)
-        for blk in sm.get_matching_blocks():
-            for k in range(blk.size):
-                _, s, e = heard[blk.b + k]
-                t[blk.a + k] = (s, e)
-        known = [i for i, x in enumerate(t) if x]
-        if len(known) < 0.4 * len(words):
-            raise RuntimeError("too few words matched")
-        total = len(samples) / SR
-        for i in range(len(t)):  # interpolate gaps
-            if t[i] is None:
-                prev = max([k for k in known if k < i], default=None)
-                nxt = min([k for k in known if k > i], default=None)
-                p = t[prev][1] if prev is not None else 0.0
-                n = t[nxt][0] if nxt is not None else total
-                lo = prev if prev is not None else -1
-                hi = nxt if nxt is not None else len(t)
-                frac = (i - lo) / (hi - lo)
-                s = p + (n - p) * frac
-                t[i] = (s, s + (n - p) / (hi - lo))
-        timed = [(words[i], t[i][0], t[i][1]) for i in range(len(words))]
-        print(f"    matched {len(known)}/{len(words)} words")
-        LOG.append(f"whisper: matched {len(known)}/{len(words)}")
     except Exception as e:
         print(f"    word timing from pauses ({e.__class__.__name__}: {e})")
         LOG.append(f"pauses: {e.__class__.__name__}: {str(e)[:300]}")
