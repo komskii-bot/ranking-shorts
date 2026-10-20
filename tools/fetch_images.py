@@ -46,8 +46,17 @@ def main():
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
     credits = {}
+    log = open(os.path.join(out, "fetch_log.txt"), "w")
     for q in sys.argv[2:]:
-        for src, items in (("px", pixabay(q)), ("ov", openverse(q))):
+        found = []
+        for src, fn in (("px", pixabay), ("ov", openverse)):
+            try:
+                found.append((src, fn(q)))
+            except Exception as e:
+                log.write(f"{src} {q}: {e.__class__.__name__}: {e}\n")
+                found.append((src, []))
+        for src, items in found:
+            log.write(f"{src} {q}: {len(items)} results\n")
             for i, it in enumerate(items):
                 name = f"{slug(q)}_{src}{i}.jpg"
                 try:
@@ -58,6 +67,7 @@ def main():
                     print("saved", name, it["license"], it.get("by"))
                 except Exception as e:
                     print("skip", it["url"], e)
+                    log.write(f"download failed {it['url']}: {e}\n")
     json.dump(credits, open(os.path.join(out, "credits.json"), "w"), indent=1)
 
 

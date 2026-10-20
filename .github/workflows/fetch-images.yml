@@ -24,11 +24,12 @@ jobs:
           python-version: "3.12"
       - run: pip install requests Pillow
       - name: Fetch
+        continue-on-error: true
         env:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: |
           IFS='|' read -ra Q <<< "${{ inputs.queries }}"
-          python tools/fetch_images.py "${{ inputs.folder }}" "${Q[@]}"
+          python tools/fetch_images.py "${{ inputs.folder }}" "${Q[@]}" || echo "fetch script failed" >> "${{ inputs.folder }}/fetch_log.txt"
           # keep the repo small: shrink to 1600 px wide
           python - <<'PY'
           import glob, os
@@ -43,6 +44,7 @@ jobs:
                   os.remove(f)
           PY
       - name: Commit
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
