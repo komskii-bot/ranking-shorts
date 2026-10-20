@@ -31,5 +31,11 @@
     "#top10",
     "#countries",
     "#facts"
-  ]
+  ],
+  "tts_engine": "chatterbox",
+  "voice_clone": {
+    "ref": "assets/voice/emilio_ref.wav",
+    "exaggeration": 0.5,
+    "cfg_weight": 0.5
+  }
 }

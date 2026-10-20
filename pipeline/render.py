@@ -507,7 +507,7 @@ def mascot_png(src, kind, workdir):
 
 SFX_DIR = os.path.join(ROOT, "assets", "sfx")
 # narrator: cut rumble, even out loud/quiet words, then lift it above the effects
-VOICE_FX = "highpass=f=70,acompressor=threshold=-20dB:ratio=3:attack=5:release=80:makeup=4,volume=1.25"
+VOICE_FX = "highpass=f=70,equalizer=f=3500:t=q:w=1.2:g=3,acompressor=threshold=-20dB:ratio=3:attack=5:release=80:makeup=4,volume=1.25"
 
 
 def sfx_for(seg):

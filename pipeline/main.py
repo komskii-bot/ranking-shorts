@@ -383,7 +383,7 @@ def make_video(script, config, offline, workdir):
     out_path = os.path.join(OUT, "video.mp4")
     total = render.finish(segments, workdir, out_path, accent,
                           random.choice(music) if music else None, config["music_volume"])
-    return out_path, total, credits, bool(intro or outro)
+    return out_path, total, credits, bool(intro or outro) or voice.ENGINE == "chatterbox"
 
 
 def next_monday(today=None):
@@ -440,6 +440,11 @@ def merge_sheet():
     print(f"Upload sheet: {len(posts)} videos")
 
 
+def setup_voice(config):
+    voice.ENGINE = config.get("tts_engine", "edge")
+    voice.CLONE.update(config.get("voice_clone", {}))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true", help="test render: no keys, no internet")
@@ -453,6 +458,7 @@ def main():
         return merge_sheet()
 
     config = load(os.path.join(ROOT, "config.json"), {})
+    setup_voice(config)
     kind = KINDS[args.kind]
     slot = config.get(kind["slot_key"], kind["slot"])
     qpath, hpath = os.path.join(STATE, kind["queue"]), os.path.join(STATE, "history.json")
