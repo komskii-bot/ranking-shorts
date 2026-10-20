@@ -102,6 +102,57 @@ def _whisper_dense(wav_path, win=10.0, hop=7.0):
     return out
 
 
+def _voiced_secs(audio16, a, b):
+    seg = audio16[int(max(0, a) * 16000): int(b * 16000)]
+    if len(seg) < 320:
+        return 0.0
+    hop = 320
+    n = len(seg) // hop
+    db = 20 * np.log10(np.sqrt((seg[: n * hop].reshape(n, hop) ** 2).mean(1) + 1e-12))
+    ref = _voiced_secs.ref
+    return float((db > ref).sum() * 0.02)
+
+
+def fill_gaps(wav_path, heard, min_gap=0.7, rounds=3):
+    """Whisper skips repeated phrases even in short windows. Re-transcribe, on its own,
+    every gap between heard words that still contains voice, and add what it hears."""
+    from faster_whisper import WhisperModel  # noqa
+    model = _whisper_words.model = getattr(_whisper_words, "model", None) or \
+        WhisperModel("small.en", device="cpu", compute_type="int8")
+    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", wav_path, "-ac", "1", "-ar", "16000",
+                          "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    audio = np.frombuffer(raw, np.float32)
+    total = len(audio) / 16000
+    hop = 320
+    n = len(audio) // hop
+    db = 20 * np.log10(np.sqrt((audio[: n * hop].reshape(n, hop) ** 2).mean(1) + 1e-12))
+    _voiced_secs.ref = float(np.percentile(db, 90) - 22)
+    heard = sorted(heard, key=lambda w: w[1])
+    for _ in range(rounds):
+        added = []
+        bounds = [(0.0, heard[0][1] if heard else total)] + \
+                 [(heard[i][2], heard[i + 1][1]) for i in range(len(heard) - 1)] + \
+                 [(heard[-1][2] if heard else 0.0, total)]
+        for a, b in bounds:
+            if b - a < min_gap or _voiced_secs(audio, a + 0.1, b - 0.1) < 0.3:
+                continue
+            ca, cb = max(0.0, a - 0.15), min(total, b + 0.15)
+            segs, _ = model.transcribe(audio[int(ca * 16000): int(cb * 16000)], word_timestamps=True,
+                                       vad_filter=False, beam_size=5, condition_on_previous_text=False)
+            for sg in segs:
+                if getattr(sg, "no_speech_prob", 0) > 0.6 or getattr(sg, "avg_logprob", 0) < -1.2:
+                    continue
+                for w in sg.words or []:
+                    s0, s1 = ca + w.start, ca + w.end
+                    if a - 0.05 <= (s0 + s1) / 2 <= b + 0.05 and w.word.strip():
+                        added.append((w.word.strip(), round(s0, 3), round(s1, 3)))
+        if not added:
+            break
+        LOG.append(f"gap pass added {len(added)} words: " + " ".join(w for w, _, _ in added)[:300])
+        heard = sorted(heard + added, key=lambda w: w[1])
+    return heard
+
+
 def _pauses(samples, min_gap=0.22):
     """Return (start, end) of pauses longer than min_gap seconds."""
     hop = int(SR * 0.01)
@@ -469,7 +520,7 @@ def align(wav_path, samples, beats):
             words.append(w); owner.append(bi)
     timed = None
     try:
-        heard = _whisper_dense(wav_path)
+        heard = fill_gaps(wav_path, _whisper_dense(wav_path))
         print(f"    whisper heard {len(heard)} words for {len(words)} script words")
         HEARD[wav_path] = heard
         cuts, timed = edit_dp(words, heard, len(samples) / SR)
