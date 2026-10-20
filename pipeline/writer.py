@@ -40,7 +40,8 @@ RULES = """Rules:
 - For anything that changes over time, use the newest data you can find and set "as_of".
 - Voice: a young, hype, charismatic narrator talking to a Gen Z audience. Punchy, playful, a bit cheeky ("no joke", "wild, right?", "let that sink in"), at most one slang touch per line, never cringe overload, never mean. Hooks should create curiosity in the first 2 seconds.
 - Spoken lines must sound natural read aloud: no symbols, no parentheses, spell out units ("megawatts", "kilometers").
-- Do NOT pick topics that require movie, TV, music or sports footage.
+- Do NOT pick topics that need movie, TV or music footage. Sports and Olympics topics are fine with generic footage (medals, stadiums, flags, athletes training) — never Olympic logos, event broadcasts or real named athletes.
+- Cities are welcome too ("Top 10 cities with ..."); search terms should name the city plus a landmark or skyline.
 - Do NOT rank real private individuals; companies, products, countries and nature are fine.
 - Keep it neutral: no political, religious or medical-advice topics."""
 
