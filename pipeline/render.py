@@ -134,6 +134,101 @@ def rich_title(draw, tokens, y, start, min_size, max_lines, max_w=920, stroke=8)
     return y
 
 
+HOOK_STYLES = ("badge", "banners", "guess", "bignumber", "frame")
+
+
+def hook_style(script):
+    """Opening frame look (it doubles as the Short's thumbnail): varies per video, stable on re-render."""
+    import random as _r
+    return script.get("hook_style") or _r.Random(script["id"] + "hookstyle").choice(HOOK_STYLES)
+
+
+def _title_tokens_no_top(tokens):
+    """Drop a leading 'Top 10' from the title: the frame shows it as a graphic instead."""
+    t = list(tokens)
+    if len(t) >= 2 and t[0][0].lower() == "top" and t[1][0].isdigit():
+        t = t[2:]
+    return t
+
+
+def hook_frame(img, d, script, tokens, acc):
+    n = len(script.get("items", [])) or 10
+    label = f"TOP {n}"
+    style = hook_style(script)
+    body = _title_tokens_no_top(tokens)
+    red, yel, teal = hex_rgba("#FF3B3B"), hex_rgba("#FFD23F"), hex_rgba("#1DE9D6")
+    if style == "badge":
+        # tilted starburst badge with TOP 10, title underneath
+        b = Image.new("RGBA", (440, 440), (0, 0, 0, 0)); bd = ImageDraw.Draw(b)
+        pts = []
+        import math
+        for k in range(32):
+            r = 212 if k % 2 == 0 else 174
+            a = math.pi * 2 * k / 32
+            pts.append((220 + r * math.cos(a), 220 + r * math.sin(a)))
+        bd.polygon(pts, fill=red, outline=(255, 255, 255, 255))
+        bd.text((220, 172), "TOP", font=font(82), fill=WHITE, anchor="mm", stroke_width=6, stroke_fill=(0, 0, 0, 255))
+        bd.text((220, 268), str(n), font=font(146), fill=yel, anchor="mm", stroke_width=8, stroke_fill=(0, 0, 0, 255))
+        b = b.rotate(-12, resample=Image.BICUBIC, expand=True)
+        img.alpha_composite(b, ((W - b.width) // 2, 130))
+        rich_title(d, body, 610, 100, 60, 3)
+    elif style == "banners":
+        # each title line on its own slanted colour strip
+        d.rounded_rectangle([60, 210, 420, 330], 24, fill=yel)
+        d.text((240, 270), label, font=font(84), fill=(15, 15, 15, 255), anchor="mm")
+        text = " ".join(w for w, _ in body).upper()
+        f, lines = fit_text(d, text, 860, 96, 60, 4)
+        colours = [red, hex_rgba("#4DA3FF"), hex_rgba("#FF9F1C"), teal]
+        y = 380
+        for i, line in enumerate(lines):
+            bb = d.textbbox((0, 0), line, font=f, stroke_width=6)
+            tw, th = bb[2] - bb[0], bb[3] - bb[1]
+            strip = Image.new("RGBA", (int(tw) + 100, int(th + f.size * 0.45)), colours[i % 4])
+            sd = ImageDraw.Draw(strip)
+            sd.text((strip.width / 2, strip.height / 2), line, font=f, fill=WHITE, anchor="mm",
+                    stroke_width=6, stroke_fill=(0, 0, 0, 255))
+            strip = strip.rotate(3 if i % 2 else -3, resample=Image.BICUBIC, expand=True)
+            img.alpha_composite(strip, (int((W - strip.width) / 2), int(y)))
+            y += strip.height * 0.9
+    elif style == "guess":
+        d.rounded_rectangle([(W - 330) / 2, 220, (W + 330) / 2, 320], 26, fill=red)
+        d.text((W / 2, 270), label, font=font(76), fill=WHITE, anchor="mm")
+        yb = rich_title(d, body, 360, 100, 60, 3)
+        cy = yb + 95
+        d.ellipse([W / 2 - 115, cy - 95, W / 2 + 115, cy + 95], fill=yel, outline=(0, 0, 0, 255), width=9)
+        d.text((W / 2, cy), "#1?", font=font(110), fill=(15, 15, 15, 255), anchor="mm")
+        d.text((W / 2, cy + 140), "CAN YOU GUESS IT?", font=font(54), fill=WHITE, anchor="mm",
+               stroke_width=6, stroke_fill=(0, 0, 0, 255))
+    elif style == "bignumber":
+        # huge translucent number behind the title
+        big = Image.new("RGBA", (W, H), (0, 0, 0, 0)); bg = ImageDraw.Draw(big)
+        bg.text((W / 2, 560), str(n), font=font(760), fill=acc[:3] + (110,), anchor="mm",
+                stroke_width=14, stroke_fill=(255, 255, 255, 170))
+        img.alpha_composite(big)
+        d.text((W / 2, 250), "TOP", font=font(90), fill=WHITE, anchor="mm", stroke_width=8, stroke_fill=(0, 0, 0, 255))
+        rich_title(d, body, 470, 112, 64, 3)
+    else:  # frame
+        fr = Image.new("RGBA", (W, H), (0, 0, 0, 0)); fd = ImageDraw.Draw(fr)
+        fd.rectangle([0, 0, W - 1, H - 1], outline=acc, width=26)
+        fd.rectangle([26, 26, W - 27, H - 27], outline=(255, 255, 255, 200), width=6)
+        img.alpha_composite(fr)
+        rib = Image.new("RGBA", (W, 150), acc); rd = ImageDraw.Draw(rib)
+        rd.text((W / 2, 75), f"{label} · RANKED", font=font(84), fill=(15, 15, 15, 255), anchor="mm")
+        img.alpha_composite(rib, (0, 190))
+        yb = rich_title(d, body, 400, 110, 64, 3)
+        src = (script.get("sources") or [""])[0]
+        if src:
+            src = src.split("(")[0].split(" - ")[0].strip()
+            if src.startswith("http"):
+                src = ""
+        if src:
+            tag = f"DATA: {src.upper()}"[:34]
+            fs = font(42)
+            tw = d.textlength(tag, font=fs)
+            d.rounded_rectangle([(W - tw) / 2 - 30, yb + 20, (W + tw) / 2 + 30, yb + 90], 30, fill=(0, 0, 0, 200))
+            d.text((W / 2, yb + 55), tag, font=fs, fill=WHITE, anchor="mm")
+
+
 LIST_TOP, ROW_H = 300, 118
 
 
@@ -264,13 +359,15 @@ def static_layer(script, seg, accent, path):
 
     if seg["kind"] in ("q_ask", "q_timer", "q_reveal"):
         quiz_layer(img, d, seg, acc)
-    elif seg["kind"] in ("hook", "q_hook"):
+    elif seg["kind"] == "q_hook":
         tag = font(70)
-        label = "QUIZ TIME" if seg["kind"] == "q_hook" else "TOP 5"
+        label = "QUIZ TIME"
         tw = d.textlength(label, font=tag)
         d.rounded_rectangle([(W - tw) / 2 - 34, 250, (W + tw) / 2 + 34, 350], 26, fill=hex_rgba(HIGHLIGHT[0]))
         d.text(((W - tw) / 2, 256), label, font=tag, fill=WHITE)
         rich_title(d, tokens, 395, 110, 64, 4)
+    elif seg["kind"] == "hook":
+        hook_frame(img, d, script, tokens, acc)
     elif seg["kind"] in ("outro", "q_outro"):
         f = font(118)
         parts = ([("HOW MANY", WHITE), ("DID YOU GET?", hex_rgba(HIGHLIGHT[3]))] if seg["kind"] == "q_outro"
@@ -376,7 +473,7 @@ MASCOT_SPOTS = {
     # kind: (height px, top y)
     "item": (360, 1000),
     "item10": (280, 1232),   # 10-item lists: smaller, below the list
-    "hook": (640, 1120),
+    "hook": (560, 1220),
     "outro": (640, 1120),
     "q_hook": (640, 1120),
     "q_outro": (640, 1120),
@@ -459,7 +556,9 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
     caps = []
     for j, (txt, a, b) in enumerate([] if seg.get("captions") is False else caption_chunks(seg["text"], dur - pad)):
         p = os.path.join(workdir, f"s{idx}_cap{j}.png")
-        if mascot and seg["kind"] in ("hook", "outro", "q_hook", "q_outro"):
+        if mascot and seg["kind"] == "hook":
+            caption_layer(txt, accent, p, y_one=1095, y_two=1060)  # between the title and the mascot
+        elif mascot and seg["kind"] in ("outro", "q_hook", "q_outro"):
             caption_layer(txt, accent, p, y_one=905, y_two=880)  # sits above the big mascot
         elif seg["kind"] == "item" and len(script.get("items", [])) > 5:
             caption_layer(txt, accent, p, y_one=1560, y_two=1515)  # below the long list

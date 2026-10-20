@@ -147,6 +147,42 @@ MID_FOLLOW_LINES = [
 ]
 
 
+INTRO_LINES = [
+    "And we're back with another Top 10! Today we're ranking {topic}.",
+    "Welcome back to another Bojji Top 10! Today it's {topic}.",
+    "Another day, another Top 10! This time we're ranking {topic}.",
+    "It's Top 10 time! Today we're counting down {topic}.",
+    "We're back! Today's Top 10 is {topic}.",
+    "Okay, new Top 10! Let's rank {topic}.",
+]
+INTRO_SUBS = [
+    " If you haven't yet, hit subscribe so you never miss one.",
+    " New here? Subscribe, there's a new one every day.",
+    " Not subscribed yet? Let's fix that!",
+    "",  # some days: no ask, straight into the countdown
+    "",
+]
+
+
+def intro_topic(script):
+    t = script.get("intro_topic")
+    if not t:
+        import re as _re
+        t = _re.sub(r"(?i)^top\s+\d+\s+", "", script["title"])
+        t = _re.sub(r"\s*\((?:19|20)\d\d\)|#\w+", "", t).strip(" .!?")
+        keep = {"iphone": "iPhone", "unesco": "UNESCO", "olympic": "Olympic", "android": "Android"}
+        t = " ".join(keep.get(w.lower(), w.lower()) for w in t.split())
+        if not t.lower().startswith(("the ", "a ")):
+            t = "the " + t
+    return t
+
+
+def intro_line(script):
+    """Spoken right after the hook: 'And we're back with another Top 10…' (varies per video)."""
+    rnd = random.Random(script["id"] + "intro")
+    return rnd.choice(INTRO_LINES).format(topic=intro_topic(script)) + rnd.choice(INTRO_SUBS)
+
+
 # Top 10s: a "before the top five" ask after #6 — a cliffhanger and a like/follow request in one
 MID_TOP5_LINES = [
     "Before the top five: if you're enjoying this, a like and a follow honestly mean the world to a small creator like me.",
@@ -308,7 +344,8 @@ def make_video(script, config, offline, workdir):
     if intro:
         segments.append(render.normalize_host_clip(intro, workdir, idx)); idx += 1
 
-    plan = [("hook", script["hook"], None, script["items"][-1]["search"])]
+    hook_text = script["hook"] + (" " + intro_line(script) if len(script["items"]) > 5 else "")
+    plan = [("hook", hook_text, None, script["items"][-1]["search"])]
     plan += [("item", f"Number {i['rank']}. {i['name']}. {i['line']}", i, i["search"]) for i in script["items"]]
     if not outro:
         plan.append(("outro", f"{script['outro']} {subscribe_line(script)}", None, script["items"][0]["search"]))
