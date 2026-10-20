@@ -25,6 +25,7 @@ def _clone(text, out_path):
     wav = _model.generate(text, audio_prompt_path=ref, exaggeration=CLONE["exaggeration"],
                           cfg_weight=CLONE["cfg_weight"])
     tmp = out_path.rsplit(".", 1)[0] + "_clone.wav"
+    os.makedirs(os.path.dirname(os.path.abspath(tmp)), exist_ok=True)
     ta.save(tmp, wav, _model.sr)
     # trim the model's leading/trailing silence so the pacing stays tight
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", tmp, "-af",

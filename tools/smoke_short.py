@@ -13,7 +13,7 @@ sc = {"id": "smoke-test-passports", "title": "Top 10 Countries With the Stronges
       "hook": "One passport opens almost every door on Earth.", "items": items,
       "outro": "Which country surprised you the most?", "description": "sample", "tags": ["sample"],
       "highlight": ["Strongest", "Passports"], "highlight_colors": ["#FFD23F", "#1DE9D6"], "hook_style": "guess"}
-os.makedirs("out/smoke", exist_ok=True)
+os.makedirs("out/smoke/work", exist_ok=True)
 out, total, _, synth = M.make_video(sc, cfg, False, "out/smoke/work")
 shutil.copy(out, "out/smoke/sample_top10.mp4")
 open("out/smoke/info.txt", "w").write(f"duration {total:.1f}s synthetic={synth}\nNOTE: placeholder numbers, not fact-checked\n")
