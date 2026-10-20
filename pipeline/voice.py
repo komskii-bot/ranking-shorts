@@ -15,8 +15,29 @@ CLONE = {"ref": "assets/voice/emilio_ref.wav", "exaggeration": 0.5, "cfg_weight"
 _model = None
 
 
+def spoken_numbers(text):
+    """The cloned voice mumbles digits: '193' -> 'one hundred ninety three', '7.2%' -> 'seven point two percent',
+    '2026' -> 'twenty twenty six', '1,350' -> 'one thousand three hundred fifty'."""
+    import re
+    from .explainer_audio import _expand
+
+    def rep(m):
+        tok = m.group(0)
+        words = _expand(tok)
+        return " ".join(words) if words and not any(c.isdigit() for c in " ".join(words)) else tok
+    text = re.sub(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?%?|\d+(?:\.\d+)?%?", rep, text)
+    units = {"km²": "square kilometers", "km2": "square kilometers", "km/h": "kilometers per hour", "km": "kilometers",
+             "mph": "miles per hour", "m²": "square meters", "kg": "kilograms", "GW": "gigawatts", "MW": "megawatts",
+             "TWh": "terawatt hours", "Mbps": "megabits per second", "°C": "degrees Celsius", "°F": "degrees Fahrenheit",
+             "US$": "US dollars", "$": " dollars"}
+    for u, w in units.items():
+        text = re.sub(r"(?<=[a-z ])" + re.escape(u) + r"(?=[\s.,!?]|$)", w, text) if u != "$" else text
+    return text
+
+
 def _clone(text, out_path):
     global _model
+    text = spoken_numbers(text)
     import torchaudio as ta
     from chatterbox.tts import ChatterboxTTS
     if _model is None:
