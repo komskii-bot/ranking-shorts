@@ -1,0 +1,50 @@
+name: Fetch thumbnail photos
+
+on:
+  workflow_dispatch:
+    inputs:
+      folder:
+        description: "Save under (e.g. explainers/desert-data-centers/thumb_src)"
+        required: true
+      queries:
+        description: "Searches separated by |"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests Pillow
+      - name: Fetch
+        env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: |
+          IFS='|' read -ra Q <<< "${{ inputs.queries }}"
+          python tools/fetch_images.py "${{ inputs.folder }}" "${Q[@]}"
+          # keep the repo small: shrink to 1600 px wide
+          python - <<'PY'
+          import glob, os
+          from PIL import Image
+          for f in glob.glob("${{ inputs.folder }}/*.jpg"):
+              try:
+                  im = Image.open(f).convert("RGB")
+                  if im.width > 1600:
+                      im = im.resize((1600, int(im.height * 1600 / im.width)))
+                  im.save(f, quality=88)
+              except Exception:
+                  os.remove(f)
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "${{ inputs.folder }}"
+          git commit -m "Thumbnail photos: ${{ inputs.folder }}" && git pull --rebase && git push
