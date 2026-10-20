@@ -135,6 +135,11 @@ def rich_title(draw, tokens, y, start, min_size, max_lines, max_w=920, stroke=8)
 
 
 LIST_TOP, ROW_H = 300, 118
+
+
+def list_geom(n):
+    """(top, row height, number font, max name font) for a 5- or 10-item list."""
+    return (300, 118, 76, 72) if n <= 5 else (290, 92, 60, 56)
 OPT_TOP, OPT_H, OPT_GAP = 640, 118, 22
 LETTERS = "ABCD"
 GREEN = "#3DDC84"
@@ -197,14 +202,14 @@ def quiz_layer(img, d, seg, acc):
                 yb += int(nf.size * 1.2)
 
 
-def follow_badge(workdir, idx, kind):
+def follow_badge(workdir, idx, kind, y=None, label="FOLLOW FOR MORE"):
     """Small 'FOLLOW FOR MORE' pill shown while the mid-video follow ask is spoken."""
     img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     f = font(50)
-    t = "FOLLOW FOR MORE"
+    t = label
     tw = d.textlength(t, font=f)
-    y = 1470 if kind.startswith("q_") else 1262
+    y = y or (1470 if kind.startswith("q_") else 1262)
     x0 = 50  # left side, clear of the mascot on the right
     d.rounded_rectangle([x0, y, x0 + tw + 130, y + 86], 43, fill=(255, 255, 255, 255),
                         outline=(255, 0, 0, 255), width=5)
@@ -294,39 +299,42 @@ def static_layer(script, seg, accent, path):
         item = seg["item"]
         rich_title(d, tokens, 150, 50, 34, 2, max_w=960, stroke=5)
         # big ranking list: #1 at the top, names revealed as the countdown reaches them
+        n_items = len(script["items"])
+        top, rh, nfs, maxs = list_geom(n_items)
         panel = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-        ImageDraw.Draw(panel).rounded_rectangle([30, LIST_TOP - 16, W - 30, LIST_TOP + 5 * ROW_H + 4], 36,
+        ImageDraw.Draw(panel).rounded_rectangle([30, top - 16, W - 30, top + n_items * rh + 4], 36,
                                                 fill=(0, 0, 0, 120))
         img.alpha_composite(panel)
+        numw = 105 if n_items <= 5 else 130   # room for "10."
         for it in sorted(script["items"], key=lambda i: i["rank"]):
             r = it["rank"]
-            y = LIST_TOP + (r - 1) * ROW_H
+            y = top + (r - 1) * rh
             current = r == item["rank"]
             shown = r >= item["rank"]
             if current:
-                d.rounded_rectangle([44, y + 4, W - 44, y + ROW_H - 8], 28, fill=acc)
+                d.rounded_rectangle([44, y + 4, W - 44, y + rh - 8], 26, fill=acc)
             col = hex_rgba(RANK_COLORS.get(r, "#FFFFFF"))
-            nf = font(76)
-            num = f"{r}."
-            d.text((70, y + 8), num, font=nf, fill=(20, 20, 20, 255) if current else col,
-                   stroke_width=0 if current else 6, stroke_fill=(0, 0, 0, 255))
+            nf = font(nfs)
+            d.text((66, y + 8), f"{r}.", font=nf, fill=(20, 20, 20, 255) if current else col,
+                   stroke_width=0 if current else 5, stroke_fill=(0, 0, 0, 255))
             name = it["name"].upper() if shown else "?????"
-            size = 72
-            while size > 44 and d.textlength(name, font=font(size)) > W - 230:
+            x0 = 66 + numw
+            size = maxs
+            while size > 36 and d.textlength(name, font=font(size)) > W - x0 - 60:
                 size -= 4
             f = font(size)
-            while d.textlength(name, font=f) > W - 230 and len(name) > 4:
+            while d.textlength(name, font=f) > W - x0 - 60 and len(name) > 4:
                 name = name[:-2].rstrip() + "…"
-            ny = y + 8 + (76 - size) * 0.6
+            ny = y + 8 + (nfs - size) * 0.6
             if current:
-                d.text((175, ny), name, font=f, fill=(15, 15, 15, 255))
+                d.text((x0, ny), name, font=f, fill=(15, 15, 15, 255))
             else:
-                d.text((175, ny), name, font=f, fill=WHITE if shown else (255, 255, 255, 140),
-                       stroke_width=6, stroke_fill=(0, 0, 0, 255))
+                d.text((x0, ny), name, font=f, fill=WHITE if shown else (255, 255, 255, 140),
+                       stroke_width=5, stroke_fill=(0, 0, 0, 255))
         if item.get("stat"):
-            fs, sl = fit_text(d, item["stat"], 600, 66, 40, 1)
+            fs, sl = fit_text(d, item["stat"], 600 if n_items <= 5 else 560, 66 if n_items <= 5 else 58, 40, 1)
             sw = d.textlength(sl[0], font=fs)
-            sy = LIST_TOP + 5 * ROW_H + 40
+            sy = top + n_items * rh + (40 if n_items <= 5 else 26)
             d.rounded_rectangle([50, sy, 50 + sw + 56, sy + fs.size * 1.45], 24, fill=(0, 0, 0, 200),
                                 outline=acc, width=5)
             d.text((78, sy + fs.size * 0.18), sl[0], font=fs, fill=acc)
@@ -367,6 +375,7 @@ def caption_layer(text, accent, path, y_one=1235, y_two=1190):
 MASCOT_SPOTS = {
     # kind: (height px, top y)
     "item": (360, 1000),
+    "item10": (280, 1232),   # 10-item lists: smaller, below the list
     "hook": (640, 1120),
     "outro": (640, 1120),
     "q_hook": (640, 1120),
@@ -375,7 +384,7 @@ MASCOT_SPOTS = {
     "q_timer": (330, 1225),
     "q_reveal": (330, 1225),
 }
-RIGHT_SIDE = ("item", "q_ask", "q_timer", "q_reveal")
+RIGHT_SIDE = ("item", "item10", "q_ask", "q_timer", "q_reveal")
 
 
 def mascot_png(src, kind, workdir):
@@ -452,13 +461,17 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
         p = os.path.join(workdir, f"s{idx}_cap{j}.png")
         if mascot and seg["kind"] in ("hook", "outro", "q_hook", "q_outro"):
             caption_layer(txt, accent, p, y_one=905, y_two=880)  # sits above the big mascot
+        elif seg["kind"] == "item" and len(script.get("items", [])) > 5:
+            caption_layer(txt, accent, p, y_one=1560, y_two=1515)  # below the long list
         else:
             caption_layer(txt, accent, p, y_one=1400, y_two=1360)
         caps.append((p, a, b))
     if seg["kind"] == "q_timer":
         caps += countdown_pngs(accent, workdir, idx)
     if seg.get("follow_at") is not None:
-        caps.append((follow_badge(workdir, idx, seg["kind"]), seg["follow_at"], dur))
+        long_list = seg["kind"] == "item" and len(script.get("items", [])) > 5
+        caps.append((follow_badge(workdir, idx, seg["kind"], 1420 if long_list else None,
+                                  "LIKE + FOLLOW" if long_list else "FOLLOW FOR MORE"), seg["follow_at"], dur))
 
     bg = seg.get("bg") or {"kind": "none"}
     inputs, vf = [], ""
@@ -476,10 +489,11 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
     chain = [vf, "[b0][1:v]overlay=0:0[v1]"]
     last, n_in = "v1", 2
     if mascot:
-        mp = mascot_png(mascot, seg["kind"], workdir)
-        _, my = MASCOT_SPOTS[seg["kind"]]
+        spot = "item10" if seg["kind"] == "item" and len(script.get("items", [])) > 5 else seg["kind"]
+        mp = mascot_png(mascot, spot, workdir)
+        _, my = MASCOT_SPOTS[spot]
         inputs += ["-loop", "1", "-framerate", str(FPS), "-i", mp]
-        x = f"{W - Image.open(mp).width - 10}" if seg["kind"] in RIGHT_SIDE else "(W-w)/2"
+        x = f"{W - Image.open(mp).width - 10}" if spot in RIGHT_SIDE else "(W-w)/2"
         # pops up from below at the start, then bobs gently while the narrator talks
         pop_in = "" if seg.get("no_pop") else "+if(lt(t,0.3),(0.3-t)/0.3*420,0)"
         y = f"{my}{pop_in}+9*sin(2*PI*t*1.7)"

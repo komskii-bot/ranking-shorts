@@ -6,7 +6,7 @@
   "accent_color": "#FFD23F",
   "mascot": "assets/mascot.png",
   "mascot_dir": "assets/emotions",
-  "music_volume": 0.10,
+  "music_volume": 0.1,
   "made_for_kids": false,
   "upload_mode": "manual",
   "youtube_channel": "@bojjiii",
@@ -16,9 +16,20 @@
   "posting_slot": "7:00 PM",
   "quiz_slot": "11:00 PM",
   "quiz_accent": "#1DE9D6",
-  "quiz_hashtags": ["#shorts", "#quiz", "#trivia", "#facts"],
+  "quiz_hashtags": [
+    "#shorts",
+    "#quiz",
+    "#trivia",
+    "#facts"
+  ],
   "auto_write": false,
   "gemini_model": "gemini-3.8-flash",
   "topic_mix": "Alternate between (a) CURRENT tech/AI/business rankings that need fresh data (AI data centers, AI apps, AI usage by country, chip makers, satellites, EV sales, app downloads) and (b) evergreen science/geography/animal/space rankings.",
-  "default_hashtags": ["#shorts", "#ranking", "#top5", "#facts"]
+  "default_hashtags": [
+    "#shorts",
+    "#ranking",
+    "#top10",
+    "#countries",
+    "#facts"
+  ]
 }

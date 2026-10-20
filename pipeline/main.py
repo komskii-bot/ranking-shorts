@@ -147,9 +147,22 @@ MID_FOLLOW_LINES = [
 ]
 
 
+# Top 10s: a "before the top five" ask after #6 — a cliffhanger and a like/follow request in one
+MID_TOP5_LINES = [
+    "Before the top five: if you're enjoying this, a like and a follow honestly mean the world to a small creator like me.",
+    "Quick one before the top five! If you're liking this, tap like and follow. It really helps me keep making these.",
+    "Okay, top five coming up. If you're enjoying it, a like and a follow seriously makes my day as a new creator.",
+    "Before we hit the top five: a like and a follow costs you nothing and means so much to me. Thank you!",
+    "Top five is next! If this is fun so far, like and follow. Every single one helps a small channel like mine grow.",
+    "Real talk before the top five: every like and follow tells me you want more of these. So if you do, tap them!",
+]
+
+
 def mid_follow(script, choices):
-    """Pick where (and which) mid-video follow ask goes, the same every re-render."""
+    """Pick where (and which) mid-video ask goes, the same every re-render."""
     rnd = random.Random(script["id"] + "mid")
+    if len(script.get("items", [])) > 5:
+        return 6, rnd.choice(MID_TOP5_LINES)
     return rnd.choice(choices), rnd.choice(MID_FOLLOW_LINES)
 
 
