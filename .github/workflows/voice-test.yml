@@ -1,0 +1,30 @@
+name: Voice samples
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  voices:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          pip install edge-tts chatterbox-tts
+      - name: Make samples
+        run: python tools/voice_test.py out/voice assets/voice/emilio_ref.wav
+      - name: Publish
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ls -la out/voice; cat out/voice/timing.txt || true
+          gh release create "voice-test-${{ github.run_number }}" out/voice/* --title "Voice samples" --notes "Voice comparison samples"
