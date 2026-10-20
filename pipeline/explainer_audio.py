@@ -479,6 +479,180 @@ def edit_dp(words, heard, total):
     return cuts, [(words[i], times[i][0], times[i][1]) for i in range(len(words))]
 
 
+def _mfcc_frames(samples):
+    """13 normalised cepstral coefficients per 50 ms frame + log energy."""
+    from scipy import signal
+    from scipy.fft import dct
+    x = signal.resample_poly(samples, 1, 3)  # 48k -> 16k
+    f, _, Z = signal.stft(x, fs=16000, nperseg=512, noverlap=352)
+    S = np.abs(Z) ** 2
+    nm = 40
+    mel = lambda h: 2595 * np.log10(1 + h / 700)
+    imel = lambda m: 700 * (10 ** (m / 2595) - 1)
+    bins = np.floor(513 * imel(np.linspace(mel(60), mel(8000), nm + 2)) / 16000).astype(int)
+    fb = np.zeros((nm, len(f)))
+    for i in range(1, nm + 1):
+        a, b, c = bins[i - 1], bins[i], bins[i + 1]
+        fb[i - 1, a:b] = np.linspace(0, 1, b - a, endpoint=False)
+        fb[i - 1, b:c] = np.linspace(1, 0, c - b, endpoint=False)
+    C = dct(np.log(fb @ S + 1e-8), axis=0, norm="ortho")[1:14]
+    C = (C - C.mean(1, keepdims=True)) / (C.std(1, keepdims=True) + 1e-6)
+    E = np.log(S.sum(0) + 1e-9)
+    k = 5
+    n = C.shape[1] // k
+    return C[:, : n * k].reshape(13, n, k).mean(2), E[: n * k].reshape(n, k).mean(1)
+
+
+def acoustic_retakes(samples, heard, words, timed=None, minlag=0.9, maxlag=2.8, thr=0.74):
+    """Find phrases spoken twice within ~3 s (a restart) by comparing the audio with itself.
+    Whisper often writes such a restart down only once, so this catches what text can't.
+    Returns cuts [start, start+lag): removing exactly one lag joins the two takes seamlessly."""
+    FR, L = 0.05, 8
+    C, E = _mfcc_frames(samples)
+    n = C.shape[1]
+    Cn = C / (np.linalg.norm(C, axis=0, keepdims=True) + 1e-6)
+    voiced = E > np.percentile(E, 35)
+    hits = []
+    for lag in range(int(minlag / FR), int(maxlag / FR)):
+        d = (Cn[:, : n - lag] * Cn[:, lag:]).sum(0)
+        d = np.where(voiced[: n - lag] & voiced[lag:], d, 0)
+        sm = np.convolve(d, np.ones(L) / L, mode="valid")
+        i = 0
+        while i < len(sm):
+            if sm[i] > thr:
+                j = i
+                while j < len(sm) and sm[j] > thr:
+                    j += 1
+                hits.append((i * FR, (j + L - 1) * FR, lag * FR, float(sm[i:j].max())))
+                i = j
+            else:
+                i += 1
+    hits.sort(key=lambda r: -r[3])
+    kept = []
+    for h in hits:
+        if all(abs(h[0] - k[0]) > 0.6 or abs(h[2] - k[2]) > 0.6 for k in kept):
+            kept.append(h)
+    sn = [t for t, _ in tok_script(words)]
+    def heard_in(a, b):
+        return [t for w, s0, s1 in heard if s0 < b and s1 > a for t in _expand(w)]
+    def script_count(tok, around):
+        idx = [i for i, t in enumerate(sn) if t == tok]
+        return len(idx)
+    cuts = []
+    for s0, s1, lag, sc in sorted(kept):
+        w1 = heard_in(s0, s1)
+        w2 = heard_in(s0 + lag, s1 + lag)
+        content1 = [t for t in w1 if len(t) > 2]
+        shared = [t for t in w1 if t in w2]
+        dup_in_w2 = any(a == b for a, b in zip(w2, w2[1:]))
+        # where in the script are we? use the nearest heard words' script positions
+        pos = min(range(len(timed)), key=lambda k: abs(timed[k][1] - s0)) if timed else 0
+        tpos = sum(len(_expand(w)) for w in words[:pos])
+        near = sn[max(0, tpos - 12): tpos + 12]
+        legit = bool(shared) and all(near.count(t) >= 2 for t in shared if len(t) > 2) and \
+            any(len(t) > 2 for t in shared)
+        restart = (len(shared) >= 0.5 * max(1, len(w1))) or len(w2) <= len(w1) / 2 or dup_in_w2 \
+            or (sc >= 0.8 and lag <= 2.5)   # strong acoustic match: whisper just stretched a word
+        once = [t for t in content1 if near.count(t) <= 1]
+        if restart and not legit and (once or dup_in_w2):
+            cuts.append({"start": round(s0, 3), "end": round(s0 + lag, 3),
+                         "text": f"repeat: {' '.join(w1)} / {' '.join(w2)} (match {sc:.2f})"})
+    return cuts
+
+
+def meta_retake_cuts(heard, words):
+    """'Let me repeat that' / 'sorry' / 'again': drop the earlier take of what follows,
+    plus the chatter, and keep the new take in full."""
+    toks = [_norm(w) for w, _, _ in heard]
+    cuts = []
+    for m, t in enumerate(toks):
+        if t not in META:
+            continue
+        # chatter = the heard sentence containing the meta word
+        a = m
+        while a > 0 and not heard[a - 1][0].endswith((".", "?", "!")) and m - a < 6:
+            a -= 1
+        b = m
+        while b < len(heard) - 1 and not heard[b][0].endswith((".", "?", "!")) and b - m < 6:
+            b += 1
+        post = b + 1
+        if post >= len(heard):
+            continue
+        # the new take may itself start with a stutter: skip identical leading words
+        while post + 1 < len(heard) and toks[post] == toks[post + 1]:
+            post += 1
+        probe = [x for x in toks[post: post + 8] if len(x) > 2][:4]
+        t_meta = heard[m][1]
+        start = None
+        for k in range(a - 1, -1, -1):
+            if t_meta - heard[k][1] > 75:
+                break
+            if toks[k] != toks[post]:
+                continue
+            window = [x for x in toks[k: k + 10] if len(x) > 2][:4]
+            if window and sum(1 for x in probe if x in window) >= max(2, len(probe) - 1):
+                start = k
+                break   # nearest earlier take
+        if start is None:
+            start = a
+        c0 = heard[start - 1][2] + 0.25 if start > 0 else max(0.0, heard[start][1] - 0.1)
+        c1 = heard[post][1] - 0.2
+        if c1 > c0:
+            cuts.append({"start": round(c0, 3), "end": round(c1, 3),
+                         "text": "retake: " + " ".join(w for w, _, _ in heard[start:post])[:300]})
+    return cuts
+
+
+def dup_word_cuts(heard, words):
+    """'Some, Some cities' -> cut the first one (only when the two are genuinely separate
+    sounds, not one word reported twice by overlapping transcription windows)."""
+    sn = [_norm(w) for w in words]
+    pairs = {(x, y) for x, y in zip(sn, sn[1:])}
+    cuts = []
+    for k, ((w1, a1, b1), (w2, a2, b2)) in enumerate(zip(heard, heard[1:])):
+        n1, n2 = _norm(w1), _norm(w2)
+        prev_end = heard[k - 1][2] if k > 0 else 0.0
+        clean = a1 >= prev_end - 0.05 and b1 - a1 < 0.9   # not overlapping the word before it
+        if n1 and n1 == n2 and len(n1) > 1 and (n1, n2) not in pairs and a2 - a1 >= 0.35 \
+                and b1 <= a2 + 0.05 and clean:
+            cuts.append({"start": round(a1 - 0.03, 3), "end": round(a2 - 0.03, 3), "text": f"doubled word: {w1} {w2}"})
+    return cuts
+
+
+def merge_cuts(cuts):
+    out = []
+    for c in sorted(cuts, key=lambda c: c["start"]):
+        if out and c["start"] <= out[-1]["end"] + 0.05:
+            out[-1]["end"] = max(out[-1]["end"], c["end"])
+            out[-1]["text"] += " + " + c["text"]
+        else:
+            out.append(dict(c))
+    return out
+
+
+def plan_cuts(samples, heard, words, total):
+    """All retake cuts for one recording, reviewed in timing.json before rendering."""
+    meta = meta_retake_cuts(heard, words)
+    covered = lambda c: any(m["start"] - 0.5 <= c["start"] and c["end"] <= m["end"] + 0.5 for m in meta)
+    text_cuts, _ = edit_dp(words, heard, total)
+    text_cuts = [c for c in text_cuts if len(c["text"].split()) >= 4 and not covered(c)
+                 and not any(m["start"] < c["end"] and c["start"] < m["end"] for m in meta)]
+    timed0 = time_kept(words, heard, meta, total)
+    acoustic = [c for c in acoustic_retakes(samples, heard, words, timed0) if not covered(c)]
+    dups = [c for c in dup_word_cuts(heard, words) if not covered(c)]
+    return merge_cuts(meta + text_cuts + acoustic + dups)
+
+
+def time_kept(words, heard, cuts, total):
+    """Word timings using only the heard words that survive the cuts."""
+    inside = lambda w: any(c["start"] <= (w[1] + w[2]) / 2 <= c["end"] for c in cuts)
+    keep = [w for w in heard if not inside(w)]
+    saved = list(LOG)
+    _, timed = edit_dp(words, keep, total)
+    LOG[:] = saved
+    return timed
+
+
 def apply_cuts(samples, cuts, fade=0.03):
     """Remove cut ranges with short fades so the joins don't click."""
     if not cuts:
@@ -523,7 +697,9 @@ def align(wav_path, samples, beats):
         heard = fill_gaps(wav_path, _whisper_dense(wav_path))
         print(f"    whisper heard {len(heard)} words for {len(words)} script words")
         HEARD[wav_path] = heard
-        cuts, timed = edit_dp(words, heard, len(samples) / SR)
+        total = len(samples) / SR
+        cuts = plan_cuts(samples, heard, words, total)
+        timed = time_kept(words, heard, cuts, total)
         CUTS[wav_path] = cuts
         for c in cuts:
             print(f"    cut {c['start']:.2f}-{c['end']:.2f}: {c['text']}")
