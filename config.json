@@ -36,6 +36,7 @@
   "voice_clone": {
     "ref": "assets/voice/emilio_ref.wav",
     "exaggeration": 0.5,
-    "cfg_weight": 0.5
+    "cfg_weight": 0.5,
+    "tempo": 1.12
   }
 }

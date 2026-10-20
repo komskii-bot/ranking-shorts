@@ -11,7 +11,7 @@ FALLBACK_VOICE = "en-US-GuyNeural"
 
 # Emilio's cloned voice (Chatterbox, MIT licence). main.py sets these from config.json.
 ENGINE = "edge"          # "edge" or "chatterbox"
-CLONE = {"ref": "assets/voice/emilio_ref.wav", "exaggeration": 0.5, "cfg_weight": 0.5}
+CLONE = {"ref": "assets/voice/emilio_ref.wav", "exaggeration": 0.5, "cfg_weight": 0.5, "tempo": 1.12}
 _model = None
 
 
@@ -30,7 +30,8 @@ def _clone(text, out_path):
     # trim the model's leading/trailing silence so the pacing stays tight
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", tmp, "-af",
                     "silenceremove=start_periods=1:start_threshold=-45dB,areverse,"
-                    "silenceremove=start_periods=1:start_threshold=-45dB,areverse", out_path], check=True)
+                    "silenceremove=start_periods=1:start_threshold=-45dB,areverse,"
+                    f"atempo={CLONE.get('tempo', 1.0)}", out_path], check=True)
     return out_path
 
 

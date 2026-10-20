@@ -21,7 +21,7 @@ SCHEMA_HINT = """Return ONLY a JSON object, no markdown fences, in exactly this 
      "line": "One spoken sentence, 12-20 words, with the key number and one surprising detail",
      "emotion": "optional mascot reaction for this item: thinking, curious, excited, nervous, shocked or exclaim",
      "search": "2-4 word stock-footage search term that would show this item"},
-    ... down to rank 1. TOP 10 by default: ranks 10..1 in that order. Ranks 10-6: one punchy line, 8-12 words. Ranks 5-1: 12-18 words with the surprising detail ...
+    ... down to rank 1. TOP 10 by default: ranks 10..1 in that order. Ranks 10-6: one punchy line, 6-9 words. Ranks 5-1: 10-14 words with the surprising detail ...
   ],
   "outro": "One short spoken line asking viewers what they'd put at #1",
   "cta": "Optional: one short, warm subscribe ask from a NEW creator with a reason to follow (e.g. a new ranking every day). Vary it; leave out to use the default rotation.",
@@ -34,7 +34,7 @@ SCHEMA_HINT = """Return ONLY a JSON object, no markdown fences, in exactly this 
 }"""
 
 RULES = """Rules:
-- Exactly 10 items, ordered rank 10 down to rank 1 (the whole video should land around 55-70 seconds).
+- Exactly 10 items, ordered rank 10 down to rank 1 (the whole video should land around 60-75 seconds; keep the hook to 12 words).
 - Countries make the best topics for this channel: prefer "Top 10 countries by ..." with one clear, official dataset.
 - Every number must come from a reputable source (official stats, research groups, major publications). If sources disagree, say "about" or "estimated".
 - For anything that changes over time, use the newest data you can find and set "as_of".
