@@ -6,70 +6,80 @@
    "topic": "Top 10 countries with the strongest passports (2026)",
    "source": "Henley Passport Index 2026",
    "kind": "country",
-   "status": "approved"
+   "status": "approved",
+   "check_note": "2026-10-21: skipped — Oct 2026 Henley edition not readable at source; reported scores conflict (192 vs 193) and ranks 4+ are a 12-way tie, so no clean top 10."
   },
   {
    "n": 2,
    "topic": "Top 10 countries where iPhone beats Android",
    "source": "StatCounter mobile OS share by country",
    "kind": "country",
-   "status": "approved"
+   "status": "approved",
+   "check_note": "2026-10-21: skipped — most StatCounter country pages couldn't be checked, so the full top 10 wasn't verifiable."
   },
   {
    "n": 3,
    "topic": "Top 10 biggest cities in the world",
    "source": "UN World Urbanization Prospects 2025",
    "kind": "city",
-   "status": "approved"
+   "status": "planned",
+   "week": "2026-10-25"
   },
   {
    "n": 4,
    "topic": "Top 10 countries that spend the most time on social media",
    "source": "DataReportal Digital 2026",
    "kind": "country",
-   "status": "approved"
+   "status": "approved",
+   "check_note": "2026-10-21: skipped — Digital 2026 switched to weekly social+video time and the full by-country top 10 isn't published in text."
   },
   {
    "n": 5,
    "topic": "Top 10 countries with the longest coastlines",
    "source": "CIA World Factbook",
    "kind": "country",
-   "status": "approved"
+   "status": "planned",
+   "week": "2026-10-25"
   },
   {
    "n": 6,
    "topic": "Top 10 most visited cities in the world",
    "source": "Euromonitor Top 100 City Destinations",
    "kind": "city",
-   "status": "approved"
+   "status": "planned",
+   "week": "2026-10-25"
   },
   {
    "n": 7,
    "topic": "Top 10 countries with the most Olympic gold medals (all-time, Summer)",
    "source": "Olympedia / IOC results",
    "kind": "country",
-   "status": "approved"
+   "status": "planned",
+   "week": "2026-10-25"
   },
   {
    "n": 8,
    "topic": "Top 10 countries with the most time zones",
    "source": "official territories / IANA time zones",
    "kind": "country",
-   "status": "approved"
+   "status": "planned",
+   "week": "2026-10-25"
   },
   {
    "n": 9,
    "topic": "Top 10 cities with the worst traffic",
    "source": "TomTom Traffic Index",
    "kind": "city",
-   "status": "approved"
+   "status": "planned",
+   "week": "2026-10-25"
   },
   {
    "n": 10,
    "topic": "Top 10 countries with the most immigrants",
    "source": "UN DESA International Migrant Stock",
    "kind": "country",
-   "status": "approved"
+   "status": "planned",
+   "week": "2026-10-25"
   },
   {
    "n": 11,
