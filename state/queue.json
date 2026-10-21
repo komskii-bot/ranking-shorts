@@ -2,7 +2,7 @@
  {
   "id": "iphone-beats-android-countries-2026",
   "title": "Top 10 Countries Where iPhone Beats Android",
-  "hook": "In number one, iPhones outnumber Androids nearly two to one.",
+  "hook": "You'd guess the USA, but it's not even top five.",
   "items": [
    {
     "rank": 10,
@@ -103,13 +103,13 @@
    "https://gs.statcounter.com/os-market-share/mobile/worldwide"
   ],
   "topic_n": 2,
-  "intro_topic": "the countries where iPhone beats Android",
+  "intro_topic": "the countries where iPhone beats Android, by share of mobile web browsing",
   "post_on": "2026-10-25"
  },
  {
   "id": "biggest-cities-world-2025",
   "title": "Top 10 Biggest Cities in the World",
-  "hook": "Number one just stole Tokyo's crown, and it's not even close.",
+  "hook": "Think Tokyo is the biggest city? Not anymore. Can you guess?",
   "items": [
    {
     "rank": 10,
@@ -214,12 +214,12 @@
   ],
   "post_on": "2026-10-26",
   "topic_n": 3,
-  "intro_topic": "the biggest cities on Earth"
+  "intro_topic": "the biggest cities on Earth by population, counting the whole urban area"
  },
  {
   "id": "longest-coastlines-countries",
   "title": "Top 10 Countries With the Longest Coastlines",
-  "hook": "Number one's coastline could wrap around Earth about five times.",
+  "hook": "Think Australia or Russia wins? Not even close. Guess number one!",
   "items": [
    {
     "rank": 10,
@@ -321,12 +321,13 @@
    "https://world-factbook.scraperwall.com/fields/2060.html"
   ],
   "post_on": "2026-10-27",
-  "topic_n": 5
+  "topic_n": 5,
+  "intro_topic": "the countries with the longest coastlines, measured in kilometers"
  },
  {
   "id": "most-visited-cities-2025",
   "title": "Top 10 Most Visited Cities in the World",
-  "hook": "Number one welcomed over thirty million foreign visitors in 2025.",
+  "hook": "Paris isn't number one. It's not even top five. Guess?",
   "items": [
    {
     "rank": 10,
@@ -430,12 +431,12 @@
   ],
   "post_on": "2026-10-28",
   "topic_n": 6,
-  "intro_topic": "the most visited cities on the planet"
+  "intro_topic": "the most visited cities by international tourist arrivals"
  },
  {
   "id": "most-olympic-gold-medals-countries",
   "title": "Top 10 Countries With the Most Olympic Gold Medals",
-  "hook": "Number one has more golds than the next four combined.",
+  "hook": "Think China is number two? Surprisingly, it's not. Can you guess?",
   "items": [
    {
     "rank": 10,
@@ -534,12 +535,12 @@
   ],
   "post_on": "2026-10-29",
   "topic_n": 7,
-  "intro_topic": "the countries with the most Summer Olympic gold medals"
+  "intro_topic": "the countries with the most Summer Olympic gold medals of all time"
  },
  {
   "id": "most-time-zones-countries",
   "title": "Top 10 Countries With the Most Time Zones",
-  "hook": "Bet you think number one is Russia. Plot twist incoming.",
+  "hook": "You'd think Russia has the most time zones. Surprisingly, it doesn't.",
   "items": [
    {
     "rank": 10,
@@ -638,12 +639,13 @@
    "https://www.timeanddate.com/time/country-with-the-most-time-zones.html"
   ],
   "post_on": "2026-10-30",
-  "topic_n": 8
+  "topic_n": 8,
+  "intro_topic": "the countries with the most time zones, overseas territories included"
  },
  {
   "id": "worst-traffic-cities-2025",
   "title": "Top 10 Cities With the Worst Traffic Jams",
-  "hook": "In number one, drives take about seventy-six percent longer on average.",
+  "hook": "Manila or LA worst traffic? Neither even made the top ten.",
   "items": [
    {
     "rank": 10,
@@ -746,6 +748,6 @@
   ],
   "post_on": "2026-10-31",
   "topic_n": 9,
-  "intro_topic": "the cities with the worst traffic jams"
+  "intro_topic": "the cities with the worst traffic, by how much longer trips take"
  }
 ]

@@ -35,6 +35,8 @@ SCHEMA_HINT = """Return ONLY a JSON object, no markdown fences, in exactly this 
 
 RULES = """Rules:
 - Exactly 10 items, ordered rank 10 down to rank 1 (the whole video should land around 60-75 seconds; keep the hook to 12 words).
+- Hook = a misdirection: name the answer viewers would EXPECT and say it's wrong (e.g. "You'd guess the USA, but it's not even top five."), then dare them to guess. It must be factually true and must not reveal #1.
+- Always make clear WHAT is being measured: put the metric in "intro_topic" (spoken after the hook), e.g. "the biggest cities on Earth by population, counting the whole urban area".
 - Countries make the best topics for this channel: prefer "Top 10 countries by ..." with one clear, official dataset.
 - Every number must come from a reputable source (official stats, research groups, major publications). If sources disagree, say "about" or "estimated".
 - For anything that changes over time, use the newest data you can find and set "as_of".
