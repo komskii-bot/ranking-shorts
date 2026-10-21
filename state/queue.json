@@ -1,5 +1,112 @@
 [
  {
+  "id": "iphone-beats-android-countries-2026",
+  "title": "Top 10 Countries Where iPhone Beats Android",
+  "hook": "In number one, iPhones outnumber Androids nearly two to one.",
+  "items": [
+   {
+    "rank": 10,
+    "name": "Saudi Arabia",
+    "stat": "51.6% iPhone",
+    "line": "Saudi Arabia just squeaks by at nearly fifty-two percent.",
+    "search": "riyadh skyline"
+   },
+   {
+    "rank": 9,
+    "name": "Bahrain",
+    "stat": "53.4% iPhone",
+    "line": "Bahrain goes iPhone with about fifty-three percent.",
+    "search": "bahrain skyline"
+   },
+   {
+    "rank": 8,
+    "name": "United States",
+    "stat": "53.6% iPhone",
+    "line": "The US? Just about fifty-four percent iPhone.",
+    "search": "new york skyline"
+   },
+   {
+    "rank": 7,
+    "name": "Switzerland",
+    "stat": "55.0% iPhone",
+    "line": "Switzerland sits right at fifty-five percent.",
+    "search": "zurich city"
+   },
+   {
+    "rank": 6,
+    "name": "Sweden",
+    "stat": "56.1% iPhone",
+    "line": "Sweden hits about fifty-six percent iPhone.",
+    "search": "stockholm city"
+   },
+   {
+    "rank": 5,
+    "name": "Norway",
+    "stat": "58.7% iPhone",
+    "line": "Norway hits nearly fifty-nine percent, while neighbor Finland is about two-thirds Android.",
+    "search": "norway fjord"
+   },
+   {
+    "rank": 4,
+    "name": "Japan",
+    "stat": "60.5% iPhone",
+    "line": "Japan is about sixty and a half percent iPhone, South Korea leans Android.",
+    "search": "tokyo street crowd"
+   },
+   {
+    "rank": 3,
+    "name": "Australia",
+    "stat": "62.6% iPhone",
+    "line": "Australia is about sixty-three percent iPhone, while New Zealand is a coin flip.",
+    "search": "sydney opera house"
+   },
+   {
+    "rank": 2,
+    "name": "Denmark",
+    "stat": "62.7% iPhone",
+    "line": "Denmark beats Australia by a hair, about sixty-three percent iPhone.",
+    "search": "copenhagen harbor"
+   },
+   {
+    "rank": 1,
+    "name": "Canada",
+    "stat": "64.9% iPhone",
+    "line": "Canada wins with nearly sixty-five percent, almost two iPhones for every Android.",
+    "search": "toronto skyline"
+   }
+  ],
+  "outro": "Team iPhone or team Android? Tell me below.",
+  "highlight": [
+   "iPhone",
+   "Android"
+  ],
+  "highlight_colors": [
+   "#1DE9D6",
+   "#3DDC84"
+  ],
+  "description": "Countries where iPhone (iOS) beats Android, ranked by iOS share of mobile web traffic in StatCounter Global Stats for September 2026. UN member states with over 1 million people.",
+  "tags": [
+   "countries",
+   "iphone",
+   "android",
+   "ios",
+   "smartphones",
+   "apple",
+   "tech",
+   "mobile",
+   "top 10"
+  ],
+  "as_of": "September 2026",
+  "sources": [
+   "StatCounter Global Stats, mobile OS market share by country, September 2026",
+   "https://gs.statcounter.com/os-market-share/mobile/canada",
+   "https://gs.statcounter.com/os-market-share/mobile/worldwide"
+  ],
+  "topic_n": 2,
+  "intro_topic": "the countries where iPhone beats Android",
+  "post_on": "2026-10-25"
+ },
+ {
   "id": "biggest-cities-world-2025",
   "title": "Top 10 Biggest Cities in the World",
   "hook": "Number one just stole Tokyo's crown, and it's not even close.",
@@ -105,7 +212,7 @@
    "https://www.worldometers.info/population/largest-cities-in-the-world/",
    "https://www.destatis.de/DE/Themen/Laender-Regionen/Internationales/Thema/bevoelkerung-arbeit-soziales/bevoelkerung/Stadtbevoelkerung.html"
   ],
-  "post_on": "2026-10-25",
+  "post_on": "2026-10-26",
   "topic_n": 3,
   "intro_topic": "the biggest cities on Earth"
  },
@@ -213,7 +320,7 @@
    "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_length_of_coastline",
    "https://world-factbook.scraperwall.com/fields/2060.html"
   ],
-  "post_on": "2026-10-26",
+  "post_on": "2026-10-27",
   "topic_n": 5
  },
  {
@@ -321,7 +428,7 @@
    "https://en.wikipedia.org/wiki/List_of_cities_by_international_visitors",
    "https://www.timeout.com/news/revealed-the-worlds-most-visited-cities-by-international-arrivals-in-2025-120525"
   ],
-  "post_on": "2026-10-27",
+  "post_on": "2026-10-28",
   "topic_n": 6,
   "intro_topic": "the most visited cities on the planet"
  },
@@ -425,7 +532,7 @@
    "All-time Olympic Games medal table, Summer (through Paris 2024): https://en.wikipedia.org/wiki/All-time_Olympic_Games_medal_table",
    "Olympedia country pages: https://www.olympedia.org/countries/USA"
   ],
-  "post_on": "2026-10-28",
+  "post_on": "2026-10-29",
   "topic_n": 7,
   "intro_topic": "the countries with the most Summer Olympic gold medals"
  },
@@ -530,7 +637,7 @@
    "https://news.gov.bc.ca/releases/2026AG0013-000209",
    "https://www.timeanddate.com/time/country-with-the-most-time-zones.html"
   ],
-  "post_on": "2026-10-29",
+  "post_on": "2026-10-30",
   "topic_n": 8
  },
  {
@@ -637,113 +744,8 @@
    "https://www.outlooktraveller.com/News/global-traffic-index-2025-indian-cities-among-the-most-congested-on-earth",
    "https://tg24.sky.it/motori/auto/2026/01/27/traffico-citta-mondo-classifica-2025"
   ],
-  "post_on": "2026-10-30",
+  "post_on": "2026-10-31",
   "topic_n": 9,
   "intro_topic": "the cities with the worst traffic jams"
- },
- {
-  "id": "most-immigrants-countries-2024",
-  "title": "Top 10 Countries With the Most Immigrants",
-  "hook": "Number one is home to over fifty million people born abroad.",
-  "items": [
-   {
-    "rank": 10,
-    "name": "Russia",
-    "stat": "7.6 million migrants",
-    "line": "Russia hosts over seven and a half million.",
-    "search": "moscow city street"
-   },
-   {
-    "rank": 9,
-    "name": "Australia",
-    "stat": "8.1 million migrants",
-    "line": "Australia: about eight million, roughly thirty percent of people.",
-    "search": "sydney city street"
-   },
-   {
-    "rank": 8,
-    "name": "UAE",
-    "stat": "8.2 million migrants",
-    "line": "UAE: about eight million, nearly three in four residents!",
-    "search": "dubai skyline"
-   },
-   {
-    "rank": 7,
-    "name": "Canada",
-    "stat": "8.8 million migrants",
-    "line": "Canada hosts nearly nine million, over twenty percent.",
-    "search": "toronto skyline"
-   },
-   {
-    "rank": 6,
-    "name": "Spain",
-    "stat": "8.9 million migrants",
-    "line": "Spain edges Canada, also nearly nine million.",
-    "search": "madrid city street"
-   },
-   {
-    "rank": 5,
-    "name": "France",
-    "stat": "9.2 million migrants",
-    "line": "France is home to about nine point two million people born abroad.",
-    "search": "paris city street"
-   },
-   {
-    "rank": 4,
-    "name": "United Kingdom",
-    "stat": "11.8 million migrants",
-    "line": "The UK hosts nearly twelve million migrants, about seventeen percent of its population.",
-    "search": "london city street"
-   },
-   {
-    "rank": 3,
-    "name": "Saudi Arabia",
-    "stat": "13.7 million migrants",
-    "line": "Saudi Arabia hosts nearly fourteen million, about four in ten residents.",
-    "search": "riyadh skyline"
-   },
-   {
-    "rank": 2,
-    "name": "Germany",
-    "stat": "16.8 million migrants",
-    "line": "Germany has about sixteen point eight million, roughly one in five people.",
-    "search": "berlin city street"
-   },
-   {
-    "rank": 1,
-    "name": "United States",
-    "stat": "52.4 million migrants",
-    "line": "The US is number one with over fifty-two million, more than three times Germany.",
-    "search": "new york street crowd"
-   }
-  ],
-  "outro": "Which country surprised you most? Tell me below.",
-  "highlight": [
-   "Most Immigrants"
-  ],
-  "highlight_colors": [
-   "#3DDC84"
-  ],
-  "description": "Countries with the most international migrants (people living outside their country of birth), mid-2024, from UN DESA's International Migrant Stock 2024 (published January 2025).",
-  "tags": [
-   "countries",
-   "immigrants",
-   "migration",
-   "international migrants",
-   "population",
-   "un data",
-   "usa",
-   "germany",
-   "geography",
-   "top 10"
-  ],
-  "as_of": "July 2024",
-  "sources": [
-   "UN DESA, International Migrant Stock 2024: Key facts and figures (Jan 2025)",
-   "https://www.un.org/development/desa/pd/sites/www.un.org.development.desa.pd/files/undesa_pd_2025_intlmigstock_2024_key_facts_and_figures_advance-unedited.pdf",
-   "https://www.migrationpolicy.org/article/top-statistics-global-migration-migrants"
-  ],
-  "post_on": "2026-10-31",
-  "topic_n": 10
  }
 ]
