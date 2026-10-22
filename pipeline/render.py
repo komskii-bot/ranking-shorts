@@ -546,6 +546,19 @@ def gradient_bg(path, seed):
     return path
 
 
+def mascot_track(frames, kind, workdir, idx):
+    """Animated mascot: frames = [(png path, seconds), ...] -> ffconcat list of sized stickers + first sticker."""
+    stickers = [(mascot_png(p, kind, workdir), d) for p, d in frames if d > 0.001]
+    lst = os.path.join(workdir, f"s{idx}_mascot.ffconcat")
+    with open(lst, "w") as fh:
+        fh.write("ffconcat version 1.0\n")
+        for p, d in stickers:
+            fh.write(f"file '{os.path.abspath(p)}'\nduration {d:.4f}\n")
+        fh.write(f"file '{os.path.abspath(stickers[-1][0])}'\nduration 2.0\n")
+        fh.write(f"file '{os.path.abspath(stickers[-1][0])}'\n")
+    return lst, stickers[0][0]
+
+
 def render_segment(seg, script, accent, workdir, idx, mascot=None):
     mascot = seg.get("mascot") or mascot
     """seg: kind, text, audio, bg ({'kind': video|photo|none, 'path'})"""
@@ -589,9 +602,13 @@ def render_segment(seg, script, accent, workdir, idx, mascot=None):
     last, n_in = "v1", 2
     if mascot:
         spot = "item10" if seg["kind"] == "item" and len(script.get("items", [])) > 5 else seg["kind"]
-        mp = mascot_png(mascot, spot, workdir)
         _, my = MASCOT_SPOTS[spot]
-        inputs += ["-loop", "1", "-framerate", str(FPS), "-i", mp]
+        if isinstance(mascot, dict):  # animated: lip-sync / loops / pose changes
+            lst, mp = mascot_track(mascot["frames"], spot, workdir, idx)
+            inputs += ["-f", "concat", "-safe", "0", "-i", lst]
+        else:
+            mp = mascot_png(mascot, spot, workdir)
+            inputs += ["-loop", "1", "-framerate", str(FPS), "-i", mp]
         x = f"{W - Image.open(mp).width - 10}" if spot in RIGHT_SIDE else "(W-w)/2"
         # pops up from below at the start, then bobs gently while the narrator talks
         pop_in = "" if seg.get("no_pop") else "+if(lt(t,0.3),(0.3-t)/0.3*420,0)"

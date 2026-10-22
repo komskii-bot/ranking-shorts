@@ -5,7 +5,9 @@ from PIL import Image
 from scipy import ndimage as ndi
 OUT = "."
 # usage: python tools/cut_sprite_sheet.py SHEET.jpg OUT_DIR/FOLDER ROWS COLS name1 name2 ... (reading order)
-SHEETS = {sys.argv[1]: (sys.argv[2], int(sys.argv[3]), int(sys.argv[4]), sys.argv[5:])}
+ALIGN = '--align' in sys.argv
+args = [a for a in sys.argv[1:] if a != '--align']
+SHEETS = {args[0]: (args[1], int(args[2]), int(args[3]), args[4:])}
 def gutters(mask1d, n, size):
     """Cell boundaries: centre of gutter runs near the expected even splits, else even split."""
     b = [0]
@@ -35,6 +37,7 @@ for key, (folder, R, C, names) in SHEETS.items():
     bg |= np.isin(wl, list(set(np.unique(np.concatenate([wl[0], wl[-1], wl[:, 0], wl[:, -1]]))) - {0}))
     fg = ~bg
     os.makedirs(os.path.join(OUT, folder), exist_ok=True)
+    cells = []
     for r in range(R):
         for c in range(C):
             name = names[r * C + c]
@@ -70,7 +73,17 @@ for key, (folder, R, C, names) in SHEETS.items():
             sp = (band & (rgb[..., 1] > mx)) | strong
             rgb[..., 1][sp] = mx[sp]
             rgba = np.dstack([rgb.astype(np.uint8), a])
-            ys, xs = np.where(a > 0)
+            cells.append((name, rgba))
+    if ALIGN:  # one shared box (cell-relative) for every frame, so loops don't jitter
+        hh = min(r.shape[0] for _, r in cells); ww = min(r.shape[1] for _, r in cells)
+        boxes = [np.where(r[:hh, :ww, 3] > 0) for _, r in cells]
+        y0 = min(b[0].min() for b in boxes); y1 = max(b[0].max() for b in boxes)
+        x0 = min(b[1].min() for b in boxes); x1 = max(b[1].max() for b in boxes)
+    for name, rgba in cells:
+        if ALIGN:
+            rgba = rgba[y0:y1 + 1, x0:x1 + 1]
+        else:
+            ys, xs = np.where(rgba[..., 3] > 0)
             rgba = rgba[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-            Image.fromarray(rgba).save(os.path.join(OUT, folder, name + ".png"))
-            print(folder, name, rgba.shape[:2])
+        Image.fromarray(rgba).save(os.path.join(OUT, folder, name + ".png"))
+        print(folder, name, rgba.shape[:2])

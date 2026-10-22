@@ -221,7 +221,8 @@ EMOTIONS = ["presenting", "shocked", "thinking", "celebrating", "curious", "exci
 # Poses picked automatically; the gloomier ones (angry, sad, bored...) are only used when a script asks for them.
 AUTO_HOOK = ["presenting", "curious", "mischievous", "wink", "suspicious"]
 AUTO_MIDDLE = ["thinking", "curious", "excited", "nervous", "hopeful", "unsure", "suspicious", "surprised",
-               "mischievous", "wink", "chill", "laughing"]
+               "mischievous", "wink", "chill", "laughing",
+               "point_up", "point_side", "thumbs_up", "shrug", "magnifier"]  # gestures: only with animated_mascot
 AUTO_TOP = ["shocked", "exclaim", "surprised", "panicked"]
 AUTO_OUTRO = ["celebrating", "presenting", "joyful", "laughing", "wink"]
 
@@ -231,9 +232,21 @@ def emotion_files(config):
     return {e: os.path.join(folder, e + ".png") for e in EMOTIONS if os.path.exists(os.path.join(folder, e + ".png"))}
 
 
+SPRITES = os.path.join(ROOT, "assets", "sprites")
+GESTURES = ["point_up", "point_side", "thumbs_up", "shrug", "magnifier"]
+
+
+def sprite(name):
+    hit = glob.glob(os.path.join(SPRITES, "*", name + ".png"))
+    return hit[0] if hit else None
+
+
 def pick_emotions(script, config):
     """Mascot pose per segment: hook / countdown / #1 reveal / outro. Scripts may set item["emotion"]."""
     have = emotion_files(config)
+    if config.get("animated_mascot"):  # sprite gestures join the pose pool
+        have.update({g: sprite(g) for g in GESTURES + ["thumbs_down", "facepalm", "hold_phone", "hold_globe",
+                                                         "mindblown_01", "point_down"] if sprite(g)})
     if not have:
         return {}
     rnd = random.Random(script["id"])
@@ -250,6 +263,77 @@ def pick_emotions(script, config):
         else:
             poses[it["rank"]] = have[middle[k % len(middle)]] if middle else pick(EMOTIONS)
     return poses
+
+
+def lipsync_frames(audio, total, happy, seed):
+    """Mouth shapes from the narration's loudness (15 changes a second) plus natural blinks."""
+    import subprocess, numpy as np
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", audio, "-f", "s16le", "-ac", "1", "-ar", "16000", "-"],
+                         capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, np.int16).astype(np.float32)
+    step = 1 / 15
+    n = int(total / step) + 1
+    win = int(16000 * step)
+    rms = np.array([np.sqrt(np.mean(x[i * win:(i + 1) * win] ** 2)) if i * win < len(x) else 0.0 for i in range(n)])
+    ref = np.percentile(rms[rms > 0], 90) if (rms > 0).any() else 1.0
+    lvl = rms / max(ref, 1e-6)
+    rnd = random.Random(seed)
+    if happy:
+        closed, mid, wide, oo, blink = "happy_talk_01", "happy_talk_02", "happy_talk_02", "happy_talk_02", ["happy_blink"] * 2
+    else:
+        closed, mid, wide, oo, blink = "talk_01", "talk_02", "talk_03", "talk_04", ["blink_01", "blink_02", "blink_01"]
+    local = np.convolve(lvl, np.ones(5) / 5, mode="same")  # syllables = peaks above the local average
+    names, run = [], 0
+    for v, m in zip(lvl, local):
+        if v < 0.15:
+            nm = closed
+        elif v >= m and run < 4:
+            nm = wide if v > 0.5 else mid
+        else:
+            nm = (oo if rnd.random() < 0.15 else mid) if v > 0.35 and not happy else closed
+        run = run + 1 if names and nm == names[-1] and nm != closed else 0
+        names.append(nm)
+    t = rnd.uniform(1.2, 2.5)  # blinks every ~2.5-4.5 s, only while the mouth is closed
+    while t < total:
+        i = int(t / step)
+        if i + len(blink) <= n and all(names[j] == closed for j in range(i, i + len(blink))):
+            names[i:i + len(blink)] = blink
+        t += rnd.uniform(2.5, 4.5)
+    frames = []
+    for nm in names:  # merge repeats
+        if frames and frames[-1][0] == nm:
+            frames[-1][1] += step
+        else:
+            frames.append([nm, step])
+    return [(sprite(nm), d) for nm, d in frames]
+
+
+def loop_frames(names, fps, secs):
+    seq, t, k = [], 0.0, 0
+    while t < secs:
+        seq.append((sprite(names[k % len(names)]), 1 / fps)); t += 1 / fps; k += 1
+    return seq
+
+
+def animate(kind, item, pose, audio, total, follow_at, script, follow_rank):
+    """Animated mascot plan for one segment (dict for render_segment), or the static pose path."""
+    rnd = random.Random(script["id"] + kind + str(item["rank"] if item else ""))
+    if kind in ("hook", "outro"):
+        return {"frames": lipsync_frames(audio, total, True, script["id"] + kind)}
+    frames = []
+    if item["rank"] == 1:
+        loop = rnd.choice([(["mindblown_01", "mindblown_02"], 3), (["fistpump_01", "fistpump_02", "fistpump_03"], 6),
+                           (["panic_01", "panic_02", "panic_03"], 8)])
+        frames = loop_frames(*loop, min(2.2, total)) + [(pose, max(0.1, total - 2.2))]
+    elif follow_at is not None:
+        frames = [(pose, follow_at), (sprite("point_down"), total - follow_at)]
+    elif item["rank"] == 2 and total > 2.5:  # drumroll into the #1 reveal
+        frames = [(pose, total - 1.2)] + loop_frames(["drumroll_01", "drumroll_02", "drumroll_03"], 9, 1.2)
+    else:
+        return pose
+    if any(p is None for p, _ in frames):
+        return pose
+    return {"frames": frames}
 
 
 def silence(path, secs):
@@ -381,6 +465,8 @@ def make_video(script, config, offline, workdir):
                 bg = {"kind": got["kind"], "path": got.get("path", clip)}
                 credits.append(got)
         pose = poses.get("hook" if kind == "hook" else "outro" if kind == "outro" else item["rank"])
+        if config.get("animated_mascot") and pose:
+            pose = animate(kind, item, pose, audio, render.duration(audio) + 0.35, follow_at, script, follow_rank)
         add({"kind": kind, "text": text, "item": item, "audio": audio, "bg": bg, "mascot": pose,
              "follow_at": follow_at})
         print(f"  segment {idx}: {kind} {item['name'] if item else ''}")

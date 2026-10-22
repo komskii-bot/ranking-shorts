@@ -6,6 +6,7 @@
   "accent_color": "#FFD23F",
   "mascot": "assets/mascot.png",
   "mascot_dir": "assets/emotions",
+  "animated_mascot": false,
   "music_volume": 0.1,
   "made_for_kids": false,
   "upload_mode": "manual",
