@@ -11,6 +11,8 @@ from pipeline.writer import validate
 path = sys.argv[1]
 script = validate(json.load(open(path)))
 cfg = json.load(open("config.json"))
+if os.environ.get("ANIMATED") == "1":  # per-run override from one-short.yml
+    cfg["animated_mascot"] = True
 M.setup_voice(cfg)
 os.makedirs("out/one/work", exist_ok=True)
 out, total, credits, synthetic = M.make_video(script, cfg, False, "out/one/work")

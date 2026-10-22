@@ -6,6 +6,9 @@ on:
       script:
         description: "Script file, e.g. state/one_off/<id>.json"
         required: true
+      animated:
+        description: "Animated Bojji for this run (1 = on)"
+        default: "0"
 
 permissions:
   contents: write
@@ -30,6 +33,7 @@ jobs:
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          ANIMATED: ${{ inputs.animated }}
         run: python tools/render_one.py "${{ inputs.script }}"
       - name: Publish (Releases page)
         env:
