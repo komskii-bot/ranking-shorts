@@ -1,0 +1,14 @@
+# Bojji sprite frames (Oct 22, 2026)
+
+Cut from Emilio's Google Flow sprite sheets with `tools/cut_sprite_sheet.py` (transparent PNG, trimmed).
+
+| Folder | Frames | Status |
+|---|---|---|
+| talk | talk_01-04 (closed, mid, "ah", "oo"), blink_01-02, happy_talk_01-02, happy_blink | ready (lip-sync not wired yet) |
+| gestures | point_up, point_side, thumbs_up, thumbs_down, shrug, facepalm, mindblown_01-02, point_down | ready |
+| props | drumroll_01-03, hold_phone, hold_globe, magnifier, magnifier_grin, smile_a, smile_b | ready |
+| reactions | fistpump_01-03, laugh_01-03, panic_01-03 | ready |
+| dance | dance_01-04 | usable; arms clipped by the sheet's cell edges in 01/03 |
+| desk_peek | desk_type_01-02, peek_01-02 | ready (headphones worn on head here) |
+| full_body | idle_01-02, present_left/right, hold_sign, wave, trip_01-02 | off-model: no headphones, no alien logo - regenerate |
+| run | run_01-04 | weak cycle (not side view, frames 2/4 standing) - regenerate |
