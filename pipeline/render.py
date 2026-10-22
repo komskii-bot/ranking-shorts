@@ -549,6 +549,23 @@ def gradient_bg(path, seed):
 def mascot_track(frames, kind, workdir, idx):
     """Animated mascot: frames = [(png path, seconds), ...] -> ffconcat list of sized stickers + first sticker."""
     stickers = [(mascot_png(p, kind, workdir), d) for p, d in frames if d > 0.001]
+    # every frame on one canvas size: a size change mid-stream makes ffmpeg rebuild the filter graph and drop
+    # the list/caption layers. Bottom-aligned; right-aligned on the right-side spots, centred elsewhere.
+    sizes = {p: Image.open(p).size for p, _ in stickers}
+    cw, ch = max(w for w, _ in sizes.values()), max(h for _, h in sizes.values())
+    padded = {}
+    for p, (w, h) in sizes.items():
+        if (w, h) == (cw, ch):
+            padded[p] = p
+            continue
+        q = p[:-4] + f"_{cw}x{ch}.png"
+        if not os.path.exists(q):
+            canvas = Image.new("RGBA", (cw, ch), (0, 0, 0, 0))
+            x = cw - w if kind in RIGHT_SIDE else (cw - w) // 2
+            canvas.alpha_composite(Image.open(p).convert("RGBA"), (x, ch - h))
+            canvas.save(q)
+        padded[p] = q
+    stickers = [(padded[p], d) for p, d in stickers]
     lst = os.path.join(workdir, f"s{idx}_mascot.ffconcat")
     with open(lst, "w") as fh:
         fh.write("ffconcat version 1.0\n")
