@@ -19,7 +19,7 @@ SCHEMA_HINT = """Return ONLY a JSON object, no markdown fences, in exactly this 
   "items": [
     {"rank": 5, "name": "Short name (max 4 words)", "stat": "Key number, max 4 words, e.g. 946 MW",
      "line": "One spoken sentence, 12-20 words, with the key number and one surprising detail",
-     "emotion": "optional mascot reaction for this item: thinking, curious, excited, nervous, shocked or exclaim",
+     "emotion": "optional mascot reaction for this item, one of: thinking, curious, excited, nervous, shocked, exclaim, surprised, panicked, hopeful, unsure, suspicious, mischievous, wink, chill, sweaty, cringe, laughing, joyful, shy, embarrassed, worried, sad, disappointed, annoyed, angry, bored, sleepy",
      "search": "2-4 word stock-footage search term that would show this item"},
     ... down to rank 1. TOP 10 by default: ranks 10..1 in that order. Ranks 10-6: one punchy line, 6-9 words. Ranks 5-1: 10-14 words with the surprising detail ...
   ],

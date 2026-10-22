@@ -213,7 +213,17 @@ def join_audio(first, second, out, gap=0.15):
     return out
 
 
-EMOTIONS = ["presenting", "shocked", "thinking", "celebrating", "curious", "excited", "exclaim", "nervous"]
+EMOTIONS = ["presenting", "shocked", "thinking", "celebrating", "curious", "excited", "exclaim", "nervous",
+            # Oct 22 expression set (busts on transparent background)
+            "angry", "annoyed", "bored", "chill", "cringe", "disappointed", "embarrassed", "hopeful", "joyful",
+            "laughing", "mischievous", "panicked", "sad", "shy", "sleepy", "surprised", "suspicious", "sweaty",
+            "unsure", "wink", "worried"]
+# Poses picked automatically; the gloomier ones (angry, sad, bored...) are only used when a script asks for them.
+AUTO_HOOK = ["presenting", "curious", "mischievous", "wink", "suspicious"]
+AUTO_MIDDLE = ["thinking", "curious", "excited", "nervous", "hopeful", "unsure", "suspicious", "surprised",
+               "mischievous", "wink", "chill", "laughing"]
+AUTO_TOP = ["shocked", "exclaim", "surprised", "panicked"]
+AUTO_OUTRO = ["celebrating", "presenting", "joyful", "laughing", "wink"]
 
 
 def emotion_files(config):
@@ -228,15 +238,15 @@ def pick_emotions(script, config):
         return {}
     rnd = random.Random(script["id"])
     pick = lambda opts: have.get(rnd.choice([o for o in opts if o in have] or list(have)))
-    poses = {"hook": pick(["presenting", "curious"]), "outro": pick(["celebrating", "presenting"])}
-    middle = [e for e in ["thinking", "curious", "excited", "nervous"] if e in have]
+    poses = {"hook": pick(AUTO_HOOK), "outro": pick(AUTO_OUTRO)}
+    middle = [e for e in AUTO_MIDDLE if e in have]
     rnd.shuffle(middle)
     for k, it in enumerate(sorted(script["items"], key=lambda i: -i["rank"])):
         want = it.get("emotion")
         if want in have:
             poses[it["rank"]] = have[want]
         elif it["rank"] == 1:
-            poses[1] = pick(["shocked", "exclaim"])
+            poses[1] = pick(AUTO_TOP)
         else:
             poses[it["rank"]] = have[middle[k % len(middle)]] if middle else pick(EMOTIONS)
     return poses
