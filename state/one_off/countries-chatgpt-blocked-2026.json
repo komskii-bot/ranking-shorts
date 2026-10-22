@@ -1,0 +1,72 @@
+{
+ "id": "countries-chatgpt-blocked-2026",
+ "title": "5 Countries Where ChatGPT Is Blocked or Was Banned",
+ "hook": "Think only far-off countries block ChatGPT? One of them is in Europe.",
+ "items": [
+  {
+   "rank": 5,
+   "name": "Italy",
+   "stat": "Blocked 4 weeks, 2023",
+   "line": "Italy blocked ChatGPT for about four weeks in 2023 over data privacy, then blocked China's DeepSeek in 2025.",
+   "search": "rome city street"
+  },
+  {
+   "rank": 4,
+   "name": "Syria",
+   "stat": "Not on OpenAI's list",
+   "line": "Syria is still missing from OpenAI's list of supported countries, so ChatGPT won't work there.",
+   "search": "damascus old city"
+  },
+  {
+   "rank": 3,
+   "name": "Iran",
+   "stat": "Not on OpenAI's list",
+   "line": "Iran is also off OpenAI's list, so people there can't officially sign up for ChatGPT.",
+   "search": "tehran skyline"
+  },
+  {
+   "rank": 2,
+   "name": "China",
+   "stat": "Security review since 2023",
+   "line": "China doesn't get ChatGPT either, and since 2023 its public chatbots need a government security review.",
+   "search": "shanghai skyline"
+  },
+  {
+   "rank": 1,
+   "name": "North Korea",
+   "stat": "No open internet",
+   "line": "In North Korea, most people can't reach the global internet at all, just a government intranet.",
+   "search": "pyongyang city"
+  }
+ ],
+ "outro": "Should countries ever block AI apps? Tell me below.",
+ "highlight": [
+  "ChatGPT",
+  "Blocked"
+ ],
+ "highlight_colors": [
+  "#1DE9D6",
+  "#FF3B3B"
+ ],
+ "description": "Five countries where ChatGPT is blocked, unavailable or was temporarily banned: Italy's 2023 privacy block (lifted after about four weeks) and its 2025 DeepSeek block, countries missing from OpenAI's supported list, China's 2023 generative AI rules, and North Korea's closed intranet.",
+ "tags": [
+  "countries",
+  "chatgpt",
+  "ai",
+  "artificial intelligence",
+  "openai",
+  "ai ban",
+  "tech",
+  "italy",
+  "china"
+ ],
+ "as_of": "October 2026",
+ "sources": [
+  "OpenAI: ChatGPT supported countries https://help.openai.com/en/articles/7947663-chatgpt-supported-countries",
+  "Italy Garante ChatGPT ban Mar 31–Apr 28, 2023 https://www.privacylaws.com/news/italy-s-garante-imposes-and-then-withdraws-a-ban-on-chatgpt/",
+  "Italy blocks DeepSeek, Jan 30, 2025 https://www.dailymaverick.co.za/article/2025-01-30-italys-privacy-watchdog-blocks-chinese-ai-app-deepseek/",
+  "China Interim Measures for Generative AI (eff. Aug 15, 2023) https://www.loc.gov/item/global-legal-monitor/2023-07-18/china-generative-ai-measures-finalized/",
+  "North Korea internet profile https://thenetmonitor.org/country-profiles/prk"
+ ],
+ "status": "awaiting-approval"
+}

@@ -1,0 +1,46 @@
+name: One-off Short
+
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: "Script file, e.g. state/one_off/<id>.json"
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-short
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - run: pip install -r requirements.txt chatterbox-tts
+      - name: Render
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: python tools/render_one.py "${{ inputs.script }}"
+      - name: Publish (Releases page)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ID=$(python -c "import json;print(json.load(open('${{ inputs.script }}'))['id'])")
+          gh release create "one-${ID}-${{ github.run_number }}" out/one/*.mp4 --title "Bojji one-off: ${ID}" --notes-file out/one/upload_notes.md
+      - name: Save history
+        run: |
+          git config user.name "ranking-bot"
+          git config user.email "ranking-bot@users.noreply.github.com"
+          git add state/
+          git diff --cached --quiet || git commit -m "One-off render $(date -u +%F)"
+          git pull --rebase && git push
