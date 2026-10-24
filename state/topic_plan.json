@@ -14,7 +14,7 @@
    "topic": "Top 10 countries where iPhone beats Android",
    "source": "StatCounter mobile OS share by country",
    "kind": "country",
-   "status": "planned",
+   "status": "used",
    "week": "2026-10-25"
   },
   {
@@ -22,7 +22,7 @@
    "topic": "Top 10 biggest cities in the world",
    "source": "UN World Urbanization Prospects 2025",
    "kind": "city",
-   "status": "planned",
+   "status": "used",
    "week": "2026-10-25"
   },
   {
@@ -38,7 +38,7 @@
    "topic": "Top 10 countries with the longest coastlines",
    "source": "CIA World Factbook",
    "kind": "country",
-   "status": "planned",
+   "status": "used",
    "week": "2026-10-25"
   },
   {
@@ -46,7 +46,7 @@
    "topic": "Top 10 most visited cities in the world",
    "source": "Euromonitor Top 100 City Destinations",
    "kind": "city",
-   "status": "planned",
+   "status": "used",
    "week": "2026-10-25"
   },
   {
@@ -54,7 +54,7 @@
    "topic": "Top 10 countries with the most Olympic gold medals (all-time, Summer)",
    "source": "Olympedia / IOC results",
    "kind": "country",
-   "status": "planned",
+   "status": "used",
    "week": "2026-10-25"
   },
   {
@@ -62,7 +62,7 @@
    "topic": "Top 10 countries with the most time zones",
    "source": "official territories / IANA time zones",
    "kind": "country",
-   "status": "planned",
+   "status": "used",
    "week": "2026-10-25"
   },
   {
@@ -70,7 +70,7 @@
    "topic": "Top 10 cities with the worst traffic",
    "source": "TomTom Traffic Index",
    "kind": "city",
-   "status": "planned",
+   "status": "used",
    "week": "2026-10-25"
   },
   {

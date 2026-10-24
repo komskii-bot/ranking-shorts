@@ -1,0 +1,103 @@
+{
+ "id": "most-olympic-gold-medals-countries",
+ "title": "Top 10 Countries With the Most Olympic Gold Medals",
+ "hook": "Think China is number two? Surprisingly, it's not. Can you guess?",
+ "items": [
+  {
+   "rank": 10,
+   "name": "Sweden",
+   "stat": "151 golds",
+   "line": "Sweden grabs one hundred fifty-one golds.",
+   "search": "stockholm old town"
+  },
+  {
+   "rank": 9,
+   "name": "Australia",
+   "stat": "180 golds",
+   "line": "Australia punches above its weight with one hundred eighty.",
+   "search": "sydney opera house"
+  },
+  {
+   "rank": 8,
+   "name": "Hungary",
+   "stat": "187 golds",
+   "line": "Hungary, under ten million people, has one hundred eighty-seven.",
+   "search": "budapest parliament"
+  },
+  {
+   "rank": 7,
+   "name": "Japan",
+   "stat": "189 golds",
+   "line": "Japan edges Hungary with one hundred eighty-nine golds.",
+   "search": "tokyo street"
+  },
+  {
+   "rank": 6,
+   "name": "Germany",
+   "stat": "214 golds",
+   "line": "Germany racks up two hundred fourteen golds.",
+   "search": "berlin brandenburg gate"
+  },
+  {
+   "rank": 5,
+   "name": "Italy",
+   "stat": "229 golds",
+   "line": "Italy has two hundred twenty-nine golds, just fourteen behind France.",
+   "search": "rome colosseum"
+  },
+  {
+   "rank": 4,
+   "name": "France",
+   "stat": "243 golds",
+   "line": "France has two hundred forty-three, including sixteen won at home in Paris 2024.",
+   "search": "paris eiffel tower"
+  },
+  {
+   "rank": 3,
+   "name": "China",
+   "stat": "303 golds",
+   "line": "China has three hundred three golds, tied with Britain, but fewer silvers.",
+   "search": "beijing city"
+  },
+  {
+   "rank": 2,
+   "name": "Great Britain",
+   "stat": "303 golds",
+   "line": "Great Britain also has three hundred three, and wins the tie on silvers.",
+   "search": "london big ben"
+  },
+  {
+   "rank": 1,
+   "name": "United States",
+   "stat": "1,106 golds",
+   "line": "The USA has over eleven hundred golds. Let that sink in.",
+   "search": "new york skyline"
+  }
+ ],
+ "outro": "Who wins the most golds at LA 2028? Tell me below.",
+ "highlight": [
+  "Olympic Gold Medals"
+ ],
+ "highlight_colors": [
+  "#FFD23F"
+ ],
+ "description": "All-time Summer Olympic gold medals by country, through Paris 2024 (all-time medal table compiled from official results / Olympedia). Current countries only, so former teams like the Soviet Union (395 golds) and East Germany aren't ranked. Great Britain and China are tied on 303 golds; Britain is ahead on silver medals.",
+ "tags": [
+  "countries",
+  "olympics",
+  "gold medals",
+  "summer olympics",
+  "olympic medals",
+  "medal table",
+  "usa",
+  "sports",
+  "top 10"
+ ],
+ "as_of": "August 2024",
+ "sources": [
+  "All-time Olympic Games medal table, Summer (through Paris 2024): https://en.wikipedia.org/wiki/All-time_Olympic_Games_medal_table",
+  "Olympedia country pages: https://www.olympedia.org/countries/USA"
+ ],
+ "topic_n": 7,
+ "intro_topic": "the countries with the most Summer Olympic gold medals of all time"
+}
