@@ -382,7 +382,7 @@ def make_quiz_video(script, config, offline, workdir):
     a = speak(script["hook"])
     add({"kind": "q_hook", "text": script["hook"], "item": None, "audio": a,
          "bg": footage(qs[0].get("search", "technology"), 6), "mascot": pose(["presenting", "curious"])})
-    follow_q, follow_text = mid_follow(script, [2, 3, 4])
+    follow_q, follow_text = mid_follow(script, [5, 6] if len(qs) >= 10 else [2, 3, 4])
     for n, q in enumerate(qs, 1):
         ask = speak(f"Question {n}. {q['q']}")
         letter = "ABCD"[q["answer"]]

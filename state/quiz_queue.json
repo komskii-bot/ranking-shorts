@@ -1,1 +1,1185 @@
-[]
+[
+ {
+  "id": "quiz-world-capitals",
+  "title": "World Capitals Quiz: Can You Get 10/10?",
+  "highlight": [
+   "10/10",
+   "World Capitals"
+  ],
+  "highlight_colors": [
+   "#FFD23F",
+   "#1DE9D6"
+  ],
+  "hook": "Ten capital cities. The last three trip up almost everyone. Ready?",
+  "questions": [
+   {
+    "q": "What is the capital of Japan?",
+    "options": [
+     "Osaka",
+     "Tokyo",
+     "Kyoto",
+     "Hiroshima"
+    ],
+    "answer": 1,
+    "explain": "Tokyo is Japan's capital and its biggest city.",
+    "note": "Source: CIA World Factbook",
+    "search": "tokyo city"
+   },
+   {
+    "q": "What is the capital of Italy?",
+    "options": [
+     "Rome",
+     "Naples",
+     "Milan",
+     "Venice"
+    ],
+    "answer": 0,
+    "explain": "Rome has been Italy's capital since 1871.",
+    "note": "Source: CIA World Factbook",
+    "search": "rome colosseum"
+   },
+   {
+    "q": "What is the capital of Canada?",
+    "options": [
+     "Vancouver",
+     "Toronto",
+     "Ottawa",
+     "Montreal"
+    ],
+    "answer": 2,
+    "explain": "Queen Victoria picked Ottawa as the capital in 1857.",
+    "note": "Source: Government of Canada",
+    "search": "ottawa parliament"
+   },
+   {
+    "q": "What is the capital of Australia?",
+    "options": [
+     "Melbourne",
+     "Sydney",
+     "Perth",
+     "Canberra"
+    ],
+    "answer": 3,
+    "explain": "Canberra was built as a compromise between Sydney and Melbourne.",
+    "note": "Source: CIA World Factbook",
+    "search": "canberra australia",
+    "emotion": "exclaim"
+   },
+   {
+    "q": "What is the capital of Brazil?",
+    "options": [
+     "Brasília",
+     "Salvador",
+     "São Paulo",
+     "Rio de Janeiro"
+    ],
+    "answer": 0,
+    "explain": "Brasília replaced Rio de Janeiro as the capital in 1960.",
+    "note": "Source: CIA World Factbook",
+    "search": "brasilia city"
+   },
+   {
+    "q": "What is the capital of Turkey?",
+    "options": [
+     "Izmir",
+     "Ankara",
+     "Istanbul",
+     "Antalya"
+    ],
+    "answer": 1,
+    "explain": "Ankara has been Turkey's capital since 1923, not Istanbul.",
+    "note": "Source: CIA World Factbook",
+    "search": "ankara turkey"
+   },
+   {
+    "q": "What is the capital of Morocco?",
+    "options": [
+     "Rabat",
+     "Fez",
+     "Casablanca",
+     "Marrakesh"
+    ],
+    "answer": 0,
+    "explain": "Rabat is the capital. Casablanca is just the biggest city.",
+    "note": "Source: CIA World Factbook",
+    "search": "morocco city"
+   },
+   {
+    "q": "What is the capital of New Zealand?",
+    "options": [
+     "Wellington",
+     "Christchurch",
+     "Auckland",
+     "Queenstown"
+    ],
+    "answer": 0,
+    "explain": "Wellington is the world's southernmost national capital.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "wellington new zealand",
+    "emotion": "shocked"
+   },
+   {
+    "q": "What is the capital of Nigeria?",
+    "options": [
+     "Kano",
+     "Ibadan",
+     "Lagos",
+     "Abuja"
+    ],
+    "answer": 3,
+    "explain": "Abuja officially replaced Lagos as the capital in 1991.",
+    "note": "Source: CIA World Factbook",
+    "search": "nigeria city"
+   },
+   {
+    "q": "What is the capital of Kazakhstan?",
+    "options": [
+     "Karaganda",
+     "Astana",
+     "Shymkent",
+     "Almaty"
+    ],
+    "answer": 1,
+    "explain": "Astana took over from Almaty as the capital in 1997.",
+    "note": "Source: CIA World Factbook",
+    "search": "astana kazakhstan",
+    "emotion": "shocked"
+   }
+  ],
+  "outro": "So, how many did you get? Ten out of ten? Drop your score below!",
+  "description": "Ten world capitals, from easy to tricky. Can you name them all?",
+  "tags": [
+   "quiz",
+   "trivia",
+   "geography",
+   "capitals",
+   "countries",
+   "world capitals",
+   "geography quiz",
+   "general knowledge",
+   "shorts"
+  ],
+  "format": "quiz",
+  "sources": [
+   "CIA World Factbook",
+   "Encyclopaedia Britannica",
+   "Government of Canada"
+  ]
+ },
+ {
+  "id": "quiz-animal-kingdom",
+  "title": "Animal Quiz: Only Animal Lovers Get 10/10",
+  "highlight": [
+   "10/10",
+   "Animal Quiz"
+  ],
+  "highlight_colors": [
+   "#FFD23F",
+   "#3DDC84"
+  ],
+  "hook": "Ten animal questions. Number ten surprises almost everyone. Let's go!",
+  "questions": [
+   {
+    "q": "How many legs does a spider have?",
+    "options": [
+     "6",
+     "8",
+     "10",
+     "12"
+    ],
+    "answer": 1,
+    "explain": "All spiders have eight legs. Insects have six.",
+    "note": "Source: Smithsonian",
+    "search": "spider web"
+   },
+   {
+    "q": "What is the fastest land animal?",
+    "options": [
+     "Greyhound",
+     "Lion",
+     "Cheetah",
+     "Pronghorn"
+    ],
+    "answer": 2,
+    "explain": "Cheetahs can top 100 km/h in short sprints.",
+    "note": "Source: Smithsonian's National Zoo",
+    "search": "cheetah running"
+   },
+   {
+    "q": "What is the largest animal that has ever lived?",
+    "options": [
+     "African elephant",
+     "Megalodon",
+     "T. rex",
+     "Blue whale"
+    ],
+    "answer": 3,
+    "explain": "Blue whales can grow to about 30 meters long.",
+    "note": "Source: NOAA Fisheries",
+    "search": "blue whale ocean",
+    "emotion": "exclaim"
+   },
+   {
+    "q": "Which of these mammals can truly fly?",
+    "options": [
+     "Sugar glider",
+     "Colugo",
+     "Flying squirrel",
+     "Bat"
+    ],
+    "answer": 3,
+    "explain": "Bats are the only mammals capable of true flight.",
+    "note": "The others glide. Source: Smithsonian",
+    "search": "bat flying"
+   },
+   {
+    "q": "Which of these mammals lays eggs?",
+    "options": [
+     "Pangolin",
+     "Platypus",
+     "Sloth",
+     "Armadillo"
+    ],
+    "answer": 1,
+    "explain": "Platypuses and echidnas are the only egg-laying mammals.",
+    "note": "Source: Australian Museum",
+    "search": "platypus swimming"
+   },
+   {
+    "q": "How many hearts does an octopus have?",
+    "options": [
+     "1",
+     "2",
+     "3",
+     "4"
+    ],
+    "answer": 2,
+    "explain": "Two hearts pump blood to the gills, one to the body.",
+    "note": "Source: Smithsonian Ocean",
+    "search": "octopus underwater",
+    "emotion": "shocked"
+   },
+   {
+    "q": "Which living bird lays the biggest eggs?",
+    "options": [
+     "Albatross",
+     "Emu",
+     "Bald eagle",
+     "Ostrich"
+    ],
+    "answer": 3,
+    "explain": "An ostrich egg can weigh about 1.5 kg.",
+    "note": "Source: San Diego Zoo Wildlife Alliance",
+    "search": "ostrich bird"
+   },
+   {
+    "q": "What is a group of crows called?",
+    "options": [
+     "A murder",
+     "A gaggle",
+     "A parliament",
+     "A pride"
+    ],
+    "answer": 0,
+    "explain": "It's a murder of crows. A parliament is owls.",
+    "note": "Source: Merriam-Webster",
+    "search": "crows flying"
+   },
+   {
+    "q": "Which mammal has the longest pregnancy?",
+    "options": [
+     "Elephant",
+     "Rhino",
+     "Giraffe",
+     "Blue whale"
+    ],
+    "answer": 0,
+    "explain": "Elephants carry their babies for up to 22 months.",
+    "note": "Source: San Diego Zoo Wildlife Alliance",
+    "search": "elephant calf"
+   },
+   {
+    "q": "What color is a polar bear's skin?",
+    "options": [
+     "Pink",
+     "Black",
+     "Gray",
+     "White"
+    ],
+    "answer": 1,
+    "explain": "Under that white-looking fur, polar bear skin is black.",
+    "note": "Their fur is actually see-through. Source: Polar Bears International",
+    "search": "polar bear snow",
+    "emotion": "shocked"
+   }
+  ],
+  "outro": "So, how many did you get? Ten out of ten? Tell me your score below!",
+  "description": "Ten animal questions, from spiders to polar bears. How many can you get?",
+  "tags": [
+   "quiz",
+   "trivia",
+   "animals",
+   "animal facts",
+   "nature",
+   "wildlife",
+   "animal quiz",
+   "general knowledge",
+   "shorts"
+  ],
+  "format": "quiz",
+  "sources": [
+   "Australian Museum",
+   "Merriam-Webster",
+   "NOAA Fisheries",
+   "Polar Bears International",
+   "San Diego Zoo Wildlife Alliance",
+   "Smithsonian",
+   "Smithsonian Ocean",
+   "Smithsonian's National Zoo"
+  ]
+ },
+ {
+  "id": "quiz-human-body",
+  "title": "Human Body Quiz: Can You Get 10/10?",
+  "highlight": [
+   "10/10",
+   "Human Body"
+  ],
+  "highlight_colors": [
+   "#FFD23F",
+   "#FF6B6B"
+  ],
+  "hook": "Ten questions about your own body. Bet you miss the last one!",
+  "questions": [
+   {
+    "q": "How many bones are in the adult human body?",
+    "options": [
+     "106",
+     "186",
+     "206",
+     "306"
+    ],
+    "answer": 2,
+    "explain": "Most adults have 206 bones.",
+    "note": "Source: Cleveland Clinic",
+    "search": "human skeleton"
+   },
+   {
+    "q": "How many chambers does the human heart have?",
+    "options": [
+     "2",
+     "3",
+     "4",
+     "6"
+    ],
+    "answer": 2,
+    "explain": "Two atria on top, two ventricles below.",
+    "note": "Source: Cleveland Clinic",
+    "search": "heart beat"
+   },
+   {
+    "q": "What is the largest organ of the human body?",
+    "options": [
+     "Brain",
+     "Lungs",
+     "Liver",
+     "Skin"
+    ],
+    "answer": 3,
+    "explain": "Your skin is your body's largest organ.",
+    "note": "The liver is the largest internal organ. Source: Cleveland Clinic",
+    "search": "human skin",
+    "emotion": "exclaim"
+   },
+   {
+    "q": "What is the longest bone in the body?",
+    "options": [
+     "Tibia",
+     "Humerus",
+     "Fibula",
+     "Femur"
+    ],
+    "answer": 3,
+    "explain": "The femur, your thigh bone, is the longest.",
+    "note": "Source: Cleveland Clinic",
+    "search": "running legs"
+   },
+   {
+    "q": "What is the hardest substance in the human body?",
+    "options": [
+     "Cartilage",
+     "Bone",
+     "Tooth enamel",
+     "Fingernails"
+    ],
+    "answer": 2,
+    "explain": "Tooth enamel is even harder than bone.",
+    "note": "Source: Cleveland Clinic",
+    "search": "smile teeth"
+   },
+   {
+    "q": "How many teeth does a typical adult have?",
+    "options": [
+     "28",
+     "30",
+     "32",
+     "36"
+    ],
+    "answer": 2,
+    "explain": "That's 32, counting all four wisdom teeth.",
+    "note": "Source: Cleveland Clinic",
+    "search": "dentist"
+   },
+   {
+    "q": "Where is the smallest bone in your body?",
+    "options": [
+     "Finger",
+     "Ear",
+     "Nose",
+     "Toe"
+    ],
+    "answer": 1,
+    "explain": "The stapes, in the middle ear, is about 3.5 mm long.",
+    "note": "Source: Cleveland Clinic",
+    "search": "human ear",
+    "emotion": "shocked"
+   },
+   {
+    "q": "Which blood type can go to almost anyone?",
+    "options": [
+     "AB positive",
+     "B negative",
+     "O negative",
+     "A positive"
+    ],
+    "answer": 2,
+    "explain": "O negative is the universal red blood cell donor.",
+    "note": "For red cells. Source: American Red Cross",
+    "search": "blood donation"
+   },
+   {
+    "q": "About how many bones is a newborn baby born with?",
+    "options": [
+     "About 100",
+     "About 206",
+     "About 270",
+     "About 500"
+    ],
+    "answer": 2,
+    "explain": "Babies have about 270 bones. Many fuse as they grow.",
+    "note": "Source: Cleveland Clinic",
+    "search": "newborn baby",
+    "emotion": "shocked"
+   },
+   {
+    "q": "Which body part gets oxygen straight from the air?",
+    "options": [
+     "Tongue",
+     "Earlobe",
+     "Cornea",
+     "Lips"
+    ],
+    "answer": 2,
+    "explain": "The cornea has no blood vessels, so it absorbs oxygen from air.",
+    "note": "Source: Cleveland Clinic",
+    "search": "eye close up",
+    "emotion": "shocked"
+   }
+  ],
+  "outro": "So, how many did you get? Ten out of ten? Drop your score below!",
+  "description": "Ten questions about the human body, from bones to blood types.",
+  "tags": [
+   "quiz",
+   "trivia",
+   "human body",
+   "biology",
+   "science",
+   "health",
+   "science quiz",
+   "general knowledge",
+   "shorts"
+  ],
+  "format": "quiz",
+  "sources": [
+   "American Red Cross",
+   "Cleveland Clinic"
+  ]
+ },
+ {
+  "id": "quiz-famous-landmarks",
+  "title": "Landmark Quiz: Which Country Is It In?",
+  "highlight": [
+   "Which Country",
+   "Landmark Quiz"
+  ],
+  "highlight_colors": [
+   "#FFD23F",
+   "#1DE9D6"
+  ],
+  "hook": "Ten famous landmarks. Can you name the country for every one?",
+  "questions": [
+   {
+    "q": "Which country is the Eiffel Tower in?",
+    "options": [
+     "Belgium",
+     "France",
+     "Italy",
+     "Spain"
+    ],
+    "answer": 1,
+    "explain": "The Eiffel Tower opened in Paris in 1889.",
+    "note": "Source: Société d'Exploitation de la Tour Eiffel",
+    "search": "eiffel tower"
+   },
+   {
+    "q": "Which country is the Colosseum in?",
+    "options": [
+     "Turkey",
+     "Italy",
+     "Spain",
+     "Greece"
+    ],
+    "answer": 1,
+    "explain": "The Colosseum in Rome is nearly 2,000 years old.",
+    "note": "Opened 80 AD. Source: Britannica",
+    "search": "rome colosseum"
+   },
+   {
+    "q": "Which country is the Taj Mahal in?",
+    "options": [
+     "Nepal",
+     "Pakistan",
+     "Bangladesh",
+     "India"
+    ],
+    "answer": 3,
+    "explain": "The Taj Mahal stands in Agra, India.",
+    "note": "Source: UNESCO",
+    "search": "taj mahal"
+   },
+   {
+    "q": "Which country is Machu Picchu in?",
+    "options": [
+     "Mexico",
+     "Peru",
+     "Bolivia",
+     "Chile"
+    ],
+    "answer": 1,
+    "explain": "This Inca city sits high in Peru's Andes mountains.",
+    "note": "Source: UNESCO",
+    "search": "machu picchu"
+   },
+   {
+    "q": "Which country is Christ the Redeemer in?",
+    "options": [
+     "Brazil",
+     "Argentina",
+     "Portugal",
+     "Mexico"
+    ],
+    "answer": 0,
+    "explain": "The statue looks over Rio de Janeiro, Brazil.",
+    "note": "Source: UNESCO",
+    "search": "rio de janeiro"
+   },
+   {
+    "q": "Which country is Angkor Wat in?",
+    "options": [
+     "Cambodia",
+     "Laos",
+     "Thailand",
+     "Vietnam"
+    ],
+    "answer": 0,
+    "explain": "Angkor Wat is the world's largest religious monument.",
+    "note": "Source: Guinness World Records, UNESCO",
+    "search": "angkor wat",
+    "emotion": "exclaim"
+   },
+   {
+    "q": "Which country is the ancient city of Petra in?",
+    "options": [
+     "Israel",
+     "Jordan",
+     "Saudi Arabia",
+     "Egypt"
+    ],
+    "answer": 1,
+    "explain": "Petra was carved straight into rock cliffs in Jordan.",
+    "note": "Source: UNESCO",
+    "search": "petra jordan"
+   },
+   {
+    "q": "Which country is Chichén Itzá in?",
+    "options": [
+     "Guatemala",
+     "Belize",
+     "Peru",
+     "Mexico"
+    ],
+    "answer": 3,
+    "explain": "This Maya city is on Mexico's Yucatán Peninsula.",
+    "note": "Source: UNESCO",
+    "search": "chichen itza"
+   },
+   {
+    "q": "Which country is Neuschwanstein Castle in?",
+    "options": [
+     "France",
+     "Austria",
+     "Germany",
+     "Switzerland"
+    ],
+    "answer": 2,
+    "explain": "This fairy-tale castle is in Bavaria, Germany.",
+    "note": "Source: Bavarian Palace Administration",
+    "search": "neuschwanstein castle"
+   },
+   {
+    "q": "Which country do the Easter Island statues belong to?",
+    "options": [
+     "Peru",
+     "New Zealand",
+     "Chile",
+     "Fiji"
+    ],
+    "answer": 2,
+    "explain": "Easter Island belongs to Chile, over 3,500 km offshore.",
+    "note": "Rapa Nui's moai. Source: UNESCO",
+    "search": "easter island moai",
+    "emotion": "shocked"
+   }
+  ],
+  "outro": "So, how many did you get? Ten out of ten? Tell me your score below!",
+  "description": "Ten famous landmarks around the world. Can you name the country each one is in?",
+  "tags": [
+   "quiz",
+   "trivia",
+   "landmarks",
+   "geography",
+   "countries",
+   "travel",
+   "geography quiz",
+   "general knowledge",
+   "shorts"
+  ],
+  "format": "quiz",
+  "sources": [
+   "Bavarian Palace Administration",
+   "Britannica",
+   "Guinness World Records, UNESCO",
+   "Société d'Exploitation de la Tour Eiffel",
+   "UNESCO"
+  ]
+ },
+ {
+  "id": "quiz-food-origins",
+  "title": "Food Quiz: Where Did It Really Come From?",
+  "highlight": [
+   "Food Quiz",
+   "Really"
+  ],
+  "highlight_colors": [
+   "#FFD23F",
+   "#FF9F1C"
+  ],
+  "hook": "Ten foods. Where did they really come from? Number ten fools everyone.",
+  "questions": [
+   {
+    "q": "Which country are tacos from?",
+    "options": [
+     "Peru",
+     "USA",
+     "Mexico",
+     "Spain"
+    ],
+    "answer": 2,
+    "explain": "Tacos come from Mexico.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "tacos food"
+   },
+   {
+    "q": "Which country is nigiri sushi from?",
+    "options": [
+     "Korea",
+     "China",
+     "Japan",
+     "Thailand"
+    ],
+    "answer": 2,
+    "explain": "Nigiri sushi was born in Edo, now Tokyo, in the 1800s.",
+    "note": "Source: Kikkoman Food Culture",
+    "search": "sushi"
+   },
+   {
+    "q": "Pizza Margherita comes from which Italian city?",
+    "options": [
+     "Rome",
+     "Naples",
+     "Milan",
+     "Venice"
+    ],
+    "answer": 1,
+    "explain": "Pizza Margherita was born in Naples.",
+    "note": "Named for Queen Margherita, per the 1889 story. Source: Britannica",
+    "search": "pizza oven"
+   },
+   {
+    "q": "Kimchi is a famous dish from which country?",
+    "options": [
+     "China",
+     "Japan",
+     "Korea",
+     "Vietnam"
+    ],
+    "answer": 2,
+    "explain": "Kimchi is a fermented cabbage dish from Korea.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "kimchi"
+   },
+   {
+    "q": "Paella comes from which country?",
+    "options": [
+     "Italy",
+     "Portugal",
+     "Spain",
+     "Mexico"
+    ],
+    "answer": 2,
+    "explain": "Paella comes from Valencia, Spain.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "paella pan"
+   },
+   {
+    "q": "Tomatoes first came from which continent?",
+    "options": [
+     "Africa",
+     "South America",
+     "Asia",
+     "Europe"
+    ],
+    "answer": 1,
+    "explain": "Wild tomatoes come from South America, not Italy.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "tomatoes",
+    "emotion": "exclaim"
+   },
+   {
+    "q": "Potatoes were first farmed in what is now which country?",
+    "options": [
+     "USA",
+     "Russia",
+     "Peru",
+     "Ireland"
+    ],
+    "answer": 2,
+    "explain": "Potatoes were first farmed in the Andes, in today's Peru.",
+    "note": "Near Lake Titicaca, on the Peru-Bolivia border. Source: International Potato Center",
+    "search": "potato field"
+   },
+   {
+    "q": "Coffee plants first came from which country?",
+    "options": [
+     "Vietnam",
+     "Ethiopia",
+     "Colombia",
+     "Brazil"
+    ],
+    "answer": 1,
+    "explain": "Arabica coffee is native to the forests of Ethiopia.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "coffee beans"
+   },
+   {
+    "q": "The croissant was inspired by a pastry from which country?",
+    "options": [
+     "Austria",
+     "Switzerland",
+     "France",
+     "Belgium"
+    ],
+    "answer": 0,
+    "explain": "It grew out of the Austrian kipferl, brought to Paris.",
+    "note": "Source: Europeana",
+    "search": "croissant bakery",
+    "emotion": "shocked"
+   },
+   {
+    "q": "Fortune cookies became popular in which country?",
+    "options": [
+     "USA",
+     "China",
+     "Japan",
+     "Korea"
+    ],
+    "answer": 0,
+    "explain": "Fortune cookies took off in the USA, not China.",
+    "note": "They likely trace back to Japanese crackers. Source: Smithsonian",
+    "search": "fortune cookie",
+    "emotion": "shocked"
+   }
+  ],
+  "outro": "So, how many did you get? Ten out of ten? Drop your score below!",
+  "description": "Ten foods and where they really come from, from tacos to fortune cookies.",
+  "tags": [
+   "quiz",
+   "trivia",
+   "food",
+   "food quiz",
+   "food history",
+   "countries",
+   "cooking",
+   "general knowledge",
+   "shorts"
+  ],
+  "format": "quiz",
+  "sources": [
+   "Britannica",
+   "Encyclopaedia Britannica",
+   "Europeana",
+   "International Potato Center",
+   "Kikkoman Food Culture",
+   "Smithsonian"
+  ]
+ },
+ {
+  "id": "quiz-planet-earth",
+  "title": "Planet Earth Quiz: Can You Get 10/10?",
+  "highlight": [
+   "10/10",
+   "Planet Earth"
+  ],
+  "highlight_colors": [
+   "#FFD23F",
+   "#3DDC84"
+  ],
+  "hook": "Ten questions about our planet. Most people miss number seven!",
+  "questions": [
+   {
+    "q": "How many continents are there?",
+    "options": [
+     "5",
+     "6",
+     "7",
+     "8"
+    ],
+    "answer": 2,
+    "explain": "Most of the world counts seven continents.",
+    "note": "Using the common seven-continent model. Source: National Geographic",
+    "search": "earth from space"
+   },
+   {
+    "q": "What is the largest ocean on Earth?",
+    "options": [
+     "Pacific",
+     "Indian",
+     "Arctic",
+     "Atlantic"
+    ],
+    "answer": 0,
+    "explain": "The Pacific covers about a third of Earth's surface.",
+    "note": "Source: NOAA",
+    "search": "pacific ocean"
+   },
+   {
+    "q": "What is the tallest mountain above sea level?",
+    "options": [
+     "Denali",
+     "K2",
+     "Kilimanjaro",
+     "Mount Everest"
+    ],
+    "answer": 3,
+    "explain": "Everest stands 8,849 meters tall.",
+    "note": "2020 survey by Nepal and China. Source: Britannica",
+    "search": "mount everest"
+   },
+   {
+    "q": "What is the largest country by area?",
+    "options": [
+     "Canada",
+     "China",
+     "Russia",
+     "USA"
+    ],
+    "answer": 2,
+    "explain": "Russia covers about 17 million square kilometers.",
+    "note": "Source: CIA World Factbook",
+    "search": "russia landscape"
+   },
+   {
+    "q": "What is the largest hot desert on Earth?",
+    "options": [
+     "Arabian",
+     "Gobi",
+     "Kalahari",
+     "Sahara"
+    ],
+    "answer": 3,
+    "explain": "The Sahara is the largest hot desert. Antarctica is the largest overall.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "sahara desert"
+   },
+   {
+    "q": "Where is the deepest point in the ocean?",
+    "options": [
+     "Tonga Trench",
+     "Mariana Trench",
+     "Puerto Rico Trench",
+     "Java Trench"
+    ],
+    "answer": 1,
+    "explain": "Challenger Deep is nearly 11 km down.",
+    "note": "Source: NOAA",
+    "search": "deep ocean"
+   },
+   {
+    "q": "What gas makes up most of Earth's air?",
+    "options": [
+     "Nitrogen",
+     "Oxygen",
+     "Carbon dioxide",
+     "Argon"
+    ],
+    "answer": 0,
+    "explain": "Air is about 78% nitrogen and only 21% oxygen.",
+    "note": "Source: NASA",
+    "search": "blue sky clouds",
+    "emotion": "shocked"
+   },
+   {
+    "q": "What is the largest island in the world?",
+    "options": [
+     "Greenland",
+     "Madagascar",
+     "Borneo",
+     "New Guinea"
+    ],
+    "answer": 0,
+    "explain": "Greenland is the largest island, not counting Australia.",
+    "note": "Australia counts as a continent. Source: Britannica",
+    "search": "greenland ice"
+   },
+   {
+    "q": "Which continent has the most countries?",
+    "options": [
+     "Europe",
+     "Asia",
+     "Africa",
+     "South America"
+    ],
+    "answer": 2,
+    "explain": "Africa has 54 countries.",
+    "note": "UN member states. Source: United Nations",
+    "search": "africa landscape"
+   },
+   {
+    "q": "What is the deepest lake in the world?",
+    "options": [
+     "Lake Superior",
+     "Caspian Sea",
+     "Lake Tanganyika",
+     "Lake Baikal"
+    ],
+    "answer": 3,
+    "explain": "Lake Baikal in Russia is over 1,600 meters deep.",
+    "note": "Source: UNESCO",
+    "search": "lake baikal",
+    "emotion": "shocked"
+   }
+  ],
+  "outro": "So, how many did you get? Ten out of ten? Tell me your score below!",
+  "description": "Ten questions about planet Earth, from oceans to the deepest lake.",
+  "tags": [
+   "quiz",
+   "trivia",
+   "earth",
+   "geography",
+   "planet earth",
+   "nature",
+   "geography quiz",
+   "general knowledge",
+   "shorts"
+  ],
+  "format": "quiz",
+  "sources": [
+   "Britannica",
+   "CIA World Factbook",
+   "Encyclopaedia Britannica",
+   "NASA",
+   "NOAA",
+   "National Geographic",
+   "UNESCO",
+   "United Nations"
+  ]
+ },
+ {
+  "id": "quiz-halloween",
+  "title": "Halloween Quiz: Can You Get 10/10?",
+  "highlight": [
+   "10/10",
+   "Halloween"
+  ],
+  "highlight_colors": [
+   "#FFD23F",
+   "#FF9F1C"
+  ],
+  "hook": "Happy Halloween! Ten spooky questions. Can you survive all ten?",
+  "questions": [
+   {
+    "q": "What date is Halloween?",
+    "options": [
+     "October 30",
+     "October 31",
+     "November 1",
+     "November 2"
+    ],
+    "answer": 1,
+    "explain": "Halloween is October 31, the night before All Saints' Day.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "halloween pumpkins"
+   },
+   {
+    "q": "Who wrote the novel Dracula?",
+    "options": [
+     "Mary Shelley",
+     "Oscar Wilde",
+     "Bram Stoker",
+     "H.G. Wells"
+    ],
+    "answer": 2,
+    "explain": "Bram Stoker published Dracula in 1897.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "old castle night"
+   },
+   {
+    "q": "Who wrote Frankenstein?",
+    "options": [
+     "Edgar Allan Poe",
+     "Stephen King",
+     "Mary Shelley",
+     "Bram Stoker"
+    ],
+    "answer": 2,
+    "explain": "Mary Shelley published Frankenstein in 1818.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "lightning storm"
+   },
+   {
+    "q": "Which region is Count Dracula from?",
+    "options": [
+     "Transylvania",
+     "Siberia",
+     "Bavaria",
+     "Tuscany"
+    ],
+    "answer": 0,
+    "explain": "Stoker set Dracula's castle in Transylvania, Romania.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "romania castle"
+   },
+   {
+    "q": "Day of the Dead is celebrated mainly in which country?",
+    "options": [
+     "Peru",
+     "Mexico",
+     "Brazil",
+     "Spain"
+    ],
+    "answer": 1,
+    "explain": "Día de los Muertos is held on November 1 and 2.",
+    "note": "Source: UNESCO",
+    "search": "day of the dead"
+   },
+   {
+    "q": "What does the name Halloween come from?",
+    "options": [
+     "All Hallows' Eve",
+     "Hallow Moon",
+     "Hollow Evening",
+     "Haunted Eve"
+    ],
+    "answer": 0,
+    "explain": "It means the eve of All Hallows, or All Saints' Day.",
+    "note": "Source: Merriam-Webster",
+    "search": "candles night"
+   },
+   {
+    "q": "Halloween grew from which ancient Celtic festival?",
+    "options": [
+     "Beltane",
+     "Samhain",
+     "Saturnalia",
+     "Diwali"
+    ],
+    "answer": 1,
+    "explain": "Samhain marked the end of summer and harvest.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "bonfire night"
+   },
+   {
+    "q": "Botanically, a pumpkin is a…?",
+    "options": [
+     "Nut",
+     "Vegetable",
+     "Fruit",
+     "Root"
+    ],
+    "answer": 2,
+    "explain": "Pumpkins grow from flowers and hold seeds, so they're fruits.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "pumpkin patch",
+    "emotion": "exclaim"
+   },
+   {
+    "q": "Jack-o'-lanterns were first carved from what?",
+    "options": [
+     "Pumpkins",
+     "Apples",
+     "Watermelons",
+     "Turnips"
+    ],
+    "answer": 3,
+    "explain": "In Ireland and other Celtic lands, people carved turnips first.",
+    "note": "Pumpkins came later. Source: Smithsonian, Britannica",
+    "search": "jack o lantern",
+    "emotion": "shocked"
+   },
+   {
+    "q": "Which famous magician died on Halloween in 1926?",
+    "options": [
+     "Harry Houdini",
+     "Harry Blackstone",
+     "Penn Jillette",
+     "David Copperfield"
+    ],
+    "answer": 0,
+    "explain": "Harry Houdini died on October 31, 1926.",
+    "note": "Source: Encyclopaedia Britannica",
+    "search": "magician cards",
+    "emotion": "shocked"
+   }
+  ],
+  "outro": "So, how many did you get? Ten out of ten? Drop your score below!",
+  "description": "Ten spooky Halloween questions, from Dracula to jack-o'-lanterns.",
+  "tags": [
+   "quiz",
+   "trivia",
+   "halloween",
+   "halloween quiz",
+   "spooky",
+   "horror",
+   "october",
+   "general knowledge",
+   "shorts"
+  ],
+  "format": "quiz",
+  "sources": [
+   "Encyclopaedia Britannica",
+   "Merriam-Webster",
+   "Smithsonian, Britannica",
+   "UNESCO"
+  ]
+ }
+]

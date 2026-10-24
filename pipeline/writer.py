@@ -110,10 +110,10 @@ def _extract_json(text):
 QUIZ_SCHEMA = """Quiz script (state/quiz_queue.json), one object per Short:
 {
   "id": "kebab-case-unique-id", "format": "quiz",
-  "title": "e.g. Can You Get 5/5 on This AI Quiz?",
+  "title": "e.g. Can You Get 10/10 on This AI Quiz?",
   "highlight": ["phrases copied exactly from the title"], "highlight_colors": ["#hex per phrase"],
   "hook": "One spoken line, max 16 words",
-  "questions": [  // exactly 5, easy → hard
+  "questions": [  // exactly 10, easy → hard
     {"q": "Question, max 14 words, ONE clear-cut answer",
      "options": ["A", "B", "C", "D"],  // 4 options, each max 32 characters
      "answer": 1,                        // index 0-3 of the correct option
@@ -133,8 +133,8 @@ def validate_quiz(script):
         if key not in script:
             raise ValueError(f"quiz missing '{key}'")
     qs = script["questions"]
-    if len(qs) != 5:
-        raise ValueError("a quiz needs exactly 5 questions")
+    if len(qs) not in (5, 10):
+        raise ValueError("a quiz needs exactly 10 questions (or 5)")
     for i, q in enumerate(qs, 1):
         if len(q.get("options", [])) != 4 or q.get("answer") not in (0, 1, 2, 3):
             raise ValueError(f"question {i}: needs 4 options and answer 0-3")
