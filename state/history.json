@@ -219,5 +219,68 @@
     "rendered_on": "2026-10-24",
     "post_on": "2026-10-31",
     "status": "rendered"
+  },
+  {
+    "id": "quiz-world-capitals",
+    "title": "World Capitals Quiz: Can You Get 10/10?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-24",
+    "post_on": "2026-10-25",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-animal-kingdom",
+    "title": "Animal Quiz: Only Animal Lovers Get 10/10",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-24",
+    "post_on": "2026-10-26",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-human-body",
+    "title": "Human Body Quiz: Can You Get 10/10?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-24",
+    "post_on": "2026-10-27",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-famous-landmarks",
+    "title": "Landmark Quiz: Which Country Is It In?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-24",
+    "post_on": "2026-10-28",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-food-origins",
+    "title": "Food Quiz: Where Did It Really Come From?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-24",
+    "post_on": "2026-10-29",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-planet-earth",
+    "title": "Planet Earth Quiz: Can You Get 10/10?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-24",
+    "post_on": "2026-10-30",
+    "status": "rendered"
+  },
+  {
+    "id": "quiz-halloween",
+    "title": "Halloween Quiz: Can You Get 10/10?",
+    "topic": "",
+    "kind": "quiz",
+    "rendered_on": "2026-10-24",
+    "post_on": "2026-10-31",
+    "status": "rendered"
   }
 ]
